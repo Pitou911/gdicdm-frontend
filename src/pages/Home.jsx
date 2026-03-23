@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import StatCard from '../components/StatCard'
 import { useLanguage } from '../context/LanguageContext'
 import ResourceCard from '../components/ResourceCard';
+import NewsCard from '../components/NewsCard';
 
 export default function Home() {
     const { t } = useLanguage();
@@ -242,6 +243,29 @@ export default function Home() {
                     >
                         {t('eduBtn')}
                     </Link>
+                </div>
+            </div>
+        </div>
+
+        {/* News */}
+        <div className='py-18 bg-white'>
+            <div className='max-w-325 mx-auto px-8'>
+                <div className='flex items-end justify-between mb-9 gap-5 flex-wrap'>
+                    <div>
+                        <div className='eyebrow flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-teal-600'>Updates</div>
+                        <div className='text-[36px] font-bold text-gray-900 leading-[1.15] tracking-[-0.5px]'>
+                            News &amp; <em className='not-italic text-teal-600'>Announcements</em>
+                        </div>
+                    </div>
+                    <Link to="/news" className='flex items-center gap-1.5 text-[13.5px] font-semibold text-teal-600 whitespace-nowrap cursor-pointer transition-all hover:gap-2.5'>
+                        {t('linkNewsRoom')}
+                        <span className='transition-transform group-hover:translate-x-1'>→</span>
+                    </Link>
+                </div>
+                <div className='grid grid-cols-3 gap-4'>
+                    <NewsCard icon="🏛" category="Announcement" title="Government Bond Series 6 Subscription Now Open" date="15 January 2025" />
+                    <NewsCard icon="📊" category="Report" title="Q3 2024 Public Debt Bulletin Released" date="20 October 2024" />
+                    <NewsCard icon="🌏" category="Event" title="GDICDM Participates in ADB Regional Debt Forum, Manila" date="5 September 2024" />  
                 </div>
             </div>
         </div>
