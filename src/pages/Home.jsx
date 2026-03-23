@@ -222,6 +222,29 @@ export default function Home() {
                 </div>
             </div>
         </div>
+
+        {/* Education */}
+        <div className="bg-linear-to-br from-blue to-blue-2 relative overflow-hidden rounded-none before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_80%_50%,rgba(255,255,255,0.06),transparent_60%)]">
+            <div className="max-w-325 mx-auto px-8 py-14 grid grid-cols-[1fr_auto] items-center gap-10 relative z-10">
+                <div>
+                    <div className="eyebrow flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-white/75">
+                        {t('kpi1')}
+                    </div>
+                    <h2 className="font-display text-[36px] font-bold text-white mb-2.5 tracking-[-0.3px]">
+                        {t('eduTitle')}
+                    </h2>
+                    <p className="text-[14px] text-white/65 max-w-120 leading-[1.75]">
+                        {t('eduSub')}
+                    </p>
+                    <Link
+                        to="/education"
+                        className="mt-4 inline-block px-7 py-3.25 bg-white text-blue font-bold text-[13.5px] rounded-sm cursor-pointer whitespace-nowrap transition-all duration-150 shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-teal-4 hover:text-teal"
+                    >
+                        {t('eduBtn')}
+                    </Link>
+                </div>
+            </div>
+        </div>
     </>
   )
 }
