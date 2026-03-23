@@ -50,21 +50,21 @@ export default function Home() {
                 <div className='flex items-center gap-4 px-8 py-6 border-r border-gray-200 last:border-r-0'>
                     <div className='w-11 h-11 bg-teal-100 rounded-lg flex items-center justify-center text-[20px] shrink-0'>📊</div>
                     <div>
-                        <div className='text-[28px] font-display text-teal-600 leading-none tracking-[-0.5px]'>156</div>
+                        <div className='text-[28px] font-display font-bold text-teal-600 leading-none tracking-[-0.5px]'>156</div>
                         <div className='text-xs text-gray-500 mt-0.5 font-normal'>{t('kpi1')}</div>
                     </div>
                 </div>
                 <div className='flex items-center gap-4 px-8 py-6 border-r border-gray-200 last:border-r-0'>
                     <div className='w-11 h-11 bg-teal-100 rounded-lg flex items-center justify-center text-[20px] shrink-0'>🏦</div>
                     <div>
-                        <div className='text-[28px] font-display text-teal-600 leading-none tracking-[-0.5px]'>24</div>
+                        <div className='text-[28px] font-display font-bold text-teal-600 leading-none tracking-[-0.5px]'>24</div>
                         <div className='text-xs text-gray-500 mt-0.5 font-normal'>{t('kpi2')}</div>
                     </div>
                 </div>
                 <div className='flex items-center gap-4 px-8 py-6 border-r border-gray-200 last:border-r-0'>
                     <div className='w-11 h-11 bg-teal-100 rounded-lg flex items-center justify-center text-[20px] shrink-0'>🌏</div>
                     <div>
-                        <div className='text-[28px] font-display text-teal-600 leading-none tracking-[-0.5px]'>23</div>
+                        <div className='text-[28px] font-display font-bold text-teal-600 leading-none tracking-[-0.5px]'>23</div>
                         <div className='text-xs text-gray-500 mt-0.5 font-normal'>{t('kpi3')}</div>
                     </div>
                 </div>
@@ -229,7 +229,7 @@ export default function Home() {
             <div className="max-w-325 mx-auto px-8 py-14 grid grid-cols-[1fr_auto] items-center gap-10 relative z-10">
                 <div>
                     <div className="eyebrow flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-white/75">
-                        {t('kpi1')}
+                        {t('kpiEducation')}
                     </div>
                     <h2 className="font-display text-[36px] font-bold text-white mb-2.5 tracking-[-0.3px]">
                         {t('eduTitle')}
