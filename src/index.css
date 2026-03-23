@@ -62,3 +62,5 @@
     @apply no-underline;
   }
 }
+
+.eyebrow::before{content:'';width:16px;height:2px;background:var(--color-teal);border-radius:1px}

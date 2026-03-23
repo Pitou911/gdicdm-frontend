@@ -74,7 +74,7 @@ export default function Home() {
             <div className='max-w-325 mx-auto px-8'>
                 <div className='flex items-end justify-between mb-9 gap-5 flex-wrap'>
                     <div>
-                        <div className='flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-teal-600'>Debt Statistics</div>
+                        <div className='eyebrow flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-teal-600'>Debt Statistics</div>
                         <span className='w-4 h-0.5 bg-teal-600 rounded'></span>
                         <div className='text-[36px] font-bold text-gray-900 leading-[1.15] tracking-[-0.5px]'>
                             Key <em className='not-italic text-teal-600'>Indicators</em>
@@ -195,6 +195,24 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        {/* Doc */}
+        <div className='py-18 bg-light'>
+            <div className='max-w-325 mx-auto px-8'>
+                <div className='flex items-end justify-between mb-9 gap-5 flex-wrap'>
+                    <div>
+                        <div className='eyebrow flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-teal-600'>Publications</div>
+                        <div className='text-[36px] font-bold text-gray-900 leading-[1.15] tracking-[-0.5px]'>
+                            <em className='not-italic text-teal-600'>Latest</em> Documents
+                        </div>
+                    </div>
+                    <Link to="/documents" className='flex items-center gap-1.5 text-[13.5px] font-semibold text-teal-600 whitespace-nowrap cursor-pointer transition-all hover:gap-2.5'>
+                        {t('linkDocLibrary')}
+                        <span className='transition-transform group-hover:translate-x-1'>→</span>
+                    </Link>
                 </div>
             </div>
         </div>
