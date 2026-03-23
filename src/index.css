@@ -54,7 +54,7 @@
   }
 
   body{
-    @apply bg-[var(--color-snow)] text-[var(--color-text)] text-[15px] leading-relaxed overflow-x-hidden;
+    @apply bg-snow text-text text-[15px] leading-relaxed overflow-x-hidden;
     font-family: var(--font-body);
   }
 

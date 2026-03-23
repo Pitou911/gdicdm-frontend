@@ -6,33 +6,33 @@ export default function Home() {
     const { t } = useLanguage();
   return (
     <>
-        <div className='relative overflow-hidden min-h-[560px] flex items-center bg-[linear-gradient(160deg,var(--color-teal)_0%,var(--color-teal-2)_40%,var(--color-blue)_100%)]'>
-            <div className='absolute top-[-120px] right-[-80px] w-[500px] h-[500px] rounded-full bg-white/5 pointer-events-none'></div>
-            <div className='absolute bottom-[-80px] left-[-200px] w-[300px] h-[300px] rounded-full bg-white/[0.04] pointer-events-none'></div>
-            <div className='absolute inset-0 opacity-40 bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:28px_28px]'></div>
-            <div className='relative z-[2] max-w-[1300px] mx-auto px-8 py-20 grid grid-cols-[1fr_380px] gap-16 items-center w-full'>
+        <div className='relative overflow-hidden min-h-140 flex items-center bg-[linear-gradient(160deg,var(--color-teal)_0%,var(--color-teal-2)_40%,var(--color-blue)_100%)]'>
+            <div className='absolute -top-30 -right-20 w-125 h-125 rounded-full bg-white/5 pointer-events-none'></div>
+            <div className='absolute -bottom-20 -left-50 w-75 h-75 rounded-full bg-white/4 pointer-events-none'></div>
+            <div className='absolute inset-0 opacity-40 bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-size-[28px_28px]'></div>
+            <div className='relative z-2 max-w-325 mx-auto px-8 py-20 grid grid-cols-[1fr_380px] gap-16 items-center w-full'>
                 <div>
-                    <div className='inline-flex items-center gap-2 bg-white/15 backdrop-blur-md text-white text-[12px] font-semibold px-[14px] py-[6px] rounded-[20px] mb-[22px] border border-white/20 fu'>
-                        <span className='w-[6px] h-[6px] rounded-full bg-[var(--color-teal-3)] animate-pulse'></span> Official Public Debt Portal · Kingdom of Cambodia
+                    <div className='inline-flex items-center gap-2 bg-white/15 backdrop-blur-md text-white text-[12px] font-semibold px-3.5 py-1.5 rounded-[20px] mb-5.5 border border-white/20 fu'>
+                        <span className='w-1.5 h-1.5 rounded-full bg-teal-3 animate-pulse'></span> Official Public Debt Portal · Kingdom of Cambodia
                     </div>
-                    <div className='text-[52px] font-bold text-white leading-[1.1] tracking-[-1px] mb-[18px] fu fu1'>
+                    <div className='text-[52px] font-bold text-white leading-[1.1] tracking-[-1px] mb-4.5 fu fu1'>
                         Cambodia's Public Debt
                         <em id='h-heroSub2' className='not-italic text-white/75 font-light block text-[44px]'>{t('heroSub2')}</em>
                     </div>
-                    <p className='text-[15.5px] text-white/70 leading-[1.75] max-w-[440px] mb-9 fu fu2' id='h-heroSub'>
+                    <p className='text-[15.5px] text-white/70 leading-[1.75] max-w-110 mb-9 fu fu2' id='h-heroSub'>
                         {t('heroSub')}
                     </p>
                     <div className='flex gap-3 flew wrap fu fu3'>
-                        <Link to="/debt" className='px-7 py-3 bg-white text-[var(--color-teal)] font-bold text-[14px] rounded-[var(--radius-sm)] shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-150 hover:bg-[var(--color-teal-4)] hover:shadow-[var(--shadow-md)]' style={{display: 'inline-block'}}>
+                        <Link to="/debt" className='px-7 py-3 bg-white text-teal font-bold text-[14px] rounded-sm shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-150 hover:bg-teal-4 hover:shadow-(--shadow-md)' style={{display: 'inline-block'}}>
                             {t('heroBtn1')}
                         </Link>
-                        <Link to="/bonds" className='px-6 py-[11px] bg-white/10 text-white font-semibold text-[14px] border border-white/25 rounded-[var(--radius-sm)] transition-all duration-150 hover:bg-white/20' style={{display: 'inline-block'}}>
+                        <Link to="/bonds" className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[14px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20' style={{display: 'inline-block'}}>
                             {t('heroBtn2')}
                         </Link>
                     </div>
                 </div>
-                <div className='bg-white/10 backdrop-blur-[20px] border border-white/20 rounded-[var(--radius-lg)] overflow-hidden fu fu2'>
-                    <div className='px-5 py-[14px] border-b border-white/10 text-[11px] font-semibold text-white/60 tracking-[0.5px] flex items-center gap-2 before:content-[""] before:w-[6px] before:h-[6px] before:rounded-full  before:bg-[var(--color-teal-3)] before:animate-pulse before:inline-block'>
+                <div className='bg-white/10 backdrop-blur-[20px] border border-white/20 rounded-(--radius-lg) overflow-hidden fu fu2'>
+                    <div className='px-5 py-3.5 border-b border-white/10 text-[11px] font-semibold text-white/60 tracking-[0.5px] flex items-center gap-2 before:content-[""] before:w-1.5 before:h-1.5 before:rounded-full  before:bg-teal-3 before:animate-pulse before:inline-block'>
                         Live Statistics · Q1 2026
                     </div>
                     <StatCard value="$12.4B" label="Total External Debt" subLabel="As of 19 March 2026" />
@@ -44,7 +44,7 @@ export default function Home() {
 
         {/* KPIs */}
         <div className='bg-while border-b border-gray-200'>
-            <div className='max-w-[1300px] mx-auto px-8 grid grid-cols-3'>
+            <div className='max-w-325 mx-auto px-8 grid grid-cols-3'>
                 <div className='flex items-center gap-4 px-8 py-6 border-r border-gray-200 last:border-r-0'>
                     <div className='w-11 h-11 bg-teal-100 rounded-lg flex items-center justify-center text-[20px] shrink-0'>📊</div>
                     <div>
@@ -144,6 +144,56 @@ export default function Home() {
                             <text x="6" y="109" fontFamily="JetBrains Mono,monospace" fontSize="8.5" fill="var(--color-text-2)">29.8%</text>
                             <text x="256" y="60" fontFamily="JetBrains Mono,monospace" fontSize="8.5" fill="var(--color-teal)" fontWeight="500">31.2%</text>
                         </svg>
+                    </div>
+                    <div className='bg-white border border-gray-200 rounded-xl p-7 shadow transition-shadow hover:shadow-lg'>
+                        <div className='text-[15px] font-display text-gray-900 mb-1'>
+                            Debt Service Schedule
+                        </div>
+                        <div className='font-mono text-[10px] text-gray-500 mb-5'>
+                            2026 - 2030 · USD Millions
+                        </div>
+                        <div className="flex items-end gap-2 h-32.5">
+
+                            <div className="flex-1 flex flex-col items-center gap-1.25 h-full">
+                                <div className="font-mono text-[10px] text-text-3">620</div>
+                                <div className="flex-1 w-full bg-light rounded-[4px] flex items-end overflow-hidden">
+                                <div className="w-full bg-linear-to-b from-teal-2 to-teal rounded-[4px] transition-[height] duration-800" style={{ height: '62%' }}></div>
+                                </div>
+                                <div className="font-mono text-[10px] text-text-3">2025</div>
+                            </div>
+
+                            <div className="flex-1 flex flex-col items-center gap-1.25 h-full">
+                                <div className="font-mono text-[10px] text-text-3">780</div>
+                                <div className="flex-1 w-full bg-light rounded-[4px] flex items-end overflow-hidden">
+                                <div className="w-full bg-linear-to-b from-teal-2 to-teal rounded-[4px] transition-[height] duration-800" style={{ height: '78%' }}></div>
+                                </div>
+                                <div className="font-mono text-[10px] text-text-3">2026</div>
+                            </div>
+
+                            <div className="flex-1 flex flex-col items-center gap-1.25 h-full">
+                                <div className="font-mono text-[10px] text-text-3">550</div>
+                                <div className="flex-1 w-full bg-light rounded-[4px] flex items-end overflow-hidden">
+                                <div className="w-full bg-linear-to-b from-teal-2 to-teal rounded-[4px] transition-[height] duration-800" style={{ height: '55%' }}></div>
+                                </div>
+                                <div className="font-mono text-[10px] text-text-3">2027</div>
+                            </div>
+
+                            <div className="flex-1 flex flex-col items-center gap-1.25 h-full">
+                                <div className="font-mono text-[10px] text-text-3">880</div>
+                                <div className="flex-1 w-full bg-light rounded-[4px] flex items-end overflow-hidden">
+                                <div className="w-full bg-linear-to-b from-teal-2 to-teal rounded-[4px] transition-[height] duration-800" style={{ height: '88%' }}></div>
+                                </div>
+                                <div className="font-mono text-[10px] text-text-3">2028</div>
+                            </div>
+
+                            <div className="flex-1 flex flex-col items-center gap-1.25 h-full">
+                                <div className="font-mono text-[10px] text-text-3">680</div>
+                                <div className="flex-1 w-full bg-light rounded-[4px] flex items-end overflow-hidden">
+                                <div className="w-full bg-linear-to-b from-teal-2 to-teal rounded-[4px] transition-[height] duration-800" style={{ height: '68%' }}></div>
+                                </div>
+                                <div className="font-mono text-[10px] text-text-3">2029</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
