@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import StatCard from '../components/StatCard'
 import { useLanguage } from '../context/LanguageContext'
+import ResourceCard from '../components/ResourceCard';
 
 export default function Home() {
     const { t } = useLanguage();
@@ -213,6 +214,11 @@ export default function Home() {
                         {t('linkDocLibrary')}
                         <span className='transition-transform group-hover:translate-x-1'>→</span>
                     </Link>
+                </div>
+                <div className='grid grid-cols-3 gap-4'>
+                    <ResourceCard type="📄 Debt Bulletin" title="Cambodia Public Debt Bulletin — Q3 2024" meta="Sept 2024 · 2.4 MB" linkText="⬇ Download" />
+                    <ResourceCard type="📄 Statistical" title="Annual External Debt Statistics Report 2023" meta="Dec 2023 · 4.1 MB" linkText="⬇ Download" />
+                    <ResourceCard type="📄 Bond Info" title="Government Bond Series 6 — Prospectus 2025" meta="Jan 2025 · 1.8 MB" linkText="⬇ Download" />
                 </div>
             </div>
         </div>
