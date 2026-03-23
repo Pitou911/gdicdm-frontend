@@ -25,10 +25,10 @@ export default function Home() {
                         {t('heroSub')}
                     </p>
                     <div className='flex gap-3 flew wrap fu fu3'>
-                        <Link to="/debt" className='px-7 py-3 bg-white text-teal font-bold text-[14px] rounded-sm shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-150 hover:bg-teal-4 hover:shadow-(--shadow-md)' style={{display: 'inline-block'}}>
+                        <Link to="/debt" className='px-7 py-3 bg-white text-teal font-bold text-[14px] rounded-sm shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-150 hover:bg-teal-4 hover:shadow-(--shadow-md) inline-block'>
                             {t('heroBtn1')}
                         </Link>
-                        <Link to="/bonds" className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[14px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20' style={{display: 'inline-block'}}>
+                        <Link to="/bonds" className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[14px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20 inline-block'>
                             {t('heroBtn2')}
                         </Link>
                     </div>
@@ -84,7 +84,6 @@ export default function Home() {
                     </div>
                     <Link to='/debt' className='flex items-center gap-1.5 text-[13.5px] font-semibold text-teal-600 whitespace-nowrap cursor-pointer transition-all hover:gap-2.5'>
                         {t('linkDebtData')}
-                        <span className='transition-transform group-hover:translate-x-1'>→</span>
                     </Link>
                 </div>
                 <div className='grid grid-cols-3 gap-5'>
@@ -213,7 +212,6 @@ export default function Home() {
                     </div>
                     <Link to="/documents" className='flex items-center gap-1.5 text-[13.5px] font-semibold text-teal-600 whitespace-nowrap cursor-pointer transition-all hover:gap-2.5'>
                         {t('linkDocLibrary')}
-                        <span className='transition-transform group-hover:translate-x-1'>→</span>
                     </Link>
                 </div>
                 <div className='grid grid-cols-3 gap-4'>
@@ -259,7 +257,6 @@ export default function Home() {
                     </div>
                     <Link to="/news" className='flex items-center gap-1.5 text-[13.5px] font-semibold text-teal-600 whitespace-nowrap cursor-pointer transition-all hover:gap-2.5'>
                         {t('linkNewsRoom')}
-                        <span className='transition-transform group-hover:translate-x-1'>→</span>
                     </Link>
                 </div>
                 <div className='grid grid-cols-3 gap-4'>
