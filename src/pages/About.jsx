@@ -23,7 +23,7 @@ export default function About() {
                                 <p>GDICDM is mandated to formulate and implement the government's <strong>debt management strategy</strong>, ensuring that Cambodia's borrowing remains sustainable, transparent, and aligned with national development priorities.</p>
                                 <p>In International cooperation, GDICDM coordinates with multilateral institutions including the <strong>Asian Development Bank, World Bank, and IMF</strong>, as well as bilateral partners, to mobilise concessional financing for Cambodia's development programmes.</p>
                             </div>
-                            <div className="grid grid-cols-3 gap-4 mt-10">
+                            <div className="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-4 mt-10 grid-wrap">
                                 <div className="bg-white border border-light-2 rounded-sm p-6.5 shadow-(--shadow-sm)">
                                     <div className="text-[36px] font-bold text-teal opacity-30 leading-none mb-3">01</div><div className="font-display text-[16px] font-bold text-text mb-2">Public Debt Management</div><div className="text-[13px] text-text-3 leading-[1.7]">Formulating Cambodia's medium-term debt strategy, monitoring sustainability, and reporting to the National Assembly.</div>
                                 </div>
