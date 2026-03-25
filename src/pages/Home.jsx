@@ -86,7 +86,7 @@ export default function Home() {
                         {t('linkDebtData')}
                     </Link>
                 </div>
-                <div className='grid grid-cols-3 gap-5'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
                     <div className='bg-white border border-gray-200 rounded-xl p-7 shadow transition-shadow hover:shadow-lg'>
                         <div className='text-[15px] font-display text-gray-900 mb-1'>Portfolio by Creditor</div>
                         <div className='font-mono text-[10px] text-gray-500 mb-5'>Q1 2026 · Total USD 12.4B</div>
