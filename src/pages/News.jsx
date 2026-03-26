@@ -47,28 +47,31 @@ export default function News(){
                 </div>
             </div>
 
-            <div className="bg-linear-to-br from-teal to-blue relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_70%_50%,rgba(255,255,255,0.07),transparent_60%)]">
-                <div className='max-w-325 mx-auto px-8 py-13 grid grid-cols-[1fr_340px] gap-14 items-center relative z-10'>
-                    <div>
-                        <div className='inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1.25 rounded-[20px] mb-4 border border-white/20'>
-                            {featuredNews.chip}
+            {/* featured section — only render when featuredNews is loaded */}
+            {featuredNews && (
+                <div className="bg-linear-to-br from-teal to-blue relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_70%_50%,rgba(255,255,255,0.07),transparent_60%)]">
+                    <div className='max-w-325 mx-auto px-8 py-13 grid grid-cols-[1fr_340px] gap-14 items-center relative z-10'>
+                        <div>
+                            <div className='inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1.25 rounded-[20px] mb-4 border border-white/20'>
+                                {featuredNews.chip}
+                            </div>
+                            <div className='font-display text-[32px] font-bold text-white leading-[1.2] mb-3.5 tracking-[-0.5px]'>
+                                {featuredNews.title}
+                            </div>
+                            <p className='text-[14px] text-white/65 leading-[1.8] mb-5'>
+                                {featuredNews.excerpt}
+                            </p>
+                            <div className='font-mono text-[10.5px] text-white/35'>{featuredNews.date}</div>
+                            <button className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[13px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20 inline-block mt-5'>
+                                {featuredNews.link_text}
+                            </button>
                         </div>
-                        <div className='font-display text-[32px] font-bold text-white leading-[1.2] mb-3.5 tracking-[-0.5px]'>
-                            {featuredNews.title}
+                        <div className='h-65 bg-white/10 rounded-sm border border-white/15 flex items-center justify-center text-[64px] backdrop-blur-[10px]'>
+                            {featuredNews.icon}
                         </div>
-                        <p className='text-[14px] text-white/65 leading-[1.8] mb-5'>
-                            {featuredNews.excerpt}
-                        </p>
-                        <div className='font-mono text-[10.5px] text-white/35'>{featuredNews.date}</div>
-                        <button className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[13px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20 inline-block mt-5'>
-                            {featuredNews.linkText}
-                        </button>
-                    </div>
-                    <div className='h-65 bg-white/10 rounded-sm border border-white/15 flex items-center justify-center text-[64px] backdrop-blur-[10px]'>
-                        {featuredNews.icon}
                     </div>
                 </div>
-            </div>
+            )}
 
             <div className='py-18 bg-snow'>
                 <div className='max-w-325 mx-auto px-8'>
