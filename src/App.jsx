@@ -7,6 +7,7 @@ import Bonds from './pages/Bonds'
 import CmsDashboard from './pages/CmsDashboard'
 import Contact from './pages/Contact'
 import DebtData from './pages/DebtData'
+import Documents from './pages/Documents'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path='/cms-dashboard' element={<CmsDashboard/>}/>
         <Route path='/contact' element={<Contact/>}/>
         <Route path='/debt' element={<DebtData/>}/>
+        <Route path='/documents' element={<Documents/>}/>
       </Routes>
       </BrowserRouter>
     </LanguageProvider>
