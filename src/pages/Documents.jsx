@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ResourceCard from '../components/ResourceCard';
-import { resources } from '../data/index';
+// Documents.jsx
+import { fetchDocuments } from '../data/index';
+
+
 
 const TAB_MAP = {
     'All': null,
@@ -14,7 +17,11 @@ export default function Documents(){
     const [activeTab, setActiveTab] = useState('All');
     const [search, setSearch] = useState('');
     const tabs = ['All', 'Debt Bulletin', 'Statistical', 'Legal', 'Bond Info'];
+    const [resources, setResources] = useState([]);
 
+    useEffect(() => {
+        fetchDocuments().then(setResources);
+    }, []);
     const filtered = resources.filter(r => {
         const matchesTab = activeTab === 'All' || r.type === TAB_MAP[activeTab];
         const matchesSearch = r.title.toLowerCase().includes(search.toLowerCase());

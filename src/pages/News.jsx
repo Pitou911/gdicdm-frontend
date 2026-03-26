@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NewsCard from '../components/NewsCard';
-import { news, featuredNews } from '../data/index';
+import { fetchNews, fetchFeaturedNews } from '../data/index';
+
 
 const TAB_MAP = {
     'All': null,
@@ -14,7 +15,13 @@ export default function News(){
     const [activeTab, setActiveTab] = useState('All');
     const [search, setSearch] = useState('');
     const tabs = ['All', 'Announcements', 'Reports', 'Events', 'Press'];
+    const [news, setNews]             = useState([]);
+    const [featuredNews, setFeaturedNews] = useState(null);
 
+    useEffect(() => {
+        fetchNews().then(setNews);
+        fetchFeaturedNews().then(setFeaturedNews);
+    }, []);
     const filtered = news.filter(n => {
         const matchesTab = activeTab === 'All' || n.category === TAB_MAP[activeTab];
         const matchesSearch = n.title.toLowerCase().includes(search.toLowerCase());

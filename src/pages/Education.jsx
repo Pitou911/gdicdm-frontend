@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ResourceCard from '../components/ResourceCard';
-import { resources } from '../data/index';
+import { fetchResources } from '../data/index';
 
 const TAB_MAP = {
     'All Resources': null,
@@ -14,7 +14,11 @@ export default function Education(){
     const [activeTab, setActiveTab] = useState('All Resources');
     const [search, setSearch] = useState('');
     const tabs = ['All Resources', '📄 PDF Guides', '🎬 Videos', '🖼 Infographics', '🔗 Links'];
+    const [resources, setResources] = useState([]);
 
+    useEffect(() => {
+        fetchResources().then(setResources);
+    }, []);
     const filtered = resources.filter(r => {
         const matchesTab = activeTab === 'All Resources' || r.type === TAB_MAP[activeTab];
         const matchesSearch = r.title.toLowerCase().includes(search.toLowerCase());
