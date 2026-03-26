@@ -21,7 +21,7 @@ export default function Navbar(){
             <div className='max-w-325 mx-auto px-8 flex items-center h-16'>
                 <Link to='/' className='flex items-center gap-3 cursor-pointer shrink-0 mr-10 no-underline'>
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-sm flex items-center justify-center text-[17px] shrink-0"><img src='mef_logo.png'/></div>
+                        <div className="w-9 h-9 rounded-sm flex items-center justify-center text-[17px] shrink-0 shadow-[0_2px_8px_rgba(0,109,110,0.3)]"><img src='mef_logo.png'/></div>
                         <div>
                             <div className='font-display text-[15px] font-bold text-text tracking-[-0.2px]'>GDICDM</div>
                             <div className='text-[10px] text-text-3 mt-px font-normal'>Ministry of Economy &amp; Finance</div>
@@ -42,13 +42,13 @@ export default function Navbar(){
                 <div className='flex items-center gap-2 ml-auto shrink-0'>
                     <div className='flex bg-light rounded-sm p-0.75 gap-0.5'>
                         <div
-                            className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 ${lang === 'en' ? 'text-teal bg-white shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : ''}`}
+                            className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer text-teal rounded-[6px] transition-all duration-150 ${lang === 'en' ? 'text-text-3 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : ''}`}
                             onClick={() => setLang('en')}
                         >
                             EN
                         </div>
                         <div
-                            className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 ${lang === 'km' ? 'text-teal bg-white shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : ''}`}
+                            className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer text-teal rounded-[6px] transition-all duration-150 ${lang === 'km' ? 'text-text-3 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : ''}`}
                             onClick={() => setLang('km')}
                         >
                             ខ្មែរ

@@ -4,7 +4,7 @@ export default function Contact(){
             <div className="bg-linear-to-br from-teal to-blue pt-13 pb-11 relative overflow-hidden after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-15 after:bg-[linear-gradient(transparent,rgba(0,0,0,0.08))]" data-bg="CONTACT">
                 <div className="max-w-325 mx-auto px-8 grid grid-cols-[1fr_auto] items-end gap-10 relative z-10">
                     <div>
-                        <div className="flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-teal-600 before:content-[''] before:w-4 before:h-0.5 before:bg-teal before:rounded-[1px]">Get in Touch</div>
+                        <div className="flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-white/60 before:content-[''] before:w-4 before:h-0.5 before:bg-white/60 before:rounded-[1px]">Get in Touch</div>
                         <div className="font-display text-[48px] font-bold text-white leading-[1.05] tracking-[-1px]"><em className="not-italic text-white/75 font-light">Contact</em> GDICDM</div>
                         <div className="text-[14px] text-white/60 mt-2.5 max-w-110 leading-[1.7]">For enquiries about publications, data, bond investment, or media relations.</div>
                     </div>
