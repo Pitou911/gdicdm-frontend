@@ -14,7 +14,7 @@ export default function DebtData() {
                 </div>
             </div>
             <div className="py-18 bg-snow">
-                <div className="max-w-425 mx-auto px-8">
+                <div className="max-w-325 mx-auto px-8">
                     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
                         <div className='bg-white border border-gray-200 rounded-xl p-7 shadow transition-shadow hover:shadow-lg'>
                             <div className='text-[15px] font-display text-gray-900 mb-1'>Portfolio by Creditor</div>

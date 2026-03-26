@@ -30,7 +30,7 @@ export default function Bonds() {
                 </div>
             </div>
             <div className="py-18 bg-white">
-                <div className="mx-w-325 mx-auto px-8">
+                <div className="max-w-325 mx-auto px-8">
                     <div className="flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-teal-600 before:content-[''] before:w-4 before:h-0.5 before:bg-teal before:rounded-[1px]">Current Issuance</div>
                     <div className="font-display text-[36px] font-bold text-text leading-[1.15] tracking-[-0.5px] mb-6">Active <em className="not-italic text-teal">Securities</em></div>
                     <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2 mb-14">

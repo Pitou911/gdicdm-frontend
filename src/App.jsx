@@ -10,13 +10,14 @@ import DebtData from './pages/DebtData'
 import Documents from './pages/Documents'
 import Education from './pages/Education'
 import News from './pages/News'
+import Navbar from './components/Navbar'
 
 export default function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
+      <Navbar />
       <Routes>
-
         <Route path="/" element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/bonds' element={<Bonds/>}/>
