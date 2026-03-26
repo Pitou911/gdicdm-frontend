@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import NewsCard from '../components/NewsCard';
-
-const news = [
-    { icon: "📊", category: "Report",       title: "Q3 2024 Public Debt Bulletin Published",                              date: "20 October 2024" },
-    { icon: "🌏", category: "Event",        title: "GDICDM at ADB Regional Debt Management Forum, Manila",                date: "5 September 2024" },
-    { icon: "🤝", category: "Announcement", title: "MOU Signed with Japan International Cooperation Agency",              date: "12 August 2024" },
-    { icon: "📈", category: "Announcement", title: "Government Bond Series 5 Fully Subscribed",                           date: "30 March 2024" },
-    { icon: "🎓", category: "Event",        title: "Financial Literacy Workshop for Retail Investors — Phnom Penh",       date: "15 February 2024" },
-    { icon: "📋", category: "Press",        title: "MEF Issues Official Statement on 2024 Borrowing Plan",                date: "8 January 2024" },
-];
+import { news, featuredNews } from '../data/index';
 
 const TAB_MAP = {
     'All': null,
@@ -52,21 +44,21 @@ export default function News(){
                 <div className='max-w-325 mx-auto px-8 py-13 grid grid-cols-[1fr_340px] gap-14 items-center relative z-10'>
                     <div>
                         <div className='inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1.25 rounded-[20px] mb-4 border border-white/20'>
-                            ⭐ Featured · Announcement
+                            {featuredNews.chip}
                         </div>
                         <div className='font-display text-[32px] font-bold text-white leading-[1.2] mb-3.5 tracking-[-0.5px]'>
-                            Government Bond Series 6 Subscription Now Open to Retail Investors
+                            {featuredNews.title}
                         </div>
                         <p className='text-[14px] text-white/65 leading-[1.8] mb-5'>
-                            The Ministry of Economy and Finance announces the opening of the subscription period for Government Bond Series 6. The 5-year bond carries a coupon of 5.50% per annum, denominated in Cambodian Riel.
+                            {featuredNews.excerpt}
                         </p>
-                        <div className='font-mono text-[10.5px] text-white/35'>15 January 2025</div>
+                        <div className='font-mono text-[10.5px] text-white/35'>{featuredNews.date}</div>
                         <button className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[13px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20 inline-block mt-5'>
-                            Read Full Announcement →
+                            {featuredNews.linkText}
                         </button>
                     </div>
                     <div className='h-65 bg-white/10 rounded-sm border border-white/15 flex items-center justify-center text-[64px] backdrop-blur-[10px]'>
-                        🏛
+                        {featuredNews.icon}
                     </div>
                 </div>
             </div>
