@@ -8,6 +8,7 @@ import CmsDashboard from './pages/CmsDashboard'
 import Contact from './pages/Contact'
 import DebtData from './pages/DebtData'
 import Documents from './pages/Documents'
+import Education from './pages/Education'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path='/contact' element={<Contact/>}/>
         <Route path='/debt' element={<DebtData/>}/>
         <Route path='/documents' element={<Documents/>}/>
+        <Route path='/education' element={<Education/>}/>
       </Routes>
       </BrowserRouter>
     </LanguageProvider>
