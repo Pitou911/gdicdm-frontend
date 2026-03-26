@@ -9,6 +9,7 @@ import Contact from './pages/Contact'
 import DebtData from './pages/DebtData'
 import Documents from './pages/Documents'
 import Education from './pages/Education'
+import News from './pages/News'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path='/debt' element={<DebtData/>}/>
         <Route path='/documents' element={<Documents/>}/>
         <Route path='/education' element={<Education/>}/>
+        <Route path='/news' element={<News/>}/>
       </Routes>
       </BrowserRouter>
     </LanguageProvider>
