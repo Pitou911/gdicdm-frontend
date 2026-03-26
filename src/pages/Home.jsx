@@ -44,7 +44,6 @@ export default function Home() {
             </div>
         </div>
 
-        {/* KPIs */}
         <div className='bg-while border-b border-gray-200'>
             <div className='max-w-325 mx-auto px-8 grid grid-cols-3'>
                 <div className='flex items-center gap-4 px-8 py-6 border-r border-gray-200 last:border-r-0'>
@@ -71,7 +70,6 @@ export default function Home() {
             </div>
         </div>
 
-        {/* Charts */}
         <div className='bg-white py-13'>
             <div className='max-w-325 mx-auto px-8'>
                 <div className='flex items-end justify-between mb-9 gap-5 flex-wrap'>
@@ -200,7 +198,6 @@ export default function Home() {
             </div>
         </div>
 
-        {/* Doc */}
         <div className='py-18 bg-light'>
             <div className='max-w-325 mx-auto px-8'>
                 <div className='flex items-end justify-between mb-9 gap-5 flex-wrap'>
@@ -222,7 +219,6 @@ export default function Home() {
             </div>
         </div>
 
-        {/* Education */}
         <div className="bg-linear-to-br from-blue to-blue-2 relative overflow-hidden rounded-none before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_80%_50%,rgba(255,255,255,0.06),transparent_60%)]">
             <div className="max-w-325 mx-auto px-8 py-14 grid grid-cols-[1fr_auto] items-center gap-10 relative z-10">
                 <div>
@@ -245,7 +241,6 @@ export default function Home() {
             </div>
         </div>
 
-        {/* News */}
         <div className='py-18 bg-white'>
             <div className='max-w-325 mx-auto px-8'>
                 <div className='flex items-end justify-between mb-9 gap-5 flex-wrap'>

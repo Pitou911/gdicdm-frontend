@@ -31,7 +31,6 @@ export default function News(){
 
     return (
         <>
-            {/* page header */}
             <div className="bg-linear-to-br from-teal to-blue pt-13 pb-11 relative overflow-hidden after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-15 after:bg-[linear-gradient(transparent,rgba(0,0,0,0.08))]">
                 <div className='max-w-325 mx-auto px-8 grid grid-cols-[1fr_auto] items-end gap-10 relative z-10'>
                     <div>
@@ -49,29 +48,23 @@ export default function News(){
                 </div>
             </div>
 
-            {/* nf-wrap — featured article */}
             <div className="bg-linear-to-br from-teal to-blue relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_70%_50%,rgba(255,255,255,0.07),transparent_60%)]">
                 <div className='max-w-325 mx-auto px-8 py-13 grid grid-cols-[1fr_340px] gap-14 items-center relative z-10'>
                     <div>
-                        {/* nf-chip */}
                         <div className='inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1.25 rounded-[20px] mb-4 border border-white/20'>
                             ⭐ Featured · Announcement
                         </div>
-                        {/* nf-h */}
                         <div className='font-display text-[32px] font-bold text-white leading-[1.2] mb-3.5 tracking-[-0.5px]'>
                             Government Bond Series 6 Subscription Now Open to Retail Investors
                         </div>
-                        {/* nf-ex */}
                         <p className='text-[14px] text-white/65 leading-[1.8] mb-5'>
                             The Ministry of Economy and Finance announces the opening of the subscription period for Government Bond Series 6. The 5-year bond carries a coupon of 5.50% per annum, denominated in Cambodian Riel.
                         </p>
-                        {/* nf-date */}
                         <div className='font-mono text-[10.5px] text-white/35'>15 January 2025</div>
                         <button className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[13px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20 inline-block mt-5'>
                             Read Full Announcement →
                         </button>
                     </div>
-                    {/* nf-img-box */}
                     <div className='h-65 bg-white/10 rounded-sm border border-white/15 flex items-center justify-center text-[64px] backdrop-blur-[10px]'>
                         🏛
                     </div>
@@ -80,8 +73,6 @@ export default function News(){
 
             <div className='py-18 bg-snow'>
                 <div className='max-w-325 mx-auto px-8'>
-
-                    {/* fbar inline */}
                     <div className='flex items-center overflow-x-auto mb-7 border-b border-light-2'>
                         {tabs.map(tab => (
                             <div
@@ -106,8 +97,6 @@ export default function News(){
                             />
                         </div>
                     </div>
-
-                    {/* results */}
                     {filtered.length > 0 ? (
                         <div className='grid grid-cols-3 gap-4'>
                             {filtered.map((n, i) => (

@@ -31,7 +31,6 @@ export default function Documents(){
 
     return (
         <>
-            {/* page header */}
             <div className="bg-linear-to-br from-teal to-blue pt-13 pb-11 relative overflow-hidden after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-15 after:bg-[linear-gradient(transparent,rgba(0,0,0,0.08))]">
                 <div className='max-w-325 mx-auto px-8 grid grid-cols-[1fr_auto] items-end gap-10 relative z-10'>
                     <div>
@@ -51,8 +50,6 @@ export default function Documents(){
                     </div>
                 </div>
             </div>
-
-            {/* fbar */}
             <div className='bg-white border-b border-light-2 sticky top-16 z-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)]'>
                 <div className='max-w-325 mx-auto px-8 flex items-center overflow-x-auto'>
                     {tabs.map(tab => (
@@ -79,8 +76,6 @@ export default function Documents(){
                     </div>
                 </div>
             </div>
-
-            {/* resources grid */}
             <div className='py-18 bg-snow'>
                 <div className='max-w-325 mx-auto px-8'>
                     {filtered.length > 0 ? (
