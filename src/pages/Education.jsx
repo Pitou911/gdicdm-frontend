@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import ResourceCard from '../components/ResourceCard';
-
-const resources = [
-    { type: "📄 PDF Guide", title: "Introduction to Government Bonds for Retail Investors", meta: "Beginner", linkText: "⬇ Download" },
-    { type: "🎬 Video", title: "What is Public Debt? — Explained Simply in Khmer", meta: "12 min", linkText: "▶ Watch" },
-    { type: "🖼 Infographic", title: "Cambodia's Debt Portfolio — Visual Overview 2024", meta: "Infographic", linkText: "🔍 View" },
-    { type: "📄 PDF Guide", title: "How to Buy Government Bonds — Step by Step", meta: "Investor Guide", linkText: "⬇ Download" },
-    { type: "🔗 External", title: "ADB Cambodia Country Page — Economic Overview", meta: "ADB", linkText: "↗ Open" },
-    { type: "🎬 Video", title: "Understanding Treasury Bills — Short-term Investments", meta: "8 min", linkText: "▶ Watch" },
-];
+import { resources } from '../data/index';
 
 const TAB_MAP = {
     'All Resources': null,
