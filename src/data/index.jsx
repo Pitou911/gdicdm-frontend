@@ -41,12 +41,15 @@ export async function fetchResources() {
     };
 
     const cmsFormatted = cms.map(e => ({
-        id:       e.id,
-        type:     typeMap[e.type] || e.type,
-        title:    e.title,
-        meta:     e.language || '',
-        linkText: e.type === 'LINK' ? '↗ Open' : e.type === 'VIDEO' ? '▶ Play' : '⬇ Download',
-        fileUrl:  e.file_url,
+        id:        e.id,
+        type:      typeMap[e.type] || e.type,
+        title:     e.title,
+        meta:      e.language || '',
+        linkText:  e.type === 'LINK' ? '↗ Open' : e.type === 'VIDEO' ? '▶ Play' : '⬇ Download',
+        fileUrl:   e.file_url,
+        streamUrl: e.type === 'VIDEO' && e.file_url
+            ? `http://localhost:8000/api/cms/education/${e.id}/stream`
+            : null,
     }));
 
     return [...seeded, ...cmsFormatted];
