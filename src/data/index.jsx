@@ -1,59 +1,36 @@
 const BASE = 'http://localhost:8000/api';
 
-export async function fetchNews() {
-    const [news, uploads] = await Promise.all([
-        fetch(`${BASE}/news`).then(r => r.json()),
-        fetch(`${BASE}/uploads/published`).then(r => r.json()),
-    ]);
-
-    const uploadedNews = uploads
-        .filter(u => u.section === 'News')
-        .map(u => ({
-            id:       u.id,
-            icon:     '📋',
-            category: u.type || 'Announcement',
-            title:    u.title,
-            date:     u.date || '',
-        }));
-
-    return [...news, ...uploadedNews];
-}
-
-export async function fetchFeaturedNews() {
-    return fetch(`${BASE}/news/featured`).then(r => r.json());
-}
+// ── public pages ──────────────────────────────────────────
 
 export async function fetchDocuments() {
-    const [documents, uploads] = await Promise.all([
+    const [seeded, cms] = await Promise.all([
         fetch(`${BASE}/documents`).then(r => r.json()),
-        fetch(`${BASE}/uploads/published`).then(r => r.json()),
+        fetch(`${BASE}/cms/documents/published`).then(r => r.json()),
     ]);
 
-    const sectionTypeMap = {
-        'Documents':   '📄 Debt Bulletin',
-        'Bond Info':   '📄 Bond Info',
-        'Statistical': '📄 Statistical',
-        'Legal':       '📄 Legal',
+    const typeMap = {
+        'Debt Bulletin': '📄 Debt Bulletin',
+        'Statistical':   '📄 Statistical',
+        'Legal':         '📄 Legal',
+        'Bond Info':     '📄 Bond Info',
     };
 
-    const uploadedDocs = uploads
-        .filter(u => u.section === 'Documents' || u.section === 'Bond Info')
-        .map(u => ({
-            id:       u.id,
-            type:     sectionTypeMap[u.section] || '📄 Debt Bulletin',
-            title:    u.title,
-            meta:     u.date || '',
-            linkText: '⬇ Download',
-            fileUrl:  u.file_url || null,
-        }));
+    const cmsFormatted = cms.map(d => ({
+        id:       d.id,
+        type:     typeMap[d.type] || '📄 Debt Bulletin',
+        title:    d.title,
+        meta:     d.date || '',
+        linkText: '⬇ Download',
+        fileUrl:  d.file_url,
+    }));
 
-    return [...documents, ...uploadedDocs];
+    return [...seeded, ...cmsFormatted];
 }
 
 export async function fetchResources() {
-    const [resources, uploads] = await Promise.all([
+    const [seeded, cms] = await Promise.all([
         fetch(`${BASE}/resources`).then(r => r.json()),
-        fetch(`${BASE}/uploads/published`).then(r => r.json()),
+        fetch(`${BASE}/cms/education/published`).then(r => r.json()),
     ]);
 
     const typeMap = {
@@ -63,16 +40,39 @@ export async function fetchResources() {
         'LINK':  '🔗 External',
     };
 
-    const uploadedResources = uploads
-        .filter(u => u.section === 'Education')
-        .map(u => ({
-            id:       u.id,
-            type:     typeMap[u.type] || u.type,
-            title:    u.title,
-            meta:     u.language || '',
-            linkText: u.type === 'LINK' ? '↗ Open' : '⬇ Download',
-            fileUrl:  u.file_url || null,
-        }));
+    const cmsFormatted = cms.map(e => ({
+        id:       e.id,
+        type:     typeMap[e.type] || e.type,
+        title:    e.title,
+        meta:     e.language || '',
+        linkText: e.type === 'LINK' ? '↗ Open' : e.type === 'VIDEO' ? '▶ Play' : '⬇ Download',
+        fileUrl:  e.file_url,
+    }));
 
-    return [...resources, ...uploadedResources];
+    return [...seeded, ...cmsFormatted];
 }
+
+export async function fetchNews() {
+    const [seeded, cms] = await Promise.all([
+        fetch(`${BASE}/news`).then(r => r.json()),
+        fetch(`${BASE}/cms/news/published`).then(r => r.json()),
+    ]);
+
+    const cmsFormatted = cms.map(n => ({
+        id:          n.id,
+        category:    n.category,
+        title:       n.title,
+        description: n.description,
+        image_url:   n.image_url ? `http://localhost:8000${n.image_url}` : null,
+        date:        n.date || '',
+    }));
+
+    return [...seeded, ...cmsFormatted];
+}
+
+export async function fetchFeaturedNews() {
+    return fetch(`${BASE}/news/featured`).then(r => r.json());
+}
+
+// ── cms dashboard ─────────────────────────────────────────
+export async function fetchCmsAll()  { return fetch(`${BASE}/cms`).then(r => r.json()); }

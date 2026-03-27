@@ -80,7 +80,7 @@ export default function Documents(){
                     {filtered.length > 0 ? (
                         <div className='grid grid-cols-3 gap-4'>
                             {filtered.map((r, i) => (
-                                <ResourceCard key={i} type={r.type} title={r.title} meta={r.meta} linkText={r.linkText} fileUrl={r.fileUrl} />
+                                <ResourceCard key={i} id={r.id} type={r.type} title={r.title} meta={r.meta} linkText={r.linkText} fileUrl={r.fileUrl} />
                             ))}
                         </div>
                     ) : (

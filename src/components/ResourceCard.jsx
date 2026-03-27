@@ -1,4 +1,4 @@
-export default function ResourceCard({ type, typeIcon, title, meta, linkText, onClick, fileUrl }) {
+export default function ResourceCard({ id, type, typeIcon, title, meta, linkText, onClick, fileUrl }) {
     let typeColor = 'var(--color-teal)';
     let tagBg     = 'var(--color-teal-4)';
     let tagColor  = 'var(--color-teal)';
@@ -24,28 +24,44 @@ export default function ResourceCard({ type, typeIcon, title, meta, linkText, on
     const isTag = !['Debt Bulletin', 'Statistical', 'Legal', 'Bond Info'].some(t => type.includes(t));
 
     // ── determine action ──────────────────────────────────
+    // update actionHref logic
     const isLink     = type.includes('External') || (fileUrl && fileUrl.startsWith('http') && !fileUrl.includes('/storage/'));
     const hasFile    = fileUrl && fileUrl.includes('/storage/');
-    const actionHref = fileUrl ? (isLink ? fileUrl : `http://localhost:8000${fileUrl}`) : null;
+    const actionHref = fileUrl
+        ? isLink
+            ? fileUrl
+            : `http://localhost:8000/api/uploads/${id}/download`
+        : null;
+    const handleAction = async (e) => {
+      e.stopPropagation();
+      if (!actionHref) { onClick?.(); return; }
 
-    const handleAction = (e) => {
-        e.stopPropagation();
-        if (!actionHref) { onClick?.(); return; }
-
-        if (isLink) {
-            // open external link in new tab
-            window.open(actionHref, '_blank', 'noopener noreferrer');
-        } else if (hasFile) {
-            // trigger file download
-            const a = document.createElement('a');
-            a.href     = actionHref;
-            a.download = title;
-            a.target   = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    };
+      if (isLink) {
+          // open external link in new tab
+          window.open(actionHref, '_blank', 'noopener noreferrer');
+      } else if (hasFile) {
+          if (type.includes('Video')) {
+              // open video in new tab to play in browser
+              window.open(actionHref, '_blank', 'noopener noreferrer');
+          } else {
+              try {
+                  const res      = await fetch(actionHref);
+                  const blob     = await res.blob();
+                  const url      = URL.createObjectURL(blob);
+                  const a        = document.createElement('a');
+                  const filename = fileUrl.split('/').pop();
+                  a.href         = url;
+                  a.download     = filename || title;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+              } catch {
+                  window.open(actionHref, '_blank');
+              }
+          }
+      }
+  };
 
     return (
         <div

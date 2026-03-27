@@ -102,7 +102,16 @@ export default function News(){
                     {filtered.length > 0 ? (
                         <div className='grid grid-cols-3 gap-4'>
                             {filtered.map((n, i) => (
-                                <NewsCard key={i} icon={n.icon} category={n.category} title={n.title} date={n.date} />
+                                <NewsCard
+                                    key={i}
+                                    icon={n.icon}
+                                    category={n.category}
+                                    title={n.title}
+                                    date={n.date}
+                                    imageUrl={n.image_url}
+                                    description={n.description}
+                                    onClick={onClick}
+                                />
                             ))}
                         </div>
                     ) : (
