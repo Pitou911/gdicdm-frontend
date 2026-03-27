@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import NewsCard from '../components/NewsCard';
 import { fetchNews, fetchFeaturedNews } from '../data/index';
+import { useNavigate } from 'react-router-dom';
 
 
 const TAB_MAP = {
@@ -17,7 +18,7 @@ export default function News(){
     const tabs = ['All', 'Announcements', 'Reports', 'Events', 'Press'];
     const [news, setNews]             = useState([]);
     const [featuredNews, setFeaturedNews] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         fetchNews().then(setNews);
         fetchFeaturedNews().then(setFeaturedNews);
@@ -110,7 +111,7 @@ export default function News(){
                                     date={n.date}
                                     imageUrl={n.image_url}
                                     description={n.description}
-                                    onClick={onClick}
+                                    onClick={() => navigate(`/news/${n.id}`)}
                                 />
                             ))}
                         </div>

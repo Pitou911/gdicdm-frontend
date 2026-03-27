@@ -11,6 +11,7 @@ import Documents from './pages/Documents'
 import Education from './pages/Education'
 import News from './pages/News'
 import Navbar from './components/Navbar'
+import NewsDetail from './pages/NewsDetail'
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Route path='/documents' element={<Documents/>}/>
         <Route path='/education' element={<Education/>}/>
         <Route path='/news' element={<News/>}/>
+        <Route path='/news/:id' element={<NewsDetail/>}/>
       </Routes>
       </BrowserRouter>
     </LanguageProvider>
