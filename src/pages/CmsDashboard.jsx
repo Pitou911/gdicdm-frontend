@@ -16,6 +16,9 @@ export default function CmsDashboard() {
     const [editId, setEditId]     = useState(null);
     const [loading, setLoading]   = useState(false);
     const [error, setError]       = useState('');
+    // add this state at the top with your other states
+    const [file, setFile] = useState(null);
+    const [link, setLink] = useState('');
 
     // ── fetch all uploads ──────────────────────────────────
     const loadRows = () => {
@@ -42,19 +45,36 @@ export default function CmsDashboard() {
         setShowModal(true);
     };
 
-    // ── save (add or edit) ─────────────────────────────────
     const handleSave = async () => {
         setLoading(true);
         const url    = editId ? `${BASE}/uploads/${editId}` : `${BASE}/uploads`;
         const method = editId ? 'PUT' : 'POST';
+
         try {
-            const res = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify(form),
-            });
+            let body;
+            let headers = { 'Accept': 'application/json' };
+
+            if (form.type === 'LINK') {
+                // send JSON for links
+                body = JSON.stringify({ ...form, file_url: link });
+                headers['Content-Type'] = 'application/json';
+            } else if (file) {
+                // send FormData for file uploads
+                const fd = new FormData();
+                Object.entries(form).forEach(([k, v]) => fd.append(k, v));
+                fd.append('file', file);
+                body = fd;
+                // don't set Content-Type — browser sets it with boundary automatically
+            } else {
+                body = JSON.stringify(form);
+                headers['Content-Type'] = 'application/json';
+            }
+
+            const res = await fetch(url, { method, headers, body });
             if (!res.ok) throw new Error();
             setShowModal(false);
+            setFile(null);
+            setLink('');
             loadRows();
         } catch {
             setError('Failed to save.');
@@ -205,7 +225,6 @@ export default function CmsDashboard() {
                             <button onClick={() => setShowModal(false)} className="text-text-3 hover:text-text text-[20px] leading-none cursor-pointer">✕</button>
                         </div>
 
-                        {/* form fields */}
                         <div className="flex flex-col gap-4">
 
                             {/* title */}
@@ -226,7 +245,7 @@ export default function CmsDashboard() {
                                     <select
                                         className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm transition-all duration-150 focus:border-teal"
                                         value={form.type}
-                                        onChange={e => setForm({ ...form, type: e.target.value })}
+                                        onChange={e => { setForm({ ...form, type: e.target.value }); setFile(null); setLink(''); }}
                                     >
                                         {TYPES.map(t => <option key={t}>{t}</option>)}
                                     </select>
@@ -242,6 +261,74 @@ export default function CmsDashboard() {
                                     </select>
                                 </div>
                             </div>
+
+                            {/* conditional file / link upload */}
+                            {form.type === 'PDF' && (
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload PDF</label>
+                                    <div
+                                        className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all duration-150 ${file ? 'border-teal bg-teal-4' : 'border-light-2 bg-snow hover:border-teal-3 hover:bg-teal-4'}`}
+                                        onClick={() => document.getElementById('file-pdf').click()}
+                                    >
+                                        <div className="text-[28px] mb-1">📄</div>
+                                        <div className="text-[13px] font-semibold text-text-2">
+                                            {file ? file.name : 'Click to upload PDF'}
+                                        </div>
+                                        <div className="font-mono text-[10.5px] text-text-3 mt-1">.pdf files only</div>
+                                        <input id="file-pdf" type="file" accept=".pdf" className="hidden" onChange={e => setFile(e.target.files[0])} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {form.type === 'IMG' && (
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload Image</label>
+                                    <div
+                                        className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all duration-150 ${file ? 'border-teal bg-teal-4' : 'border-light-2 bg-snow hover:border-teal-3 hover:bg-teal-4'}`}
+                                        onClick={() => document.getElementById('file-img').click()}
+                                    >
+                                        {file ? (
+                                            <img src={URL.createObjectURL(file)} alt="preview" className="max-h-30 mx-auto rounded mb-2 object-cover" />
+                                        ) : (
+                                            <div className="text-[28px] mb-1">🖼️</div>
+                                        )}
+                                        <div className="text-[13px] font-semibold text-text-2">
+                                            {file ? file.name : 'Click to upload Image'}
+                                        </div>
+                                        <div className="font-mono text-[10.5px] text-text-3 mt-1">.jpg, .png files only</div>
+                                        <input id="file-img" type="file" accept=".jpg,.jpeg,.png" className="hidden" onChange={e => setFile(e.target.files[0])} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {form.type === 'VIDEO' && (
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload Video</label>
+                                    <div
+                                        className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all duration-150 ${file ? 'border-teal bg-teal-4' : 'border-light-2 bg-snow hover:border-teal-3 hover:bg-teal-4'}`}
+                                        onClick={() => document.getElementById('file-video').click()}
+                                    >
+                                        <div className="text-[28px] mb-1">🎬</div>
+                                        <div className="text-[13px] font-semibold text-text-2">
+                                            {file ? file.name : 'Click to upload Video'}
+                                        </div>
+                                        <div className="font-mono text-[10.5px] text-text-3 mt-1">.mp4 files only</div>
+                                        <input id="file-video" type="file" accept=".mp4" className="hidden" onChange={e => setFile(e.target.files[0])} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {form.type === 'LINK' && (
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">External URL</label>
+                                    <input
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm transition-all duration-150 focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={link}
+                                        onChange={e => setLink(e.target.value)}
+                                        placeholder="https://youtube.com/watch?v=..."
+                                    />
+                                </div>
+                            )}
 
                             {/* language + status */}
                             <div className="grid grid-cols-2 gap-3.5">
@@ -272,7 +359,7 @@ export default function CmsDashboard() {
                                 <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Date</label>
                                 <input
                                     type="date"
-                                    className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm transition-all duration-150 focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                    className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-[var(--radius-sm)] transition-all duration-150 focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                     value={form.date}
                                     onChange={e => setForm({ ...form, date: e.target.value })}
                                 />

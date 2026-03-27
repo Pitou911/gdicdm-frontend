@@ -1,64 +1,92 @@
-export default function ResourceCard({ type, typeIcon, title, meta, linkText, onClick }) {
-  let typeColor = 'var(--color-teal)';
-  let tagBg = 'var(--color-teal-4)';
-  let tagColor = 'var(--color-teal)';
+export default function ResourceCard({ type, typeIcon, title, meta, linkText, onClick, fileUrl }) {
+    let typeColor = 'var(--color-teal)';
+    let tagBg     = 'var(--color-teal-4)';
+    let tagColor  = 'var(--color-teal)';
 
-  if (type.includes('Guide') || type.includes('Beginner')) {
-    typeColor = 'var(--color-green-2)';
-    tagBg = 'var(--color-green-3)';
-    tagColor = 'var(--color-green-2)';
-  } else if (type.includes('Video') || type.includes('min')) {
-    typeColor = '#059669';
-    tagBg = 'var(--color-green-3)';
-    tagColor = 'var(--color-green-2)';
-  } else if (type.includes('Infographic')) {
-    typeColor = '#7c3aed';
-    tagBg = '#f3e8ff';
-    tagColor = '#7c3aed';
-  } else if (type.includes('External') || type.includes('ADB')) {
-    typeColor = 'var(--color-blue-2)';
-    tagBg = 'var(--color-blue-3)';
-    tagColor = 'var(--color-blue-2)';
-  }
+    if (type.includes('Guide') || type.includes('Beginner')) {
+        typeColor = 'var(--color-green-2)';
+        tagBg     = 'var(--color-green-3)';
+        tagColor  = 'var(--color-green-2)';
+    } else if (type.includes('Video') || type.includes('min')) {
+        typeColor = '#059669';
+        tagBg     = 'var(--color-green-3)';
+        tagColor  = 'var(--color-green-2)';
+    } else if (type.includes('Infographic')) {
+        typeColor = '#7c3aed';
+        tagBg     = '#f3e8ff';
+        tagColor  = '#7c3aed';
+    } else if (type.includes('External')) {
+        typeColor = 'var(--color-blue-2)';
+        tagBg     = 'var(--color-blue-3)';
+        tagColor  = 'var(--color-blue-2)';
+    }
 
-  const isTag = !['📄 Debt Bulletin', '📄 Statistical', '📄 Legal', '📄 Bond Info'].some(t => type.includes(t.replace('📄 ', '')));
+    const isTag = !['Debt Bulletin', 'Statistical', 'Legal', 'Bond Info'].some(t => type.includes(t));
 
-  return (
-    <div
-      className="bg-white border border-light-2 rounded-sm p-6 flex flex-col gap-2.5 cursor-pointer transition-all duration-200 shadow-(--shadow-sm) hover:border-teal-3 hover:shadow-(--shadow-lg) hover:-translate-y-0.5"
-      onClick={onClick}
-    >
-      <div
-        className="text-[11px] font-bold tracking-[1px] uppercase flex items-center gap-1.5"
-        style={{ color: typeColor }}
-      >
-        {typeIcon} {type.replace(/[📄🎬🖼🔗]/g, '').trim()}
-      </div>
+    // ── determine action ──────────────────────────────────
+    const isLink     = type.includes('External') || (fileUrl && fileUrl.startsWith('http') && !fileUrl.includes('/storage/'));
+    const hasFile    = fileUrl && fileUrl.includes('/storage/');
+    const actionHref = fileUrl ? (isLink ? fileUrl : `http://localhost:8000${fileUrl}`) : null;
 
-      <div className="text-[15.5px] font-semibold text-text leading-[1.4]">
-        {title}
-      </div>
+    const handleAction = (e) => {
+        e.stopPropagation();
+        if (!actionHref) { onClick?.(); return; }
 
-      <div className="flex items-center justify-between mt-auto pt-3 border-t border-light">
-        {isTag ? (
-          <span
-            className="text-[10px] font-semibold px-2 py-0.75 rounded-[4px]"
-            style={{ background: tagBg, color: tagColor }}
-          >
-            {meta}
-          </span>
-        ) : (
-          <span className="font-mono text-[10.5px] text-text-3">
-            {meta}
-          </span>
-        )}
-        <span
-          className="text-[12.5px] font-semibold cursor-pointer flex items-center gap-1.25 transition-colors duration-150 hover:opacity-80"
-          style={{ color: typeColor }}
+        if (isLink) {
+            // open external link in new tab
+            window.open(actionHref, '_blank', 'noopener noreferrer');
+        } else if (hasFile) {
+            // trigger file download
+            const a = document.createElement('a');
+            a.href     = actionHref;
+            a.download = title;
+            a.target   = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    };
+
+    return (
+        <div
+            className="bg-white border border-light-2 rounded-sm p-6 flex flex-col gap-2.5 cursor-pointer transition-all duration-200 shadow-(--shadow-sm) hover:border-teal-3 hover:shadow-(--shadow-lg) hover:-translate-y-0.5"
+            onClick={onClick}
         >
-          {linkText}
-        </span>
-      </div>
-    </div>
-  );
+            {/* rc-type */}
+            <div
+                className="text-[11px] font-bold tracking-[1px] uppercase flex items-center gap-1.5"
+                style={{ color: typeColor }}
+            >
+                {typeIcon} {type.replace(/[📄🎬🖼🔗]/g, '').trim()}
+            </div>
+
+            {/* rc-title */}
+            <div className="font-display text-[15.5px] font-semibold text-text leading-[1.4]">
+                {title}
+            </div>
+
+            {/* rc-foot */}
+            <div className="flex items-center justify-between mt-auto pt-3 border-t border-light">
+                {isTag ? (
+                    <span
+                        className="text-[10px] font-semibold px-2 py-0.75 rounded-[4px]"
+                        style={{ background: tagBg, color: tagColor }}
+                    >
+                        {meta}
+                    </span>
+                ) : (
+                    <span className="font-mono text-[10.5px] text-text-3">{meta}</span>
+                )}
+
+                {/* action button */}
+                <span
+                    onClick={handleAction}
+                    className="text-[12.5px] font-semibold cursor-pointer flex items-center gap-1.25 transition-colors duration-150 hover:opacity-80"
+                    style={{ color: typeColor }}
+                >
+                    {linkText}
+                </span>
+            </div>
+        </div>
+    );
 }
