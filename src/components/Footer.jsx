@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function Footer(){
     return (
         <footer className="bg-text text-white/50 pt-14 pb-7">
-            <div className="max-w-325 mx-auto px-8 grid grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-9">
+            <div className="max-w-325 mx-auto px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-9">
                 <div>
                     <div className="flex items-center gap-2.5 mb-3">
                         <div className="w-7.5 h-7.5 bg-transparent rounded-[7px] flex items-center justify-center text-[14px]"><img src="/mef_logo.png" alt="GDI Logo" className="h-6" /></div>
@@ -37,7 +37,7 @@ export default function Footer(){
                     <div className="text-[13px] text-white/35 mb-2">🕐 Mon–Fri 08:00–17:00</div>
                 </div>
             </div>
-            <div className="max-w-325 mx-auto px-8 py-5 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-white/30">
+            <div className="max-w-325 mx-auto px-8 py-5 border-t border-white/10 flex flex-col md:flex-row items-left justify-between gap-4 text-[11px] text-white/30">
                 <span>© 2025 Ministry of Economy and Finance, Kingdom of Cambodia. All rights reserved.</span>
                 <span>ADB Technical Assistance Project</span>
             </div>
