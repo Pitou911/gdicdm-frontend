@@ -176,18 +176,51 @@ export default function CmsDashboard() {
                             <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><span className="font-mono text-[11px] text-text-3">{row.date || '—'}</span></td>
                             <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">
                                 <div className="flex gap-1.25 items-center">
-                                    {row.status === 'draft' ? (
-                                        <>
-                                            <button onClick={() => handlePublish(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white">Publish</button>
-                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
-                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
-                                        </>
-                                    )}
-                                </div>
+                                {row.status === 'draft' ? (
+                                    <>
+                                        {/* edit — same as published */}
+                                        <button
+                                            onClick={() => openEdit(row)}
+                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text"
+                                        >
+                                            Edit
+                                        </button>
+                                        {/* publish */}
+                                        <button
+                                            onClick={() => handlePublish(row.id)}
+                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white"
+                                        >
+                                            Publish
+                                        </button>
+
+                                        {/* delete */}
+                                        <button
+                                            onClick={() => handleDelete(row.id)}
+                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2"
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* edit */}
+                                        <button
+                                            onClick={() => openEdit(row)}
+                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text"
+                                        >
+                                            Edit
+                                        </button>
+
+                                        {/* delete */}
+                                        <button
+                                            onClick={() => handleDelete(row.id)}
+                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2"
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                )}
+                            </div>
                             </td>
                         </tr>
                     ))}
