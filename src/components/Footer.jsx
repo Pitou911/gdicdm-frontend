@@ -6,7 +6,7 @@ export default function Footer(){
             <div className="max-w-325 mx-auto px-8 grid grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-9">
                 <div>
                     <div className="flex items-center gap-2.5 mb-3">
-                        <div className="w-7.5 h-7.5 bg-linear-to-br from-teal to-teal-2 rounded-[7px] flex items-center justify-center text-[14px]"><img src="/mef_logo.png" alt="GDI Logo" className="h-6" /></div>
+                        <div className="w-7.5 h-7.5 bg-transparent rounded-[7px] flex items-center justify-center text-[14px]"><img src="/mef_logo.png" alt="GDI Logo" className="h-6" /></div>
                         <div className="font-display text-[15px] font-bold text-white">GDICDM</div>
                     </div>
                     <div className="text-[12.5px] leading-[1.75] text-white/30 mb-3">
