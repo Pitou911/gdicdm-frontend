@@ -12,6 +12,7 @@ import Education from './pages/Education'
 import News from './pages/News'
 import Navbar from './components/Navbar'
 import NewsDetail from './pages/NewsDetail'
+import Footer from './components/Footer'
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <Route path='/news' element={<News/>}/>
         <Route path='/news/:id' element={<NewsDetail/>}/>
       </Routes>
+      <Footer/>
       </BrowserRouter>
     </LanguageProvider>
   )
