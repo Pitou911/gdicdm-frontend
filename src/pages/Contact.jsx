@@ -12,11 +12,11 @@ export default function Contact(){
             </div>
             <div className="py-18 bg-snow">
                 <div className="max-w-325 mx-auto px-8">
-                    <div className="grid grid-cols-[1fr_320px] gap-15">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-15 sm:gap-5">
                         <div>
                             <div className="flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-teal-600 before:content-[''] before:w-4 before:h-0.5 before:bg-teal before:rounded-[1px]">Send a Message</div>
                             <div className="font-display text-[28px] font-bold text-text leading-[1.15] tracking-[-0.5px] mb-7">Contact <em className="not-italic text-teal">Form</em></div>
-                            <div className="grid grid-cols-2 gap-3.5 mb-4.5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-4.5">
                                 <div className="mb-4.5"><label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Full Name</label><input className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] font-body text-text bg-white outline-none transition-all duration-150 rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]" type="text" placeholder="Your full name"/></div>
                                 <div className="mb-4.5"><label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Email Address</label><input className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] font-body text-text bg-white outline-none transition-all duration-150 rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]" type="email" placeholder="Your email address"/></div>
                             </div>
