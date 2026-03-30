@@ -53,7 +53,7 @@ export default function News(){
         <div className='max-w-325 mx-auto px-8 py-13 grid grid-cols-[1fr_340px] gap-14 items-center relative z-10'>
             <div>
                 {/* chip */}
-                <div className='inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-[5px] rounded-[20px] mb-4 border border-white/20'>
+                <div className='inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1.25 rounded-[20px] mb-4 border border-white/20'>
                     {featuredNews.chip}
                 </div>
 
@@ -77,7 +77,7 @@ export default function News(){
                 {/* read more */}
                 <button
                     onClick={() => navigate(`/news/${featuredNews.id}`)}
-                    className='px-6 py-[11px] bg-white/10 text-white font-semibold text-[13px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20 inline-block mt-5'
+                    className='px-6 py-2.75 bg-white/10 text-white font-semibold text-[13px] border border-white/25 rounded-sm transition-all duration-150 hover:bg-white/20 inline-block mt-5'
                 >
                     {featuredNews.link_text}
                 </button>
@@ -85,7 +85,7 @@ export default function News(){
 
             {/* image or fallback */}
             {featuredNews.image_url ? (
-                <div className='h-[260px] rounded-sm overflow-hidden border border-white/15 shadow-[var(--shadow-md)]'>
+                <div className='h-65 rounded-sm overflow-hidden border border-white/15 shadow-md)'>
                     <img
                         src={featuredNews.image_url}
                         alt={featuredNews.title}
@@ -93,7 +93,7 @@ export default function News(){
                     />
                 </div>
             ) : (
-                <div className='h-[260px] bg-white/10 rounded-sm border border-white/15 flex items-center justify-center text-[64px] backdrop-blur-[10px]'>
+                <div className='h-65 bg-white/10 rounded-sm border border-white/15 flex items-center justify-center text-[64px] backdrop-blur-[10px]'>
                     {featuredNews.icon}
                 </div>
             )}
