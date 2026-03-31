@@ -28,7 +28,6 @@ export default function CmsDashboard() {
 
     useEffect(() => { loadRows(); }, []);
 
-    // ── section change resets type ──────────────────────
     const handleSectionChange = (section) => {
         const defaultType = section === 'Documents' ? 'Debt Bulletin' : section === 'Education' ? 'PDF' : 'Announcement';
         setForm({ ...form, section, type: defaultType });
@@ -45,7 +44,6 @@ export default function CmsDashboard() {
         setShowModal(true);
     };
 
-    // ── resolve endpoint by section ─────────────────────
     const getEndpoint = (section, id = null) => {
         const base = section === 'Documents' ? `${BASE}/cms/documents`
                    : section === 'Education' ? `${BASE}/cms/education`
@@ -69,7 +67,6 @@ export default function CmsDashboard() {
         return `${base}/${realId}`;
     };
 
-    // ── save ────────────────────────────────────────────
     const handleSave = async () => {
         setLoading(true);
         const isEdit   = !!editId;
@@ -118,7 +115,6 @@ export default function CmsDashboard() {
         ? <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-green-3 text-green-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-green-2">Published</span>
         : <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-blue-3 text-blue-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-blue-2">Draft</span>;
 
-    // ── type options based on section ───────────────────
     const typeOptions = form.section === 'Documents' ? DOC_TYPES : form.section === 'Education' ? EDU_TYPES : NEWS_CATS;
 
     return (
@@ -144,7 +140,6 @@ export default function CmsDashboard() {
                 ))}
             </div>
 
-            {/* toolbar */}
             <div className="flex items-center justify-between mb-2.5">
                 <div className="text-[11px] font-bold tracking-[1px] uppercase text-text-3">All Content</div>
                 <button onClick={openAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2">
@@ -154,7 +149,6 @@ export default function CmsDashboard() {
 
             {error && <div className="text-[13px] text-red-500 mb-3">{error}</div>}
 
-            {/* table */}
             <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2">
                 <thead>
                     <tr>
@@ -227,7 +221,6 @@ export default function CmsDashboard() {
                 </tbody>
             </table>
 
-            {/* modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
                     <div className="bg-white rounded-md shadow-lg w-full max-w-135 p-7 max-h-[90vh] overflow-y-auto">
@@ -239,7 +232,6 @@ export default function CmsDashboard() {
 
                         <div className="flex flex-col gap-4">
 
-                            {/* section */}
                             <div>
                                 <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Section</label>
                                 <select className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal"
@@ -248,7 +240,6 @@ export default function CmsDashboard() {
                                 </select>
                             </div>
 
-                            {/* type */}
                             <div>
                                 <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">
                                     {form.section === 'News' ? 'Category' : 'Type'}
@@ -259,14 +250,12 @@ export default function CmsDashboard() {
                                 </select>
                             </div>
 
-                            {/* title */}
                             <div>
                                 <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Title</label>
                                 <input className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                     value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Enter title..." />
                             </div>
 
-                            {/* description — news only */}
                             {form.section === 'News' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Description</label>
@@ -275,7 +264,6 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
-                            {/* file upload — documents (PDF only) */}
                             {form.section === 'Documents' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload PDF</label>
@@ -289,7 +277,6 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
-                            {/* file upload — education (conditional by type) */}
                             {form.section === 'Education' && form.type === 'PDF' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload PDF</label>
@@ -340,7 +327,6 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
-                            {/* image upload — news only */}
                             {form.section === 'News' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Cover Image</label>
@@ -357,7 +343,6 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
-                            {/* language — not for news */}
                             {form.section !== 'News' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Language</label>
@@ -368,7 +353,6 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
-                            {/* status + date */}
                             <div className="grid grid-cols-2 gap-3.5">
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Status</label>
@@ -386,7 +370,6 @@ export default function CmsDashboard() {
 
                         </div>
 
-                        {/* footer */}
                         <div className="flex justify-end gap-2 mt-6">
                             <button onClick={() => setShowModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-light-2 bg-transparent text-text-3 rounded-sm cursor-pointer transition-all duration-150 hover:border-text-2 hover:text-text">Cancel</button>
                             <button onClick={handleSave} disabled={loading} className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2 disabled:opacity-50">
