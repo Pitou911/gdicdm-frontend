@@ -206,6 +206,8 @@ export default function Home() {
                                     meta={d.meta}
                                     linkText={d.linkText}
                                     fileUrl={d.fileUrl}
+                                    streamUrl={d.streamUrl}
+                                    coverUrl={d.coverUrl}
                                 />
                             ))}
                         </div>

@@ -16,14 +16,14 @@ export async function fetchDocuments() {
     };
 
     const cmsFormatted = cms.map(d => ({
-        id:       d.id,
-        type:     typeMap[d.type] || '📄 Debt Bulletin',
-        title:    d.title,
-        meta:     d.date || '',
-        linkText: '⬇ Download',
-        fileUrl:  d.file_url,
+        id:        d.id,
+        type:      typeMap[d.type] || '📄 Debt Bulletin',
+        title:     d.title,
+        meta:      d.date || '',
+        linkText:  '⬇ Download',
+        fileUrl:   d.file_url,
+        coverUrl:  d.cover_url ? `http://localhost:8000${d.cover_url}` : null,
     }));
-
     return [...seeded, ...cmsFormatted];
 }
 
@@ -47,9 +47,8 @@ export async function fetchResources() {
         meta:      e.language || '',
         linkText:  e.type === 'LINK' ? '↗ Open' : e.type === 'VIDEO' ? '▶ Play' : '⬇ Download',
         fileUrl:   e.file_url,
-        streamUrl: e.type === 'VIDEO' && e.file_url
-            ? `http://localhost:8000/api/cms/education/${e.id}/stream`
-            : null,
+        streamUrl: e.type === 'VIDEO' && e.file_url ? `http://localhost:8000/api/cms/education/${e.id}/stream` : null,
+        coverUrl:  e.cover_url ? `http://localhost:8000${e.cover_url}` : null,
     }));
 
     return [...seeded, ...cmsFormatted];
@@ -66,7 +65,8 @@ export async function fetchNews() {
         category:    n.category,
         title:       n.title,
         description: n.description,
-        image_url:   n.image_url ? `http://localhost:8000${n.image_url}` : null,
+        image_url:   n.image_url   ? `http://localhost:8000${n.image_url}`   : null,
+        cover_url:   n.cover_url   ? `http://localhost:8000${n.cover_url}`   : null,
         date:        n.date || '',
     }));
 

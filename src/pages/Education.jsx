@@ -86,6 +86,7 @@ export default function Education(){
                                     linkText={r.linkText}
                                     fileUrl={r.fileUrl}
                                     streamUrl={r.streamUrl}
+                                    coverUrl={r.coverUrl}
                                 />
                             ))}
                         </div>

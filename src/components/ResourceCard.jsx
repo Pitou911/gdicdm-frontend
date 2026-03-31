@@ -1,4 +1,4 @@
-export default function ResourceCard({ id, type, typeIcon, title, meta, linkText, onClick, fileUrl, streamUrl }) {
+export default function ResourceCard({ id, type, typeIcon, title, meta, linkText, onClick, fileUrl, streamUrl, coverUrl }) {
     let typeColor = 'var(--color-teal)';
     let tagBg     = 'var(--color-teal-4)';
     let tagColor  = 'var(--color-teal)';
@@ -64,6 +64,15 @@ export default function ResourceCard({ id, type, typeIcon, title, meta, linkText
             className="bg-white border border-light-2 rounded-sm p-6 flex flex-col gap-2.5 cursor-pointer transition-all duration-200 shadow-(--shadow-sm) hover:border-teal-3 hover:shadow-(--shadow-lg) hover:-translate-y-0.5"
             onClick={onClick}
         >
+            {coverUrl && (
+                <div className="h-32.5 overflow-hidden">
+                    <img
+                        src={coverUrl}
+                        alt={title}
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            )}
             {/* rc-type */}
             <div
                 className="text-[11px] font-bold tracking-[1px] uppercase flex items-center gap-1.5"

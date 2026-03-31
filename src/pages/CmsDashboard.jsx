@@ -15,9 +15,11 @@ const emptyForm = { title: '', section: 'Documents', type: 'Debt Bulletin', lang
 export default function CmsDashboard() {
     const [rows, setRows]           = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [preview, setPreview]     = useState(null);
     const [form, setForm]           = useState(emptyForm);
     const [editId, setEditId]       = useState(null);
     const [file, setFile]           = useState(null);
+    const [cover, setCover]         = useState(null);
     const [link, setLink]           = useState('');
     const [loading, setLoading]     = useState(false);
     const [error, setError]         = useState('');
@@ -33,14 +35,32 @@ export default function CmsDashboard() {
         setForm({ ...form, section, type: defaultType });
         setFile(null);
         setLink('');
+        setCover(null);
     };
 
-    const openAdd  = () => { setForm(emptyForm); setEditId(null); setFile(null); setLink(''); setShowModal(true); };
+    const openAdd = () => {
+        setForm(emptyForm);
+        setEditId(null);
+        setFile(null);
+        setLink('');
+        setCover(null);
+        setShowModal(true);
+    };
+
     const openEdit = (row) => {
-        setForm({ title: row.title, section: row.section, type: row.type, language: row.language || 'EN', status: row.status, date: row.date || '', description: row.description || '' });
+        setForm({
+            title:       row.title       || '',
+            section:     row.section     || 'Documents',
+            type:        row.type        || 'Debt Bulletin',
+            language:    row.language    || 'EN',
+            status:      row.status      || 'draft',
+            date:        row.date        || '',
+            description: row.description || '',
+        });
         setEditId(row.id);
         setFile(null);
         setLink('');
+        setCover(null);
         setShowModal(true);
     };
 
@@ -76,11 +96,14 @@ export default function CmsDashboard() {
         try {
             const fd = new FormData();
             Object.entries(form).forEach(([k, v]) => fd.append(k, v));
+
             if (form.section === 'News') {
-                if (file) fd.append('image', file);
+                if (file)  fd.append('image', file);
+                if (cover) fd.append('cover', cover);
             } else {
                 if (form.type === 'LINK') fd.append('file_url', link);
                 else if (file) fd.append('file', file);
+                if (cover) fd.append('cover', cover);
             }
 
             const res = await fetch(endpoint, { method: 'POST', headers: { 'Accept': 'application/json' }, body: fd });
@@ -88,6 +111,7 @@ export default function CmsDashboard() {
             setShowModal(false);
             setFile(null);
             setLink('');
+            setCover(null);
             loadRows();
         } catch {
             setError('Failed to save.');
@@ -127,10 +151,10 @@ export default function CmsDashboard() {
             {/* stats */}
             <div className="grid grid-cols-4 gap-3.5 mb-6">
                 {[
-                    { val: rows.length,                                        label: 'Total Items',    delta: 'across all sections', color: 'text-[var(--color-green-2)]' },
-                    { val: rows.filter(r => r.status === 'published').length,  label: 'Published',      delta: '↑ live items',        color: 'text-[var(--color-green-2)]' },
-                    { val: rows.filter(r => r.status === 'draft').length,      label: 'Drafts Pending', delta: 'Needs review',        color: 'text-[var(--color-amber)]' },
-                    { val: rows.filter(r => r.section === 'News').length,      label: 'News Articles',  delta: 'total articles',      color: 'text-[var(--color-green-2)]' },
+                    { val: rows.length,                                       label: 'Total Items',    delta: 'across all sections', color: 'text-green-2' },
+                    { val: rows.filter(r => r.status === 'published').length, label: 'Published',      delta: '↑ live items',        color: 'text-green-2' },
+                    { val: rows.filter(r => r.status === 'draft').length,     label: 'Drafts Pending', delta: 'Needs review',        color: 'text-amber' },
+                    { val: rows.filter(r => r.section === 'News').length,     label: 'News Articles',  delta: 'total articles',      color: 'text-green-2' },
                 ].map((s, i) => (
                     <div key={i} className="bg-white border border-light-2 rounded-sm p-5 shadow-sm">
                         <div className="font-display text-[34px] font-bold text-text leading-none mb-1 tracking-[-0.5px]">{s.val}</div>
@@ -140,6 +164,7 @@ export default function CmsDashboard() {
                 ))}
             </div>
 
+            {/* toolbar */}
             <div className="flex items-center justify-between mb-2.5">
                 <div className="text-[11px] font-bold tracking-[1px] uppercase text-text-3">All Content</div>
                 <button onClick={openAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2">
@@ -149,6 +174,7 @@ export default function CmsDashboard() {
 
             {error && <div className="text-[13px] text-red-500 mb-3">{error}</div>}
 
+            {/* table */}
             <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2">
                 <thead>
                     <tr>
@@ -170,60 +196,30 @@ export default function CmsDashboard() {
                             <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><span className="font-mono text-[11px] text-text-3">{row.date || '—'}</span></td>
                             <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">
                                 <div className="flex gap-1.25 items-center">
-                                {row.status === 'draft' ? (
-                                    <>
-                                        {/* edit — same as published */}
-                                        <button
-                                            onClick={() => openEdit(row)}
-                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text"
-                                        >
-                                            Edit
-                                        </button>
-                                        {/* publish */}
-                                        <button
-                                            onClick={() => handlePublish(row.id)}
-                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white"
-                                        >
-                                            Publish
-                                        </button>
-
-                                        {/* delete */}
-                                        <button
-                                            onClick={() => handleDelete(row.id)}
-                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2"
-                                        >
-                                            Delete
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        {/* edit */}
-                                        <button
-                                            onClick={() => openEdit(row)}
-                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text"
-                                        >
-                                            Edit
-                                        </button>
-
-                                        {/* delete */}
-                                        <button
-                                            onClick={() => handleDelete(row.id)}
-                                            className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2"
-                                        >
-                                            Delete
-                                        </button>
-                                    </>
-                                )}
-                            </div>
+                                    {row.status === 'draft' ? (
+                                        <>
+                                            <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
+                                            <button onClick={() => setPreview(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-blue-2 hover:text-blue-2">Preview</button>
+                                            <button onClick={() => handlePublish(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white">Publish</button>
+                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
+                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                        </>
+                                    )}
+                                </div>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
+            {/* add/edit modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
-                    <div className="bg-white rounded-md shadow-lg w-full max-w-135 p-7 max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/40 z-[500] flex items-center justify-center">
+                    <div className="bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] w-full max-w-[540px] p-7 max-h-[90vh] overflow-y-auto">
 
                         <div className="flex items-center justify-between mb-6">
                             <div className="font-display text-[18px] font-bold text-text">{editId ? 'Edit Item' : 'Add New Item'}</div>
@@ -232,6 +228,7 @@ export default function CmsDashboard() {
 
                         <div className="flex flex-col gap-4">
 
+                            {/* section */}
                             <div>
                                 <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Section</label>
                                 <select className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal"
@@ -240,6 +237,7 @@ export default function CmsDashboard() {
                                 </select>
                             </div>
 
+                            {/* type / category */}
                             <div>
                                 <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">
                                     {form.section === 'News' ? 'Category' : 'Type'}
@@ -250,12 +248,14 @@ export default function CmsDashboard() {
                                 </select>
                             </div>
 
+                            {/* title */}
                             <div>
                                 <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Title</label>
                                 <input className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                     value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Enter title..." />
                             </div>
 
+                            {/* description — news only */}
                             {form.section === 'News' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Description</label>
@@ -264,6 +264,7 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* file — documents PDF */}
                             {form.section === 'Documents' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload PDF</label>
@@ -277,6 +278,7 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* file — education PDF */}
                             {form.section === 'Education' && form.type === 'PDF' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload PDF</label>
@@ -290,6 +292,7 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* file — education IMG */}
                             {form.section === 'Education' && form.type === 'IMG' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload Image</label>
@@ -306,6 +309,7 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* file — education VIDEO */}
                             {form.section === 'Education' && form.type === 'VIDEO' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Upload Video</label>
@@ -319,6 +323,7 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* link — education LINK */}
                             {form.section === 'Education' && form.type === 'LINK' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">External URL</label>
@@ -327,11 +332,16 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* cover image — news (this is the main image for news) */}
                             {form.section === 'News' && (
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Cover Image</label>
-                                    <div className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all duration-150 ${file ? 'border-teal bg-teal-4' : 'border-light-2 bg-snow hover:border-teal-3 hover:bg-teal-4'}`}
-                                        onClick={() => document.getElementById('file-news-img').click()}>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">
+                                        Cover Image <span className="font-normal text-text-3">(shown on news card)</span>
+                                    </label>
+                                    <div
+                                        className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all duration-150 ${file ? 'border-teal bg-teal-4' : 'border-light-2 bg-snow hover:border-teal-3 hover:bg-teal-4'}`}
+                                        onClick={() => document.getElementById('file-news-img').click()}
+                                    >
                                         {file
                                             ? <img src={URL.createObjectURL(file)} className="max-h-25 mx-auto rounded mb-2 object-cover" />
                                             : <div className="text-[28px] mb-1">🖼️</div>
@@ -343,6 +353,50 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* cover image — documents and education */}
+                            {form.section !== 'News' && (
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">
+                                        Cover Image <span className="font-normal text-text-3">(optional — shown on card)</span>
+                                    </label>
+                                    <div
+                                        className={`border-2 border-dashed rounded-sm p-5 text-center cursor-pointer transition-all duration-150 ${cover ? 'border-teal bg-teal-4' : 'border-light-2 bg-snow hover:border-teal-3 hover:bg-teal-4'}`}
+                                        onClick={() => document.getElementById('file-cover').click()}
+                                    >
+                                        {cover ? (
+                                            <div className="relative">
+                                                <img
+                                                    src={URL.createObjectURL(cover)}
+                                                    alt="cover preview"
+                                                    className="max-h-[140px] mx-auto rounded-[4px] object-cover mb-2"
+                                                />
+                                                <div className="text-[12px] font-semibold text-teal">{cover.name}</div>
+                                                <button
+                                                    onClick={e => { e.stopPropagation(); setCover(null); }}
+                                                    className="absolute top-1 right-1 w-6 h-6 bg-black/40 text-white rounded-full text-[12px] flex items-center justify-center hover:bg-black/60"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="text-[24px] mb-1">🖼️</div>
+                                                <div className="text-[13px] font-semibold text-text-2">Click to upload cover image</div>
+                                                <div className="font-mono text-[10.5px] text-text-3 mt-1">.jpg, .png files only</div>
+                                            </>
+                                        )}
+                                        <input
+                                            id="file-cover"
+                                            type="file"
+                                            accept=".jpg,.jpeg,.png"
+                                            className="hidden"
+                                            onChange={e => setCover(e.target.files[0])}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* language — not for news */}
                             {form.section !== 'News' && (
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Language</label>
@@ -353,6 +407,7 @@ export default function CmsDashboard() {
                                 </div>
                             )}
 
+                            {/* status + date */}
                             <div className="grid grid-cols-2 gap-3.5">
                                 <div>
                                     <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Status</label>
@@ -370,6 +425,7 @@ export default function CmsDashboard() {
 
                         </div>
 
+                        {/* footer */}
                         <div className="flex justify-end gap-2 mt-6">
                             <button onClick={() => setShowModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-light-2 bg-transparent text-text-3 rounded-sm cursor-pointer transition-all duration-150 hover:border-text-2 hover:text-text">Cancel</button>
                             <button onClick={handleSave} disabled={loading} className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2 disabled:opacity-50">
@@ -380,6 +436,91 @@ export default function CmsDashboard() {
                     </div>
                 </div>
             )}
+
+            {/* preview modal */}
+            {preview && (
+                <div className="fixed inset-0 bg-black/40 z-[500] flex items-center justify-center">
+                    <div className="bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] w-full max-w-[640px] max-h-[90vh] overflow-y-auto">
+
+                        <div className="flex items-center justify-between px-7 py-5 border-b border-light-2">
+                            <div className="flex items-center gap-3">
+                                <div className="font-display text-[18px] font-bold text-text">Preview</div>
+                                <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-blue-3 text-blue-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-blue-2">Draft</span>
+                            </div>
+                            <button onClick={() => setPreview(null)} className="text-text-3 hover:text-text text-[20px] leading-none cursor-pointer">✕</button>
+                        </div>
+
+                        <div className="p-7">
+
+                            {/* cover / image preview */}
+                            {(preview.image_url || preview.cover_url) && (
+                                <div className="rounded-sm overflow-hidden mb-5 shadow-sm">
+                                    <img
+                                        src={`http://localhost:8000${preview.image_url || preview.cover_url}`}
+                                        alt={preview.title}
+                                        className="w-full h-[220px] object-cover"
+                                    />
+                                </div>
+                            )}
+
+                            {/* badges */}
+                            <div className="flex items-center gap-2 mb-4">
+                                <span className="text-[10.5px] font-bold tracking-[1px] uppercase px-2.25 py-0.75 rounded-[4px] bg-teal-4 text-teal">{preview.section}</span>
+                                <span className="text-[10.5px] font-bold tracking-[1px] uppercase px-2.25 py-0.75 rounded-[4px] bg-light text-text-3">{preview.type}</span>
+                            </div>
+
+                            {/* title */}
+                            <h2 className="font-display text-[22px] font-bold text-text leading-[1.3] tracking-[-0.3px] mb-3">
+                                {preview.title}
+                            </h2>
+
+                            {/* description */}
+                            {preview.description && (
+                                <p className="text-[14px] text-text-2 leading-[1.85] mb-4">
+                                    {preview.description}
+                                </p>
+                            )}
+
+                            {/* meta */}
+                            <div className="flex items-center gap-4 pt-4 border-t border-light-2">
+                                {preview.date && (
+                                    <div className="flex items-center gap-1.5 font-mono text-[11px] text-text-3">
+                                        📅 {preview.date}
+                                    </div>
+                                )}
+                                {preview.language && (
+                                    <div className="flex items-center gap-1.5 font-mono text-[11px] text-text-3">
+                                        🌐 {preview.language}
+                                    </div>
+                                )}
+                                {preview.file_url && (
+                                    <div className="flex items-center gap-1.5 font-mono text-[11px] text-teal">
+                                        📎 File attached
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* preview footer */}
+                        <div className="flex justify-end gap-2 px-7 py-5 border-t border-light-2">
+                            <button
+                                onClick={() => { setPreview(null); openEdit(preview); }}
+                                className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-light-2 bg-transparent text-text-3 rounded-sm cursor-pointer transition-all duration-150 hover:border-text-2 hover:text-text"
+                            >
+                                Edit
+                            </button>
+                            <button
+                                onClick={() => { handlePublish(preview.id); setPreview(null); }}
+                                className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2"
+                            >
+                                Publish Now
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
