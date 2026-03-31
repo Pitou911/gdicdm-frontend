@@ -201,12 +201,12 @@ export default function CmsDashboard() {
                                             <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
                                             <button onClick={() => setPreview(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-blue-2 hover:text-blue-2">Preview</button>
                                             <button onClick={() => handlePublish(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white">Publish</button>
-                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
                                         </>
                                     ) : (
                                         <>
                                             <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
-                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
                                         </>
                                     )}
                                 </div>
@@ -218,8 +218,8 @@ export default function CmsDashboard() {
 
             {/* add/edit modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/40 z-[500] flex items-center justify-center">
-                    <div className="bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] w-full max-w-[540px] p-7 max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
+                    <div className="bg-white rounded-md shadow-lg w-full max-w-135 p-7 max-h-[90vh] overflow-y-auto">
 
                         <div className="flex items-center justify-between mb-6">
                             <div className="font-display text-[18px] font-bold text-text">{editId ? 'Edit Item' : 'Add New Item'}</div>
@@ -368,7 +368,7 @@ export default function CmsDashboard() {
                                                 <img
                                                     src={URL.createObjectURL(cover)}
                                                     alt="cover preview"
-                                                    className="max-h-[140px] mx-auto rounded-[4px] object-cover mb-2"
+                                                    className="max-h-35 mx-auto rounded-[4px] object-cover mb-2"
                                                 />
                                                 <div className="text-[12px] font-semibold text-teal">{cover.name}</div>
                                                 <button
@@ -439,8 +439,8 @@ export default function CmsDashboard() {
 
             {/* preview modal */}
             {preview && (
-                <div className="fixed inset-0 bg-black/40 z-[500] flex items-center justify-center">
-                    <div className="bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] w-full max-w-[640px] max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
+                    <div className="bg-white rounded-md shadow-lg w-full max-w-160 max-h-[90vh] overflow-y-auto">
 
                         <div className="flex items-center justify-between px-7 py-5 border-b border-light-2">
                             <div className="flex items-center gap-3">
@@ -458,7 +458,7 @@ export default function CmsDashboard() {
                                     <img
                                         src={`http://localhost:8000${preview.image_url || preview.cover_url}`}
                                         alt={preview.title}
-                                        className="w-full h-[220px] object-cover"
+                                        className="w-full h-55 object-cover"
                                     />
                                 </div>
                             )}
