@@ -61,14 +61,14 @@ export default function Navbar(){
                         <div
                             onClick={() => setLang('en')}
                             className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer rounded-[6px] transition-all duration-150
-                                ${lang === 'en' ? 'bg-white text-text-3 shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : 'text-teal'}`}
+                                ${lang === 'en' ? 'text-teal  shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-white' : ' text-text-3'}`}
                         >
                             EN
                         </div>
                         <div
                             onClick={() => setLang('km')}
                             className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer rounded-[6px] transition-all duration-150
-                                ${lang === 'km' ? 'bg-white text-text-3 shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : 'text-teal'}`}
+                                ${lang === 'km' ? ' text-teal bg-white  shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : 'text-text-3'}`}
                         >
                             ខ្មែរ
                         </div>
