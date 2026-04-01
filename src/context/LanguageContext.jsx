@@ -26,6 +26,7 @@ const translations = {
     navAbout: 'About',
     navContact: 'Contact',
     btnAdmin: 'CMS Admin',
+    navCalendar: 'Calendar',
   },
   km: {
     ann: 'សញ្ញាប័ណ្ណរដ្ឋ ស៊េរីទី ៦ — ការជាវបើក ១៥ – ២៨ មករា ២០២៥ ។ ទាក់ទងធនាគារចែកចាយ',
@@ -52,6 +53,7 @@ const translations = {
     navAbout: 'អំពីយើង',
     navContact: 'ទំនាក់ទំនង',
     btnAdmin: 'រដ្ឋបាល',
+    navCalendar: 'ប្រតិទិន',
   }
 };
 

@@ -13,6 +13,7 @@ import News from './pages/News'
 import Navbar from './components/Navbar'
 import NewsDetail from './pages/NewsDetail'
 import Footer from './components/Footer'
+import Calendar from './pages/Calendar'
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <Route path='/education' element={<Education/>}/>
         <Route path='/news' element={<News/>}/>
         <Route path='/news/:id' element={<NewsDetail/>}/>
+        <Route path='/calendar' element={<Calendar/>}/>
       </Routes>
       <Footer/>
       </BrowserRouter>

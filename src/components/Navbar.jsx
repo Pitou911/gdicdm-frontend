@@ -9,6 +9,7 @@ export default function Navbar(){
 
     const navLinks = [
         { id: 'Home',      path: '/',          label: t('navHome') },
+        { id: 'Calendar',  path: '/calendar',   label: t('navCalendar') },
         { id: 'About',     path: '/about',      label: t('navAbout') },
         { id: 'Bonds',     path: '/bonds',      label: t('navBonds') },
         { id: 'Debt Data', path: '/debt',       label: t('navDebt') },
