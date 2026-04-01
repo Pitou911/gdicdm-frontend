@@ -1,7 +1,7 @@
 import {
     PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-    LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine,
-    BarChart, Bar, Legend,
+    Line, XAxis, YAxis, CartesianGrid,
+    BarChart, Bar, Legend, ComposedChart,
 } from 'recharts';
 import { useState } from 'react';
 
@@ -34,7 +34,142 @@ const allBiddingData = [
     { year: '2025', bidding: 1467300, offered: 690300  },
     { year: '2026', bidding: 1684120, offered: 1367520, note: 'As of April' },
 ];
+// IssuanceVsCeiling 
+const issuanceData = [
+    { year: '2022', annual: 1219, issuance: 72,   pct: 6  },
+    { year: '2023', annual: 813,  issuance: 238,  pct: 29 },
+    { year: '2024', annual: 440,  issuance: 301,  pct: 68 },
+    { year: '2025', annual: 500,  issuance: 690,  pct: 138 },
+    { year: '2026', annual: 2114, issuance: 1368, pct: 65 },
+];
 
+const IssuanceCustomLabel = ({ x, y, width, value }) => (
+    <text x={x + width / 2} y={y - 6} textAnchor="middle"
+        fontFamily="JetBrains Mono, monospace" fontSize={10} fontWeight={700}
+        fill="var(--color-text-2)">
+        {value.toLocaleString()}
+    </text>
+);
+
+const PctCustomLabel = ({ x, y, value }) => (
+    <text x={x} y={y - 8} textAnchor="middle"
+        fontFamily="JetBrains Mono, monospace" fontSize={10} fontWeight={700}
+        fill="var(--color-teal-3)">
+        {value}%
+    </text>
+);
+
+export function IssuanceVsCeiling() {
+    return (
+        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
+
+            {/* header */}
+            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)] text-center">
+                Issuance VS Annual Ceiling
+            </div>
+            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-5 text-center">
+                Billion KHR · 2022–2026
+            </div>
+
+            <ResponsiveContainer width="100%" height={320}>
+                <ComposedChart
+                    data={issuanceData}
+                    margin={{ top: 24, right: 24, left: 0, bottom: 0 }}
+                    barCategoryGap="30%"
+                    barGap={4}
+                >
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-light-2)" vertical={false} />
+
+                    {/* left axis — Billion KHR */}
+                    <YAxis
+                        yAxisId="left"
+                        tickFormatter={v => v.toLocaleString()}
+                        tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
+                        axisLine={false} tickLine={false}
+                        label={{ value: 'Billion KHR', angle: -90, position: 'insideLeft', offset: 14, style: { fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fill: 'var(--color-text-3)' } }}
+                    />
+
+                    {/* right axis — % */}
+                    <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        tickFormatter={v => `${v}%`}
+                        tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
+                        axisLine={false} tickLine={false}
+                        domain={[0, 160]}
+                        hide
+                    />
+
+                    <XAxis
+                        dataKey="year"
+                        tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
+                        axisLine={false} tickLine={false}
+                    />
+
+                    <Tooltip
+                        content={({ active, payload, label }) => {
+                            if (!active || !payload?.length) return null;
+                            return (
+                                <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] px-3 py-2 shadow-[var(--shadow-md)] text-[12px]">
+                                    <div className="font-bold text-[var(--color-text)] mb-1">{label}</div>
+                                    {payload.map((p, i) => (
+                                        <div key={i} className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full" style={{ background: p.color }}></div>
+                                            <span className="text-[var(--color-text-2)]">{p.name}:</span>
+                                            <span className="font-semibold text-[var(--color-text)]">
+                                                {p.name === '(%)' ? `${p.value}%` : p.value.toLocaleString()}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            );
+                        }}
+                    />
+
+                    <Legend
+                        iconType="square" iconSize={8}
+                        wrapperStyle={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, paddingTop: 12 }}
+                    />
+
+                    {/* annual ceiling bar */}
+                    <Bar
+                        yAxisId="left"
+                        dataKey="annual"
+                        name="Annual"
+                        fill="var(--color-green-2)"
+                        radius={[3, 3, 0, 0]}
+                        label={<IssuanceCustomLabel />}
+                    />
+
+                    {/* issuance bar */}
+                    <Bar
+                        yAxisId="left"
+                        dataKey="issuance"
+                        name="Issuance"
+                        fill="var(--color-teal-3)"
+                        radius={[3, 3, 0, 0]}
+                        label={<IssuanceCustomLabel />}
+                    />
+
+                    {/* % line */}
+                    <Line
+                        yAxisId="right"
+                        type="linear"
+                        dataKey="pct"
+                        name="(%)"
+                        stroke="var(--color-teal-4)"
+                        strokeWidth={2}
+                        strokeDasharray="5 4"
+                        dot={{ r: 4, fill: 'var(--color-teal-3)', stroke: 'white', strokeWidth: 1.5 }}
+                        activeDot={{ r: 6 }}
+                        label={<PctCustomLabel />}
+                    />
+
+                </ComposedChart>
+            </ResponsiveContainer>
+        </div>
+    );
+}
 // ── formatters ────────────────────────────────────────────
 const formatUnit = (v) => {
     if (v >= 1000000) return `${(v / 1000000).toFixed(2)}M`;
@@ -59,7 +194,6 @@ const ChartTooltip = ({ active, payload, label, suffix = '' }) => {
     );
 };
 
-const totalOffered = tenorData.reduce((s, d) => s + d.value, 0).toFixed(2);
 
 export function PortfolioDonut() {
     const [activeIndex, setActiveIndex] = useState(null);
@@ -173,51 +307,6 @@ export function PortfolioDonut() {
                 ))}
             </div>
 
-        </div>
-    );
-}
-
-// ── line chart ────────────────────────────────────────────
-export function DebtGDPLine() {
-    return (
-        <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
-            <div className="mb-1 font-display text-[15px] font-bold text-text">
-                Debt-to-GDP Trend
-            </div>
-            <div className="font-mono text-[10px] text-text-3 mb-5">
-                2020–2026 · IMF Methodology
-            </div>
-            <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={gdpData} margin={{ top: 4, right: 16, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-light-2)" vertical={false} />
-                    <XAxis
-                        dataKey="year"
-                        tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
-                        axisLine={false} tickLine={false}
-                    />
-                    <YAxis
-                        domain={[25, 34]}
-                        tickFormatter={v => `${v}%`}
-                        tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
-                        axisLine={false} tickLine={false}
-                    />
-                    <Tooltip content={<ChartTooltip suffix="%" />} />
-                    <ReferenceLine
-                        y={31.2} stroke="var(--color-teal-3)"
-                        strokeDasharray="4 4" strokeWidth={1.5}
-                        label={{ value: 'Current 31.2%', position: 'insideTopRight', fontSize: 9, fill: 'var(--color-teal)', fontFamily: 'JetBrains Mono, monospace' }}
-                    />
-                    <Line
-                        type="monotone"
-                        dataKey="ratio"
-                        name="Debt/GDP"
-                        stroke="var(--color-teal)"
-                        strokeWidth={2.5}
-                        dot={{ r: 4, fill: 'white', stroke: 'var(--color-teal)', strokeWidth: 2.5 }}
-                        activeDot={{ r: 6, fill: 'var(--color-teal)' }}
-                    />
-                </LineChart>
-            </ResponsiveContainer>
         </div>
     );
 }

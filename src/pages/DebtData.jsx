@@ -1,4 +1,4 @@
-import { DebtGDPLine, DebtServiceBar, PortfolioDonut } from "../components/DebtCharts";
+import { DebtServiceBar, IssuanceVsCeiling, PortfolioDonut } from "../components/DebtCharts";
 
 const now = new Date();
 
@@ -33,7 +33,7 @@ export default function DebtData() {
                 <div className="max-w-325 mx-auto px-8">
                     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5'>
                         <PortfolioDonut />
-                        <DebtGDPLine />
+                        <IssuanceVsCeiling />
                         <DebtServiceBar />
                     </div>
                 </div>

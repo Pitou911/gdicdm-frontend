@@ -6,7 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import ResourceCard from '../components/ResourceCard';
 import NewsCard from '../components/NewsCard';
 import { fetchDocuments, fetchNews } from '../data/index';
-import { DebtGDPLine, PortfolioDonutSimple, DebtServiceBarSimple } from '../components/DebtCharts';
+import { PortfolioDonutSimple, DebtServiceBarSimple, IssuanceVsCeiling } from '../components/DebtCharts';
 
 export default function Home() {
     const { t } = useLanguage();
@@ -99,7 +99,7 @@ export default function Home() {
                     </div>
                     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5'>
                         <PortfolioDonutSimple />
-                        <DebtGDPLine />
+                        <IssuanceVsCeiling />
                         <DebtServiceBarSimple />
                     </div>
                 </div>
