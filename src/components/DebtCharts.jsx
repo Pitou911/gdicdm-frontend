@@ -5,12 +5,17 @@ import {
 } from 'recharts';
 import { useState } from 'react';
 
-// ── data ─────────────────────────────────────────────────
-const portfolioData = [
-    { name: 'Multilateral', value: 39, color: 'var(--color-teal)' },
-    { name: 'Bilateral',    value: 37, color: 'var(--color-blue)' },
-    { name: 'Commercial',   value: 24, color: 'var(--color-teal-3)' },
+const today = new Date();
+const todayLabel = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const tenorData = [
+    { name: '3-Year',  value: 1159.60, pct: 43.44, investors: 14, color: 'var(--color-teal)' },
+    { name: '1-Year',  value: 740.90,  pct: 27.76, investors: 17, color: 'var(--color-blue)' },
+    { name: '15-Year', value: 468.00,  pct: 17.53, investors: 3,  color: 'var(--color-teal-2)' },
+    { name: '2-Year',  value: 172.00,  pct: 6.44,  investors: 4,  color: 'var(--color-teal-3)' },
+    { name: '10-Year', value: 75.92,   pct: 2.84,  investors: 4,  color: 'var(--color-blue-2)' },
+    { name: '5-Year',  value: 52.80,   pct: 1.98,  investors: 4,  color: 'var(--color-mid)' },
 ];
+
 
 const gdpData = [
     { year: '2020', ratio: 27.4 },
@@ -54,66 +59,120 @@ const ChartTooltip = ({ active, payload, label, suffix = '' }) => {
     );
 };
 
-// ── donut chart ───────────────────────────────────────────
-const RADIAN = Math.PI / 180;
-const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    return percent > 0.08 ? (
-        <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central"
-            fontFamily="JetBrains Mono, monospace" fontSize={11} fontWeight={700}>
-            {`${(percent * 100).toFixed(0)}%`}
-        </text>
-    ) : null;
-};
+const totalOffered = tenorData.reduce((s, d) => s + d.value, 0).toFixed(2);
 
 export function PortfolioDonut() {
+    const [activeIndex, setActiveIndex] = useState(null);
+
     return (
-        <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
-            <div className="mb-1 font-display text-[15px] font-bold text-text">
-                Portfolio by Creditor
+        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
+
+            {/* header */}
+            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)]">
+                Offered Amount by Tenor
             </div>
-            <div className="font-mono text-[10px] text-text-3 mb-5">
-                Q1 2026 · Total USD 12.4B
+            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-4">
+                Billion KHR · As of {todayLabel}
             </div>
-            <div className="flex items-center gap-6">
-                <div className="w-40 h-40 shrink-0">
+
+            {/* donut + legend row */}
+            <div className="flex items-center gap-5">
+
+                <div className="w-37.5 h-37.5 shrink-0 relative">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
-                                data={portfolioData}
+                                data={tenorData}
                                 cx="50%" cy="50%"
-                                innerRadius={42} outerRadius={75}
+                                innerRadius={0}
+                                outerRadius={72}
                                 dataKey="value"
                                 labelLine={false}
-                                label={renderCustomLabel}
                                 strokeWidth={2}
                                 stroke="white"
+                                onMouseEnter={(_, i) => setActiveIndex(i)}
+                                onMouseLeave={() => setActiveIndex(null)}
                             >
-                                {portfolioData.map((entry, i) => (
-                                    <Cell key={i} fill={entry.color} />
+                                {tenorData.map((entry, i) => (
+                                    <Cell
+                                        key={i}
+                                        fill={entry.color}
+                                        opacity={activeIndex === null || activeIndex === i ? 1 : 0.4}
+                                    />
                                 ))}
                             </Pie>
-                            <Tooltip content={<ChartTooltip suffix="%" />} />
+                            <Tooltip
+                                content={({ active, payload }) => {
+                                    if (!active || !payload?.length) return null;
+                                    const d = payload[0].payload;
+                                    return (
+                                        <div className="bg-white border border-light-2 rounded-sm px-3 py-2 shadow-md text-[12px]">
+                                            <div className="font-semibold text-text mb-1">{d.name}</div>
+                                            <div className="font-mono text-text-2">{d.value.toLocaleString()} B KHR</div>
+                                            <div className="font-mono text-teal">{d.pct}%</div>
+                                            <div className="font-mono text-text-3">{d.investors} investors</div>
+                                        </div>
+                                    );
+                                }}
+                            />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col gap-3 flex-1">
-                    {portfolioData.map((d, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                            <div className="w-2.5 h-2.5 rounded-[3px] shrink-0" style={{ background: d.color }}></div>
-                            <span className="text-[13px] text-text-2 flex-1">{d.name}</span>
-                            <span className="font-mono text-[12px] font-semibold text-text">{d.value}%</span>
+
+                {/* legend */}
+                <div className="flex flex-col gap-[6px] flex-1">
+                    {tenorData.map((d, i) => (
+                        <div
+                            key={i}
+                            className={`flex items-center gap-2 cursor-pointer transition-opacity duration-150 ${activeIndex !== null && activeIndex !== i ? 'opacity-40' : ''}`}
+                            onMouseEnter={() => setActiveIndex(i)}
+                            onMouseLeave={() => setActiveIndex(null)}
+                        >
+                            <div className="w-2 h-2 rounded-[2px] shrink-0" style={{ background: d.color }}></div>
+                            <span className="text-[12px] text-[var(--color-text-2)] flex-1">{d.name}</span>
+                            <span className="font-mono text-[10.5px] font-semibold text-[var(--color-text)]">{d.pct}%</span>
                         </div>
                     ))}
-                    <div className="pt-2 mt-1 border-t border-light-2">
-                        <div className="font-mono text-[10px] text-text-3">
-                            Concessional loans account for 76% of total external debt
-                        </div>
-                    </div>
                 </div>
             </div>
+
+            {/* 6 tenor boxes */}
+            <div className="grid grid-cols-3 gap-2 mt-5">
+                {tenorData.map((d, i) => (
+                    <div
+                        key={i}
+                        className={`rounded-[var(--radius-sm)] px-3 py-2.5 border transition-all duration-150 cursor-pointer ${activeIndex === i ? 'border-transparent shadow-[0_0_0_2px_rgba(0,109,110,0.2)]' : 'border-[var(--color-light-2)]'}`}
+                        style={{ background: activeIndex === i ? `color-mix(in srgb, ${d.color} 10%, white)` : 'var(--color-snow)' }}
+                        onMouseEnter={() => setActiveIndex(i)}
+                        onMouseLeave={() => setActiveIndex(null)}
+                    >
+                        {/* tenor label */}
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                            <div className="w-2 h-2 rounded-[2px] shrink-0" style={{ background: d.color }}></div>
+                            <div className="font-mono text-[9px] font-bold tracking-[0.5px] uppercase text-[var(--color-text-3)]">
+                                {d.name}
+                            </div>
+                        </div>
+
+                        {/* amount */}
+                        <div className="font-[var(--font-display)] text-[14px] font-bold leading-none" style={{ color: d.color }}>
+                            {d.value.toLocaleString()}
+                        </div>
+                        <div className="font-mono text-[8.5px] text-[var(--color-text-3)] mt-0.5 mb-2">B KHR</div>
+
+                        {/* divider */}
+                        <div className="border-t border-[var(--color-light-2)] pt-1.5 flex items-center justify-between">
+                            <div className="font-mono text-[9px] text-[var(--color-text-3)]">
+                                {d.investors} investors
+                            </div>
+                            <div className="font-mono text-[9px] font-semibold" style={{ color: d.color }}>
+                                {d.pct}%
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
         </div>
     );
 }
@@ -289,6 +348,123 @@ export function DebtServiceBar() {
                     * 2026 data as of April
                 </div>
             )}
+        </div>
+    );
+}
+
+// add these two new exports at the bottom of DebtCharts.jsx
+
+export function PortfolioDonutSimple() {
+    const [activeIndex, setActiveIndex] = useState(null);
+
+    return (
+        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
+            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)]">
+                Offered Amount by Tenor
+            </div>
+            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-4">
+                Billion KHR · As of {todayLabel}
+            </div>
+
+            <div className="flex items-center gap-5">
+                {/* pie */}
+                <div className="w-[150px] h-[150px] shrink-0">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={tenorData}
+                                cx="50%" cy="50%"
+                                innerRadius={0}
+                                outerRadius={72}
+                                dataKey="value"
+                                labelLine={false}
+                                strokeWidth={2}
+                                stroke="white"
+                                onMouseEnter={(_, i) => setActiveIndex(i)}
+                                onMouseLeave={() => setActiveIndex(null)}
+                            >
+                                {tenorData.map((entry, i) => (
+                                    <Cell
+                                        key={i}
+                                        fill={entry.color}
+                                        opacity={activeIndex === null || activeIndex === i ? 1 : 0.4}
+                                    />
+                                ))}
+                            </Pie>
+                            <Tooltip
+                                content={({ active, payload }) => {
+                                    if (!active || !payload?.length) return null;
+                                    const d = payload[0].payload;
+                                    return (
+                                        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] px-3 py-2 shadow-[var(--shadow-md)] text-[12px]">
+                                            <div className="font-semibold text-[var(--color-text)] mb-1">{d.name}</div>
+                                            <div className="font-mono text-[var(--color-text-2)]">{d.value.toLocaleString()} B KHR</div>
+                                            <div className="font-mono text-[var(--color-teal)]">{d.pct}%</div>
+                                        </div>
+                                    );
+                                }}
+                            />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+
+                {/* legend only — no boxes */}
+                <div className="flex flex-col gap-[6px] flex-1">
+                    {tenorData.map((d, i) => (
+                        <div
+                            key={i}
+                            className={`flex items-center gap-2 cursor-pointer transition-opacity duration-150 ${activeIndex !== null && activeIndex !== i ? 'opacity-40' : ''}`}
+                            onMouseEnter={() => setActiveIndex(i)}
+                            onMouseLeave={() => setActiveIndex(null)}
+                        >
+                            <div className="w-2 h-2 rounded-[2px] shrink-0" style={{ background: d.color }}></div>
+                            <span className="text-[12px] text-[var(--color-text-2)] flex-1">{d.name}</span>
+                            <span className="font-mono text-[10.5px] font-semibold text-[var(--color-text)]">{d.pct}%</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export function DebtServiceBarSimple() {
+    return (
+        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
+            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)]">
+                Bidding vs Offered
+            </div>
+            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-5">
+                2022–2026 · All Years · * 2026 as of April
+            </div>
+
+            <ResponsiveContainer width="100%" height={200}>
+                <BarChart
+                    data={allBiddingData}
+                    margin={{ top: 4, right: 8, left: -10, bottom: 0 }}
+                    barCategoryGap="35%"
+                    barGap={4}
+                >
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-light-2)" vertical={false} />
+                    <XAxis
+                        dataKey="year"
+                        tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
+                        axisLine={false} tickLine={false}
+                    />
+                    <YAxis
+                        tickFormatter={formatUnit}
+                        tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
+                        axisLine={false} tickLine={false}
+                    />
+                    <Tooltip content={<ChartTooltip />} />
+                    <Legend
+                        iconType="square" iconSize={8}
+                        wrapperStyle={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, paddingTop: 10 }}
+                    />
+                    <Bar dataKey="bidding" name="Bidding" fill="var(--color-teal)"   radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="offered" name="Offered" fill="var(--color-teal-3)" radius={[3, 3, 0, 0]} />
+                </BarChart>
+            </ResponsiveContainer>
         </div>
     );
 }
