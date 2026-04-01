@@ -114,21 +114,21 @@ export default function Calendar() {
 
                                     return (
                                         <tr key={i} className={`group border-b border-light last:border-b-0 transition-colors duration-150
-                                            ${past ? 'opacity-50' : 'hover:bg-[var(--color-snow)]'}`}
+                                            ${past ? 'opacity-50' : 'hover:bg-snow'}`}
                                         >
                                             {/* date */}
                                             <td className="px-6 py-4 align-middle">
-                                                <div className={`font-[var(--font-display)] text-[18px] font-bold tracking-[-0.3px] ${past ? 'text-[var(--color-mid)]' : 'text-[var(--color-text)]'}`}>
+                                                <div className={`font-display text-[18px] font-bold tracking-[-0.3px] ${past ? 'text-mid' : 'text-text'}`}>
                                                     {ev.label}
                                                 </div>
                                                 {today_ && (
-                                                    <div className="font-mono text-[9px] font-bold tracking-[1px] uppercase text-[var(--color-teal)] mt-0.5">Today</div>
+                                                    <div className="font-mono text-[9px] font-bold tracking-[1px] uppercase text-teal mt-0.5">Today</div>
                                                 )}
                                             </td>
 
                                             {/* month */}
                                             <td className="px-6 py-4 align-middle">
-                                                <div className={`text-[13px] font-medium ${past ? 'text-[var(--color-mid)]' : 'text-[var(--color-text-2)]'}`}>
+                                                <div className={`text-[13px] font-medium ${past ? 'text-mid' : 'text-text-2'}`}>
                                                     {ev.month}
                                                 </div>
                                             </td>
@@ -139,19 +139,19 @@ export default function Calendar() {
                                                 return (
                                                     <td key={tenor} className="px-4 py-4 align-middle text-center">
                                                         {active ? (
-                                                            <div className={`inline-flex items-center justify-center w-9 h-9 rounded-[var(--radius-sm)] text-[11px] font-bold transition-all duration-150
+                                                            <div className={`inline-flex items-center justify-center w-9 h-9 rounded-sm text-[11px] font-bold transition-all duration-150
                                                                 ${past
-                                                                    ? 'bg-[var(--color-light)] text-[var(--color-mid)]'
+                                                                    ? 'bg-light text-mid'
                                                                     : upcoming
-                                                                        ? 'bg-[var(--color-teal-4)] text-[var(--color-teal)] border border-[var(--color-teal-3)] shadow-[0_0_0_2px_rgba(0,109,110,0.1)]'
-                                                                        : 'bg-[var(--color-teal)] text-white shadow-[0_2px_6px_rgba(0,109,110,0.25)]'
+                                                                        ? 'bg-teal-4 text-teal border border-teal-3 shadow-[0_0_0_2px_rgba(0,109,110,0.1)]'
+                                                                        : 'bg-teal text-white shadow-[0_2px_6px_rgba(0,109,110,0.25)]'
                                                                 }`}
                                                             >
                                                                 {tenor}
                                                             </div>
                                                         ) : (
                                                             <div className="inline-flex items-center justify-center w-9 h-9">
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-light-2)]"></div>
+                                                                <div className="w-1.5 h-1.5 rounded-full bg-light-2"></div>
                                                             </div>
                                                         )}
                                                     </td>
@@ -161,19 +161,19 @@ export default function Calendar() {
                                             {/* status */}
                                             <td className="px-6 py-4 align-middle">
                                                 {past ? (
-                                                    <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-light)] text-[var(--color-mid)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-mid)]">
+                                                    <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-light text-mid before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-mid">
                                                         Closed
                                                     </span>
                                                 ) : today_ ? (
-                                                    <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-amber-3)] text-[var(--color-amber)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-amber)]">
+                                                    <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-amber-3 text-amber before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-amber">
                                                         Today
                                                     </span>
                                                 ) : upcoming ? (
-                                                    <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-teal-4)] text-[var(--color-teal)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-teal)]">
+                                                    <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-teal-4 text-teal before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-teal">
                                                         Upcoming
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-green-3)] text-[var(--color-green-2)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-green-2)]">
+                                                    <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-green-3 text-green-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-green-2">
                                                         Scheduled
                                                     </span>
                                                 )}
@@ -186,11 +186,11 @@ export default function Calendar() {
                     </div>
 
                     {/* bottom note */}
-                    <div className="mt-6 flex items-start gap-3 bg-[var(--color-blue-3)] border border-[var(--color-blue-2)]/20 rounded-[var(--radius-sm)] px-5 py-4">
+                    <div className="mt-6 flex items-start gap-3 bg-blue-3 border border-blue-2/20 rounded-sm px-5 py-4">
                         <div className="text-[18px] shrink-0">ℹ️</div>
                         <div>
-                            <div className="text-[13px] font-semibold text-[var(--color-blue-2)] mb-[3px]">Important Notice</div>
-                            <div className="text-[12.5px] text-[var(--color-text-2)] leading-[1.7]">
+                            <div className="text-[13px] font-semibold text-blue-2 mb-0.75">Important Notice</div>
+                            <div className="text-[12.5px] text-text-2 leading-[1.7]">
                                 Auction dates and tenors are indicative and subject to change. Final terms will be announced via official MEF circulars at least 5 business days prior to each auction date. Contact your authorized dealer for subscription details.
                             </div>
                         </div>
