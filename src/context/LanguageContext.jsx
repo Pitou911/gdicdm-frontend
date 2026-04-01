@@ -1,76 +1,89 @@
-import { createContext, useState, useContext } from 'react';
-
-const translations = {
-  en: {
-    ann: 'Government Bond Series 6 — Subscription open 15 Jan – 28 Jan 2025. Contact your authorised primary dealer.',
-    heroSub2: 'Transparent, Responsible & Sustainable',
-    heroSub: 'Official debt data, publications, and investment information from the General Department of International Cooperation and Debt Management.',
-    heroBtn1: 'View Debt Data',
-    heroBtn2: 'Bond Issuances →',
-    kpi1: 'Publications available',
-    kpi2: 'Bond series issued',
-    kpi3: 'Partner organisations',
-    kpiEducation: 'Education on Public Debt & Investment',
-    linkDebtData: 'View Debt Data →',
-    linkDocLibrary: 'All Documents →',
-    linkNewsRoom: 'All News →',
-    eduTitle: 'Understand Public Debt & Investment',
-    eduSub: 'Free guides, videos, and infographics on government bonds, debt management, and Cambodia\'s fiscal landscape.',
-    eduBtn: 'Explore Education Centre →',
-    navHome: 'Home',
-    navDebt: 'Debt Data',
-    navDocs: 'Documents',
-    navEdu: 'Education',
-    navBonds: 'Bonds & T-Bills',
-    navNews: 'News',
-    navAbout: 'About',
-    navContact: 'Contact',
-    btnAdmin: 'CMS Admin',
-    navCalendar: 'Calendar',
-  },
-  km: {
-    ann: 'សញ្ញាប័ណ្ណរដ្ឋ ស៊េរីទី ៦ — ការជាវបើក ១៥ – ២៨ មករា ២០២៥ ។ ទាក់ទងធនាគារចែកចាយ',
-    heroSub2: 'ប្រកបដោយតម្លាភាព ទទួលខុសត្រូវ និងចីរភាព',
-    heroSub: 'ទិន្នន័យបំណុល ការបោះផ្សាយ និងព័ត៌មានវិនិយោគ ពីអគ្គនាយកដ្ឋានសហប្រតិបត្តិការអន្តរជាតិ និងការគ្រប់គ្រងបំណុល',
-    heroBtn1: 'មើលទិន្នន័យបំណុល',
-    heroBtn2: 'ការចេញសញ្ញាប័ណ្ណ →',
-    kpi1: 'ឯកសារអាចទាញយក',
-    kpi2: 'ស៊េរីសញ្ញាប័ណ្ណ',
-    kpi3: 'អង្គការដៃគូ',
-    kpiEducation: 'ការអប់រំអំពីបំណុលសាធារណៈ និងវិនិយោគ',
-    linkDebtData: 'មើលទិន្នន័យបំណុល →',
-    linkDocLibrary: 'មើលឯកសារ →',
-    linkNewsRoom: 'មើលព័ត៌មាន →',
-    eduTitle: 'យល់ដឹងអំពីបំណុលសាធារណៈ',
-    eduSub: 'មគ្គុទ្ទេស វីដេអូ និងរូបភាពព័ត៌មានស្តីពីសញ្ញាប័ណ្ណរដ្ឋ',
-    eduBtn: 'ស្វែងយល់ →',
-    navHome: 'ទំព័រដើម',
-    navDebt: 'ទិន្នន័យ',
-    navDocs: 'ឯកសារ',
-    navEdu: 'ការអប់រំ',
-    navBonds: 'សញ្ញាប័ណ្ណអន្តរការ',
-    navNews: 'ព័ត៌មាន',
-    navAbout: 'អំពីយើង',
-    navContact: 'ទំនាក់ទំនង',
-    btnAdmin: 'រដ្ឋបាល',
-    navCalendar: 'ប្រតិទិន',
-  }
-};
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const LanguageContext = createContext();
 
-export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('en');
-  
-  const t = (key) => {
-    return translations[lang][key] || key;
-  };
+const BASE_TRANSLATIONS = {
+    en: {
+        navHome: 'Home', navAbout: 'About', navBonds: 'Bonds',
+        navDebt: 'Debt Data', navDocs: 'Documents', navEdu: 'Education',
+        navNews: 'News', navContact: 'Contact', navCalendar: 'Calendar',
+        heroSub2: 'Transparency & Accountability',
+        heroSub: 'Access official debt statistics, bond information, and financial education resources from the General Department of International Cooperation and Debt Management.',
+        heroBtn1: 'View Debt Data', heroBtn2: 'Explore Bonds',
+        kpi1: 'Published Documents', kpi2: 'Partner Organisations', kpi3: 'International Partners',
+        kpiEducation: 'Learning Resources',
+        eduTitle: 'Understand Public Debt', eduSub: 'Free guides, videos, and infographics on public debt and investment in Cambodia.', eduBtn: 'Browse Resources',
+        linkDebtData: 'View All Data →', linkDocLibrary: 'View All Documents →', linkNewsRoom: 'View All News →',
+    }
+};
 
-  return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+const CACHE_KEY = 'translation_cache_km';
+
+export function LanguageProvider({ children }) {
+    const [lang, setLang]             = useState('en');
+    const [translations, setTranslations] = useState({});
+    const [loading, setLoading]       = useState(false);
+
+    const translateText = async (text) => {
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|km`;
+        const res  = await fetch(url);
+        const data = await res.json();
+        return data.responseData?.translatedText || text;
+    };
+
+    const loadKhmerTranslations = useCallback(async () => {
+        // check cache first
+        const cached = sessionStorage.getItem(CACHE_KEY);
+        if (cached) {
+            setTranslations(JSON.parse(cached));
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const entries  = Object.entries(BASE_TRANSLATIONS.en);
+            const results  = {};
+
+            // translate in batches of 5 to avoid rate limiting
+            for (let i = 0; i < entries.length; i += 5) {
+                const batch = entries.slice(i, i + 5);
+                const translated = await Promise.all(
+                    batch.map(async ([key, value]) => {
+                        const text = await translateText(value);
+                        return [key, text];
+                    })
+                );
+                translated.forEach(([key, value]) => { results[key] = value; });
+                // small delay between batches to respect rate limits
+                if (i + 5 < entries.length) await new Promise(r => setTimeout(r, 300));
+            }
+
+            sessionStorage.setItem(CACHE_KEY, JSON.stringify(results));
+            setTranslations(results);
+        } catch (err) {
+            console.error('Translation failed:', err);
+            setTranslations({});
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (lang === 'km') loadKhmerTranslations();
+    }, [lang, loadKhmerTranslations]);
+
+    const t = useCallback((key) => {
+        if (lang === 'en') return BASE_TRANSLATIONS.en[key] || key;
+        return translations[key] || BASE_TRANSLATIONS.en[key] || key;
+    }, [lang, translations]);
+
+    return (
+        <LanguageContext.Provider value={{ lang, setLang, t, loading }}>
+            {children}
+        </LanguageContext.Provider>
+    );
 }
 
-export const useLanguage = () => useContext(LanguageContext);
+export function useLanguage() {
+    return useContext(LanguageContext);
+}
