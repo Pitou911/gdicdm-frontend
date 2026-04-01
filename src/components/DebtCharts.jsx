@@ -61,13 +61,13 @@ const PctCustomLabel = ({ x, y, value }) => (
 
 export function IssuanceVsCeiling() {
     return (
-        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
+        <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
 
             {/* header */}
-            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)] text-center">
+            <div className="mb-1 font-display text-[15px] font-bold text-text text-center">
                 Issuance VS Annual Ceiling
             </div>
-            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-5 text-center">
+            <div className="font-mono text-[10px] text-text-3 mb-5 text-center">
                 Billion KHR · 2022–2026
             </div>
 
@@ -110,13 +110,13 @@ export function IssuanceVsCeiling() {
                         content={({ active, payload, label }) => {
                             if (!active || !payload?.length) return null;
                             return (
-                                <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] px-3 py-2 shadow-[var(--shadow-md)] text-[12px]">
-                                    <div className="font-bold text-[var(--color-text)] mb-1">{label}</div>
+                                <div className="bg-white border border-light-2 rounded-sm px-3 py-2 shadow-md text-[12px]">
+                                    <div className="font-bold text-text mb-1">{label}</div>
                                     {payload.map((p, i) => (
                                         <div key={i} className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full" style={{ background: p.color }}></div>
-                                            <span className="text-[var(--color-text-2)]">{p.name}:</span>
-                                            <span className="font-semibold text-[var(--color-text)]">
+                                            <span className="text-text-2">{p.name}:</span>
+                                            <span className="font-semibold text-text">
                                                 {p.name === '(%)' ? `${p.value}%` : p.value.toLocaleString()}
                                             </span>
                                         </div>
