@@ -45,10 +45,11 @@ export default function Contact(){
                             </div>
                             <div className="bg-white border border-light-2 rounded-sm p-5.5 mb-3 shadow-sm">
                                 <div className="flex items-center gap-1.5 text-[10.5px] font-bold tracking-[1.5px] uppercase text-teal mb-3 before:content-[''] before:w-3 before:h-0.5 before:bg-teal before:rounded-[1px]">Contact Details</div>
-                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📞<span className="text-text-2" >+855 23 430 000</span></div>
-                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📠<span className="text-text-2" >+855 23 430 001</span></div>
-                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">✉<span className="text-text-2" >gdicdm@mef.gov.kh</span></div>
-                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">🕐<span className="text-text-2" >Mon–Fri 08:00–17:00 ICT</span></div>
+                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📞<span className="text-text-2" >(855) 11 720 222</span></div>
+                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">💬<span className="text-text-2" >t.me/governmentsecuritieskh</span></div>
+                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📧<span className="text-text-2" >dgs.gidcdm@mef.gov.kh</span></div>
+                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">🌐<span className="text-text-2" >gdicdm.mef.gov.kh</span></div>
+                                <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📍<span className="text-text-2" >Street 92, Phnom Penh, 1202</span></div>
                             </div>
                             <div className="bg-white border-light-2 rounded-sm p-5.5 mb-3 shadow-sm" style={{ background: 'var(--teal4)', borderColor: 'var(--teal3)' }}>
                                 <div className="text-[13px] text-teal leading-[1.75]">

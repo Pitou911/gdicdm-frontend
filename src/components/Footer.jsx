@@ -31,10 +31,11 @@ export default function Footer(){
                 </div>
                 <div>
                     <div className="text-[10px] font-bold tracking-[2px] uppercase text-teal-3 mb-3.5">Contact</div>
-                    <div className="text-[13px] text-white/35 mb-2">📍 Street 92, Phnom Penh</div>
-                    <div className="text-[13px] text-white/35 mb-2">📞 +855 23 430 000</div>
-                    <div className="text-[13px] text-white/35 mb-2">✉ gdicdm@mef.gov.kh</div>
-                    <div className="text-[13px] text-white/35 mb-2">🕐 Mon–Fri 08:00–17:00</div>
+                    <div className="text-[13px] text-white/35 mb-2">📞 (855) 11 720 222</div>
+                    <div className="text-[13px] text-white/35 mb-2">💬 t.me/governmentsecuritieskh</div>
+                    <div className="text-[13px] text-white/35 mb-2">📧 dgs.gidcdm@mef.gov.kh</div>
+                    <div className="text-[13px] text-white/35 mb-2">🌐 gdicdm.mef.gov.kh</div>
+                    <div className="text-[13px] text-white/35 mb-2">📍 Street 92, Phnom Penh, 1202</div>
                 </div>
             </div>
             <div className="max-w-325 mx-auto px-8 py-5 border-t border-white/10 flex flex-col md:flex-row items-left justify-between gap-4 text-[11px] text-white/30">
