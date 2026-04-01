@@ -49,10 +49,11 @@ export default function About() {
                         <div className="flex items-center gap-1.5 text-[10.5px] font-bold tracking-[1.5px] uppercase text-teal mb-3 before:content-[''] before:w-3 before:h-0.5 before:bg-teal before:rounded-[1px]">
                             Contact
                         </div>
-                        <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📍 <span>Ministry of Economy and Finance, Phnom Penh</span></div>
-                        <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📞 <span>+855 23 123 456</span></div>
-                        <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📧 <span>gdicdm@mef.gov.kh</span></div>
-                        <div className="flex gap-2.5 text-[13.5px] text-text-2 items-start leading-normal">🕐 <span>Mon-Fri, 08:00-17:00 ICT</span></div>
+                        <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📞<span>(855) 11 720 222</span></div>
+                        <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">💬<span>t.me/governmentsecuritieskh</span></div>
+                        <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">📧<span>dgs.gidcdm@mef.gov.kh</span></div>
+                        <div className="flex gap-2.5 text-[13.5px] text-text-2 mb-2.25 items-start leading-normal">🌐<span>gdicdm.mef.gov.kh</span></div>
+                        <div className="flex gap-2.5 text-[13.5px] text-text-2 items-start leading-normal">📍<span>Street 92, Phnom Penh, 120</span></div>
                         </div>
 
                         <div className="rounded-sm p-5.5 mb-3 bg-linear-to-br from-teal to-blue">

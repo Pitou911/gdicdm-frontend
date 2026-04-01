@@ -17,15 +17,6 @@ const tenorData = [
 ];
 
 
-const gdpData = [
-    { year: '2020', ratio: 27.4 },
-    { year: '2021', ratio: 28.9 },
-    { year: '2022', ratio: 29.8 },
-    { year: '2023', ratio: 30.1 },
-    { year: '2024', ratio: 30.8 },
-    { year: '2025', ratio: 31.0 },
-    { year: '2026', ratio: 31.2 },
-];
 
 const allBiddingData = [
     { year: '2022', bidding: 159900,  offered: 72100   },
