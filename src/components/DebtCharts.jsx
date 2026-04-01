@@ -358,17 +358,17 @@ export function PortfolioDonutSimple() {
     const [activeIndex, setActiveIndex] = useState(null);
 
     return (
-        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
-            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)]">
+        <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
+            <div className="mb-1 font-display text-[15px] font-bold text-text">
                 Offered Amount by Tenor
             </div>
-            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-4">
+            <div className="font-mono text-[10px] text-text-3 mb-4">
                 Billion KHR · As of {todayLabel}
             </div>
 
             <div className="flex items-center gap-5">
                 {/* pie */}
-                <div className="w-[150px] h-[150px] shrink-0">
+                <div className="w-37.5 h-37.5 shrink-0">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
@@ -396,10 +396,10 @@ export function PortfolioDonutSimple() {
                                     if (!active || !payload?.length) return null;
                                     const d = payload[0].payload;
                                     return (
-                                        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] px-3 py-2 shadow-[var(--shadow-md)] text-[12px]">
-                                            <div className="font-semibold text-[var(--color-text)] mb-1">{d.name}</div>
-                                            <div className="font-mono text-[var(--color-text-2)]">{d.value.toLocaleString()} B KHR</div>
-                                            <div className="font-mono text-[var(--color-teal)]">{d.pct}%</div>
+                                        <div className="bg-white border border-light-2 rounded-sm px-3 py-2 shadow-md text-[12px]">
+                                            <div className="font-semibold text-text mb-1">{d.name}</div>
+                                            <div className="font-mono text-text-2">{d.value.toLocaleString()} B KHR</div>
+                                            <div className="font-mono text-teal">{d.pct}%</div>
                                         </div>
                                     );
                                 }}
@@ -409,7 +409,7 @@ export function PortfolioDonutSimple() {
                 </div>
 
                 {/* legend only — no boxes */}
-                <div className="flex flex-col gap-[6px] flex-1">
+                <div className="flex flex-col gap-1.5 flex-1">
                     {tenorData.map((d, i) => (
                         <div
                             key={i}
@@ -417,9 +417,9 @@ export function PortfolioDonutSimple() {
                             onMouseEnter={() => setActiveIndex(i)}
                             onMouseLeave={() => setActiveIndex(null)}
                         >
-                            <div className="w-2 h-2 rounded-[2px] shrink-0" style={{ background: d.color }}></div>
-                            <span className="text-[12px] text-[var(--color-text-2)] flex-1">{d.name}</span>
-                            <span className="font-mono text-[10.5px] font-semibold text-[var(--color-text)]">{d.pct}%</span>
+                            <div className="w-2 h-2 rounded-xs shrink-0" style={{ background: d.color }}></div>
+                            <span className="text-[12px] text-text-2 flex-1">{d.name}</span>
+                            <span className="font-mono text-[10.5px] font-semibold text-text">{d.pct}%</span>
                         </div>
                     ))}
                 </div>
@@ -430,11 +430,11 @@ export function PortfolioDonutSimple() {
 
 export function DebtServiceBarSimple() {
     return (
-        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
-            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)]">
+        <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
+            <div className="mb-1 font-display text-[15px] font-bold text-text">
                 Bidding vs Offered
             </div>
-            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-5">
+            <div className="font-mono text-[10px] text-text-3 mb-5">
                 2022–2026 · All Years · * 2026 as of April
             </div>
 
