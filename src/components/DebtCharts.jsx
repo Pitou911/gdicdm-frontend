@@ -3,6 +3,7 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine,
     BarChart, Bar, Legend,
 } from 'recharts';
+import { useState } from 'react';
 
 // ── data ─────────────────────────────────────────────────
 const portfolioData = [
@@ -21,14 +22,20 @@ const gdpData = [
     { year: '2026', ratio: 31.2 },
 ];
 
-const debtServiceData = [
-    { year: '2025', principal: 380, interest: 240 },
-    { year: '2026', principal: 460, interest: 320 },
-    { year: '2027', principal: 340, interest: 210 },
-    { year: '2028', principal: 560, interest: 320 },
-    { year: '2029', principal: 420, interest: 260 },
-    { year: '2030', principal: 390, interest: 230 },
+const allBiddingData = [
+    { year: '2022', bidding: 159900,  offered: 72100   },
+    { year: '2023', bidding: 282000,  offered: 238000  },
+    { year: '2024', bidding: 379300,  offered: 301300  },
+    { year: '2025', bidding: 1467300, offered: 690300  },
+    { year: '2026', bidding: 1684120, offered: 1367520, note: 'As of April' },
 ];
+
+// ── formatters ────────────────────────────────────────────
+const formatUnit = (v) => {
+    if (v >= 1000000) return `${(v / 1000000).toFixed(2)}M`;
+    if (v >= 1000)    return `${(v / 1000).toFixed(1)}K`;
+    return v.toLocaleString();
+};
 
 // ── custom tooltip ────────────────────────────────────────
 const ChartTooltip = ({ active, payload, label, suffix = '' }) => {
@@ -40,7 +47,7 @@ const ChartTooltip = ({ active, payload, label, suffix = '' }) => {
                 <div key={i} className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full" style={{ background: p.color || p.fill }}></div>
                     <span className="text-text-2">{p.name}:</span>
-                    <span className="font-semibold text-text">{p.value}{suffix}</span>
+                    <span className="font-semibold text-text">{p.value.toLocaleString()}{suffix}</span>
                 </div>
             ))}
         </div>
@@ -64,14 +71,12 @@ const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent
 export function PortfolioDonut() {
     return (
         <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
-            {/* header */}
             <div className="mb-1 font-display text-[15px] font-bold text-text">
                 Portfolio by Creditor
             </div>
             <div className="font-mono text-[10px] text-text-3 mb-5">
                 Q1 2026 · Total USD 12.4B
             </div>
-
             <div className="flex items-center gap-6">
                 <div className="w-40 h-40 shrink-0">
                     <ResponsiveContainer width="100%" height="100%">
@@ -94,8 +99,6 @@ export function PortfolioDonut() {
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-
-                {/* legend */}
                 <div className="flex flex-col gap-3 flex-1">
                     {portfolioData.map((d, i) => (
                         <div key={i} className="flex items-center gap-2">
@@ -125,7 +128,6 @@ export function DebtGDPLine() {
             <div className="font-mono text-[10px] text-text-3 mb-5">
                 2020–2026 · IMF Methodology
             </div>
-
             <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={gdpData} margin={{ top: 4, right: 16, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--color-light-2)" vertical={false} />
@@ -161,39 +163,132 @@ export function DebtGDPLine() {
     );
 }
 
-// ── bar chart ─────────────────────────────────────────────
+// ── bar chart — bidding vs offered ────────────────────────
 export function DebtServiceBar() {
+    const [activeFilter, setActiveFilter] = useState('All');
+    const filters = ['All', '2022', '2023', '2024', '2025', '2026'];
+
+    const chartData = activeFilter === 'All'
+        ? allBiddingData
+        : allBiddingData.filter(d => d.year === activeFilter);
+
+    const selectedRow = activeFilter !== 'All'
+        ? allBiddingData.find(d => d.year === activeFilter)
+        : null;
+
+    const coverageRatio = selectedRow
+        ? ((selectedRow.bidding / selectedRow.offered) * 100).toFixed(1)
+        : null;
+
     return (
         <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
-            <div className="mb-1 font-display text-[15px] font-bold text-text">
-                Debt Service Schedule
-            </div>
-            <div className="font-mono text-[10px] text-text-3 mb-5">
-                2025–2030 · USD Millions
+
+            {/* header */}
+            <div className="flex items-start justify-between gap-4 mb-1">
+                <div>
+                    <div className="font-display text-[15px] font-bold text-text">
+                        Bidding vs Offered
+                    </div>
+                    <div className="font-mono text-[10px] text-text-3 mt-0.5">
+                        {activeFilter === 'All'
+                            ? '2022–2026 · All Years'
+                            : activeFilter === '2026'
+                                ? `${activeFilter} · As of April`
+                                : `${activeFilter} · Full Year`
+                        }
+                    </div>
+                </div>
+
+                {/* coverage badge */}
+                {coverageRatio && (
+                    <div className="text-right shrink-0">
+                        <div className="font-display text-[20px] font-bold text-teal leading-none">
+                            {coverageRatio}%
+                        </div>
+                        <div className="font-mono text-[9px] text-text-3 mt-0.5">
+                            Coverage Ratio
+                        </div>
+                    </div>
+                )}
             </div>
 
-            <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={debtServiceData} margin={{ top: 4, right: 16, left: -20, bottom: 0 }} barCategoryGap="35%">
+            {/* year filter tabs */}
+            <div className="flex items-center gap-0.75 flex-wrap mb-5 mt-3">
+                {filters.map(f => (
+                    <button
+                        key={f}
+                        onClick={() => setActiveFilter(f)}
+                        className={`font-mono text-[10.5px] font-semibold px-2.5 py-1 rounded-[6px] cursor-pointer transition-all duration-150
+                            ${activeFilter === f
+                                ? 'bg-teal text-white'
+                                : 'bg-light text-text-3 hover:bg-light-2 hover:text-text'
+                            }`}
+                    >
+                        {f === '2026' ? '2026 *' : f}
+                    </button>
+                ))}
+            </div>
+
+            {/* chart */}
+            <ResponsiveContainer width="100%" height={activeFilter === 'All' ? 200 : 160}>
+                <BarChart
+                    data={chartData}
+                    margin={{ top: 4, right: 8, left: -10, bottom: 0 }}
+                    barCategoryGap={activeFilter === 'All' ? '35%' : '55%'}
+                    barGap={4}
+                >
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--color-light-2)" vertical={false} />
                     <XAxis
                         dataKey="year"
                         tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
                         axisLine={false} tickLine={false}
+                        hide={activeFilter !== 'All'}
                     />
                     <YAxis
-                        tickFormatter={v => `$${v}M`}
+                        tickFormatter={formatUnit}
                         tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-mid)' }}
                         axisLine={false} tickLine={false}
                     />
-                    <Tooltip content={<ChartTooltip suffix="M" />} />
+                    <Tooltip content={<ChartTooltip />} />
                     <Legend
                         iconType="square" iconSize={8}
-                        wrapperStyle={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, paddingTop: 12 }}
+                        wrapperStyle={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, paddingTop: 10 }}
                     />
-                    <Bar dataKey="principal" name="Principal" fill="var(--color-teal)"   radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="interest"  name="Interest"  fill="var(--color-teal-3)" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="bidding" name="Bidding" fill="var(--color-teal)"   radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="offered" name="Offered" fill="var(--color-teal-3)" radius={[3, 3, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>
+
+            {/* single year stat breakdown */}
+            {selectedRow && (
+                <div className="mt-4 pt-4 border-t border-light-2 grid grid-cols-2 gap-3">
+                    <div className="bg-teal-4 rounded-sm px-4 py-3">
+                        <div className="font-mono text-[9px] font-bold tracking-[1px] uppercase text-teal mb-1">
+                            Bidding
+                        </div>
+                        <div className="font-display text-[18px] font-bold text-teal leading-none">
+                            {selectedRow.bidding.toLocaleString()}
+                        </div>
+                        <div className="font-mono text-[9px] text-teal/60 mt-0.5">units</div>
+                    </div>
+                    <div className="bg-light rounded-sm px-4 py-3">
+                        <div className="font-mono text-[9px] font-bold tracking-[1px] uppercase text-text-3 mb-1">
+                            Offered
+                        </div>
+                        <div className="font-display text-[18px] font-bold text-text leading-none">
+                            {selectedRow.offered.toLocaleString()}
+                        </div>
+                        <div className="font-mono text-[9px] text-text-3/60 mt-0.5">units</div>
+                    </div>
+                </div>
+            )}
+
+            {/* 2026 note */}
+            {(activeFilter === 'All' || activeFilter === '2026') && (
+                <div className="mt-3 font-mono text-[9.5px] text-text-3">
+                    * 2026 data as of April
+                </div>
+            )}
         </div>
     );
 }
