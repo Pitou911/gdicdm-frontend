@@ -65,13 +65,13 @@ export function PortfolioDonut() {
     const [activeIndex, setActiveIndex] = useState(null);
 
     return (
-        <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]">
+        <div className="bg-white border border-light-2 rounded-md p-6 shadow-sm">
 
             {/* header */}
-            <div className="mb-1 font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text)]">
+            <div className="mb-1 font-display text-[15px] font-bold text-text">
                 Offered Amount by Tenor
             </div>
-            <div className="font-mono text-[10px] text-[var(--color-text-3)] mb-4">
+            <div className="font-mono text-[10px] text-text-3 mb-4">
                 Billion KHR · As of {todayLabel}
             </div>
 
@@ -120,7 +120,7 @@ export function PortfolioDonut() {
                 </div>
 
                 {/* legend */}
-                <div className="flex flex-col gap-[6px] flex-1">
+                <div className="flex flex-col gap-1.5 flex-1">
                     {tenorData.map((d, i) => (
                         <div
                             key={i}
@@ -128,9 +128,9 @@ export function PortfolioDonut() {
                             onMouseEnter={() => setActiveIndex(i)}
                             onMouseLeave={() => setActiveIndex(null)}
                         >
-                            <div className="w-2 h-2 rounded-[2px] shrink-0" style={{ background: d.color }}></div>
-                            <span className="text-[12px] text-[var(--color-text-2)] flex-1">{d.name}</span>
-                            <span className="font-mono text-[10.5px] font-semibold text-[var(--color-text)]">{d.pct}%</span>
+                            <div className="w-2 h-2 rounded-xs shrink-0" style={{ background: d.color }}></div>
+                            <span className="text-[12px] text-text-2 flex-1">{d.name}</span>
+                            <span className="font-mono text-[10.5px] font-semibold text-text">{d.pct}%</span>
                         </div>
                     ))}
                 </div>
@@ -141,28 +141,28 @@ export function PortfolioDonut() {
                 {tenorData.map((d, i) => (
                     <div
                         key={i}
-                        className={`rounded-[var(--radius-sm)] px-3 py-2.5 border transition-all duration-150 cursor-pointer ${activeIndex === i ? 'border-transparent shadow-[0_0_0_2px_rgba(0,109,110,0.2)]' : 'border-[var(--color-light-2)]'}`}
+                        className={`rounded-sm px-3 py-2.5 border transition-all duration-150 cursor-pointer ${activeIndex === i ? 'border-transparent shadow-[0_0_0_2px_rgba(0,109,110,0.2)]' : 'border-light-2'}`}
                         style={{ background: activeIndex === i ? `color-mix(in srgb, ${d.color} 10%, white)` : 'var(--color-snow)' }}
                         onMouseEnter={() => setActiveIndex(i)}
                         onMouseLeave={() => setActiveIndex(null)}
                     >
                         {/* tenor label */}
                         <div className="flex items-center gap-1.5 mb-1.5">
-                            <div className="w-2 h-2 rounded-[2px] shrink-0" style={{ background: d.color }}></div>
-                            <div className="font-mono text-[9px] font-bold tracking-[0.5px] uppercase text-[var(--color-text-3)]">
+                            <div className="w-2 h-2 rounded-xs shrink-0" style={{ background: d.color }}></div>
+                            <div className="font-mono text-[9px] font-bold tracking-[0.5px] uppercase text-text-3">
                                 {d.name}
                             </div>
                         </div>
 
                         {/* amount */}
-                        <div className="font-[var(--font-display)] text-[14px] font-bold leading-none" style={{ color: d.color }}>
+                        <div className="font-display text-[14px] font-bold leading-none" style={{ color: d.color }}>
                             {d.value.toLocaleString()}
                         </div>
-                        <div className="font-mono text-[8.5px] text-[var(--color-text-3)] mt-0.5 mb-2">B KHR</div>
+                        <div className="font-mono text-[8.5px] text-text-3 mt-0.5 mb-2">B KHR</div>
 
                         {/* divider */}
-                        <div className="border-t border-[var(--color-light-2)] pt-1.5 flex items-center justify-between">
-                            <div className="font-mono text-[9px] text-[var(--color-text-3)]">
+                        <div className="border-t border-light-2 pt-1.5 flex items-center justify-between">
+                            <div className="font-mono text-[9px] text-text-3">
                                 {d.investors} investors
                             </div>
                             <div className="font-mono text-[9px] font-semibold" style={{ color: d.color }}>
