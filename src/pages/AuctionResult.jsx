@@ -65,26 +65,26 @@ export default function AuctionResult() {
 
 
     const CurrencyBadge = ({ currency }) => currency === 'USD'
-        ? <span className="font-mono text-[10px] font-bold px-[6px] py-[2px] rounded-[4px] bg-[var(--color-blue-3)] text-[var(--color-blue-2)]">USD</span>
-        : <span className="font-mono text-[10px] font-bold px-[6px] py-[2px] rounded-[4px] bg-[var(--color-teal-4)] text-[var(--color-teal)]">KHR</span>;
+        ? <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] bg-blue-3 text-blue-2">USD</span>
+        : <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] bg-teal-4 text-teal">KHR</span>;
 
     const StatusBadge = ({ status }) => status === 'settled'
-        ? <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-green-3)] text-[var(--color-green-2)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-green-2)]">Settled</span>
-        : <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-amber-3)] text-[var(--color-amber)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-amber)]">Pending</span>;
+        ? <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-green-3 text-green-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-green-2">Settled</span>
+        : <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-amber-3 text-amber before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-amber">Pending</span>;
 
     return (
         <>
             {/* page header */}
-            <div className="bg-linear-to-br from-[var(--color-teal)] to-[var(--color-blue)] pt-[52px] pb-[44px] relative overflow-hidden after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[60px] after:bg-[linear-gradient(transparent,rgba(0,0,0,0.08))]">
-                <div className="max-w-[1300px] mx-auto px-8 grid grid-cols-[1fr_auto] items-end gap-10 relative z-10">
+            <div className="bg-linear-to-br from-teal to-blue pt-13 pb-11 relative overflow-hidden after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-15 after:bg-[linear-gradient(transparent,rgba(0,0,0,0.08))]">
+                <div className="max-w-325 mx-auto px-8 grid grid-cols-[1fr_auto] items-end gap-10 relative z-10">
                     <div>
                         <div className="flex items-center gap-2 mb-2.5 text-[11.5px] font-bold tracking-[1.5px] uppercase text-white/60 before:content-[''] before:w-4 before:h-0.5 before:bg-white/60 before:rounded-[1px]">
                             Bond Market
                         </div>
-                        <h1 className="font-[var(--font-display)] text-[48px] font-bold text-white leading-[1.05] tracking-[-1px]">
+                        <h1 className="font-display text-[48px] font-bold text-white leading-[1.05] tracking-[-1px]">
                             Auction <em className="not-italic text-white/75 font-light">Results</em>
                         </h1>
-                        <p className="text-[14px] text-white/60 mt-2.5 max-w-[440px] leading-[1.7]">
+                        <p className="text-[14px] text-white/60 mt-2.5 max-w-110 leading-[1.7]">
                             Official government bond auction results including offered, bidding, accepted amounts and coupon rates.
                         </p>
                     </div>
@@ -95,57 +95,57 @@ export default function AuctionResult() {
                 </div>
             </div>
 
-            <div className="py-16 bg-[var(--color-snow)]">
-                <div className="max-w-[1300px] mx-auto px-8">
+            <div className="py-16 bg-snow">
+                <div className="max-w-325 mx-auto px-8">
 
                     {/* filter bar */}
-                    <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-md)] p-4 shadow-[var(--shadow-sm)] mb-6 flex items-center gap-3 flex-wrap">
+                    <div className="bg-white border border-light-2 rounded-md p-4 shadow-sm mb-6 flex items-center gap-3 flex-wrap">
 
                         {/* search */}
                         <input
-                            className="border-[1.5px] border-[var(--color-light-2)] px-[14px] py-2 text-[13px] font-[var(--font-body)] outline-none text-[var(--color-text)] bg-[var(--color-snow)] rounded-[var(--radius-sm)] w-[220px] transition-[border-color] duration-150 focus:border-[var(--color-teal)] placeholder:text-[var(--color-text-3)]"
+                            className="border-[1.5px] border-light-2 px-3.5 py-2 text-[13px] font-body outline-none text-text bg-snow rounded-sm w-55 transition-[border-color] duration-150 focus:border-teal placeholder:text-text-3"
                             placeholder="Search by title or date..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                         />
 
-                        <div className="w-px h-6 bg-[var(--color-light-2)]" />
+                        <div className="w-px h-6 bg-light-2" />
 
                         {/* tenor filter */}
                         <div className="flex items-center gap-1 flex-wrap">
-                            <span className="font-mono text-[10px] text-[var(--color-text-3)] mr-1">Tenor:</span>
+                            <span className="font-mono text-[10px] text-text-3 mr-1">Tenor:</span>
                             {TENORS.map(t => (
                                 <button key={t} onClick={() => setTenor(t)}
-                                    className={`font-mono text-[10.5px] font-semibold px-[9px] py-[4px] rounded-[6px] cursor-pointer transition-all duration-150
-                                        ${tenor === t ? 'bg-[var(--color-teal)] text-white' : 'bg-[var(--color-light)] text-[var(--color-text-3)] hover:bg-[var(--color-light-2)]'}`}>
+                                    className={`font-mono text-[10.5px] font-semibold px-2.25 py-1 rounded-[6px] cursor-pointer transition-all duration-150
+                                        ${tenor === t ? 'bg-teal text-white' : 'bg-light text-text-3 hover:bg-light-2'}`}>
                                     {t}
                                 </button>
                             ))}
                         </div>
 
-                        <div className="w-px h-6 bg-[var(--color-light-2)]" />
+                        <div className="w-px h-6 bg-light-2" />
 
                         {/* currency filter */}
                         <div className="flex items-center gap-1">
-                            <span className="font-mono text-[10px] text-[var(--color-text-3)] mr-1">Currency:</span>
+                            <span className="font-mono text-[10px] text-text-3 mr-1">Currency:</span>
                             {CURRENCIES.map(c => (
                                 <button key={c} onClick={() => setCurrency(c)}
-                                    className={`font-mono text-[10.5px] font-semibold px-[9px] py-[4px] rounded-[6px] cursor-pointer transition-all duration-150
-                                        ${currency === c ? 'bg-[var(--color-teal)] text-white' : 'bg-[var(--color-light)] text-[var(--color-text-3)] hover:bg-[var(--color-light-2)]'}`}>
+                                    className={`font-mono text-[10.5px] font-semibold px-2.25 py-1 rounded-[6px] cursor-pointer transition-all duration-150
+                                        ${currency === c ? 'bg-teal text-white' : 'bg-light text-text-3 hover:bg-light-2'}`}>
                                     {c}
                                 </button>
                             ))}
                         </div>
 
-                        <div className="w-px h-6 bg-[var(--color-light-2)]" />
+                        <div className="w-px h-6 bg-light-2" />
 
                         {/* status filter */}
                         <div className="flex items-center gap-1">
-                            <span className="font-mono text-[10px] text-[var(--color-text-3)] mr-1">Status:</span>
+                            <span className="font-mono text-[10px] text-text-3 mr-1">Status:</span>
                             {STATUSES.map(s => (
                                 <button key={s} onClick={() => setStatus(s)}
-                                    className={`font-mono text-[10.5px] font-semibold px-[9px] py-[4px] rounded-[6px] cursor-pointer transition-all duration-150 capitalize
-                                        ${status === s ? 'bg-[var(--color-teal)] text-white' : 'bg-[var(--color-light)] text-[var(--color-text-3)] hover:bg-[var(--color-light-2)]'}`}>
+                                    className={`font-mono text-[10.5px] font-semibold px-2.25 py-1 rounded-[6px] cursor-pointer transition-all duration-150 capitalize
+                                        ${status === s ? 'bg-teal text-white' : 'bg-light text-text-3 hover:bg-light-2'}`}>
                                     {s}
                                 </button>
                             ))}
@@ -155,7 +155,7 @@ export default function AuctionResult() {
                         {(search || tenor !== 'All' || currency !== 'All' || status !== 'All') && (
                             <button
                                 onClick={() => { setSearch(''); setTenor('All'); setCurrency('All'); setStatus('All'); }}
-                                className="ml-auto font-mono text-[10.5px] text-[var(--color-text-3)] hover:text-[var(--color-text)] transition-colors duration-150 cursor-pointer"
+                                className="ml-auto font-mono text-[10.5px] text-text-3 hover:text-text transition-colors duration-150 cursor-pointer"
                             >
                                 ✕ Clear
                             </button>
@@ -164,13 +164,13 @@ export default function AuctionResult() {
 
                     {/* table */}
                     {filtered.length === 0 ? (
-                        <div className="text-center py-16 text-[var(--color-text-3)]">
+                        <div className="text-center py-16 text-text-3">
                             <div className="text-[32px] mb-3">📭</div>
-                            <div className="text-[15px] font-semibold text-[var(--color-text-2)] mb-1">No results found</div>
+                            <div className="text-[15px] font-semibold text-text-2 mb-1">No results found</div>
                             <div className="text-[13px]">Try adjusting your filters.</div>
                         </div>
                     ) : (
-                        <div className="bg-white rounded-[var(--radius-md)] border border-[var(--color-light-2)] overflow-hidden shadow-[var(--shadow-sm)]">
+                        <div className="bg-white rounded-md border border-light-2 overflow-hidden shadow-sm">
                             <table className="w-full border-collapse">
                                 <thead>
                                     <tr>
@@ -190,7 +190,7 @@ export default function AuctionResult() {
                                             <th
                                                 key={col.key}
                                                 onClick={() => handleSort(col.key)}
-                                                className="bg-[var(--color-teal)] text-white/85 px-4 py-[13px] text-left text-[10.5px] font-bold tracking-[0.8px] uppercase cursor-pointer hover:bg-[var(--color-teal-2)] transition-colors duration-150 whitespace-nowrap"
+                                                className="bg-teal text-white/85 px-4 py-3.25 text-left text-[10.5px] font-bold tracking-[0.8px] uppercase cursor-pointer hover:bg-teal-2 transition-colors duration-150 whitespace-nowrap"
                                             >
                                                 {col.label}<SortIcon col={col.key} />
                                             </th>
@@ -199,16 +199,16 @@ export default function AuctionResult() {
                                 </thead>
                                 <tbody>
                                     {filtered.map((r, i) => (
-                                        <tr key={r.id} className="group border-b border-[var(--color-light)] last:border-b-0 hover:bg-[var(--color-snow)] transition-colors duration-150">
+                                        <tr key={r.id} className="group border-b border-light last:border-b-0 hover:bg-snow transition-colors duration-150">
 
                                             {/* date */}
                                             <td className="px-4 py-3 align-middle whitespace-nowrap">
-                                                <div className="font-mono text-[12px] font-semibold text-[var(--color-text)]">{r.dateLabel}</div>
+                                                <div className="font-mono text-[12px] font-semibold text-text">{r.dateLabel}</div>
                                             </td>
 
                                             {/* title */}
                                             <td className="px-4 py-3 align-middle">
-                                                <div className="font-mono text-[11.5px] font-bold text-[var(--color-teal)] tracking-[0.3px]">
+                                                <div className="font-mono text-[11.5px] font-bold text-teal tracking-[0.3px]">
                                                     {r.title}
                                                 </div>
                                             </td>
@@ -220,28 +220,28 @@ export default function AuctionResult() {
 
                                             {/* tenor */}
                                             <td className="px-4 py-3 align-middle">
-                                                <span className="font-mono text-[11px] font-semibold text-[var(--color-text-2)]">
+                                                <span className="font-mono text-[11px] font-semibold text-text-2">
                                                     {r.tenor}Y
                                                 </span>
                                             </td>
 
                                             {/* offered */}
                                             <td className="px-4 py-3 align-middle">
-                                                <span className="font-mono text-[12px] text-[var(--color-text)]">
+                                                <span className="font-mono text-[12px] text-text">
                                                     {r.offered.toFixed(2)}
                                                 </span>
                                             </td>
 
                                             {/* bidding */}
                                             <td className="px-4 py-3 align-middle">
-                                                <span className="font-mono text-[12px] text-[var(--color-text)]">
+                                                <span className="font-mono text-[12px] text-text">
                                                     {r.bidding.toFixed(2)}
                                                 </span>
                                             </td>
 
                                             {/* accepted */}
                                             <td className="px-4 py-3 align-middle">
-                                                <span className="font-mono text-[12px] text-[var(--color-text)]">
+                                                <span className="font-mono text-[12px] text-text">
                                                     {r.accepted.toFixed(2)}
                                                 </span>
                                             </td>
@@ -249,13 +249,13 @@ export default function AuctionResult() {
                                             {/* cover ratio */}
                                             <td className="px-4 py-3 align-middle">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-[12px] font-semibold text-[var(--color-text)]">
+                                                    <span className="font-mono text-[12px] font-semibold text-text">
                                                         {r.coverRatio.toFixed(2)}x
                                                     </span>
                                                     {/* mini bar */}
-                                                    <div className="w-10 h-[5px] bg-[var(--color-light-2)] rounded-full overflow-hidden">
+                                                    <div className="w-10 h-1.25 bg-light-2 rounded-full overflow-hidden">
                                                         <div
-                                                            className="h-full rounded-full bg-[var(--color-teal)]"
+                                                            className="h-full rounded-full bg-teal"
                                                             style={{ width: `${Math.min((r.coverRatio / 3) * 100, 100)}%` }}
                                                         />
                                                     </div>
@@ -264,14 +264,14 @@ export default function AuctionResult() {
 
                                             {/* coupon */}
                                             <td className="px-4 py-3 align-middle">
-                                                <span className="font-mono text-[12px] font-semibold text-[var(--color-teal)]">
+                                                <span className="font-mono text-[12px] font-semibold text-teal">
                                                     {r.coupon.toFixed(2)}%
                                                 </span>
                                             </td>
 
                                             {/* investors */}
                                             <td className="px-4 py-3 align-middle text-center">
-                                                <span className="font-mono text-[12px] text-[var(--color-text-2)]">
+                                                <span className="font-mono text-[12px] text-text-2">
                                                     {r.investors}
                                                 </span>
                                             </td>
@@ -296,9 +296,9 @@ export default function AuctionResult() {
                             { label: 'Total Accepted', val: `${filtered.reduce((s, r) => s + r.accepted, 0).toFixed(2)} B` },
                             { label: 'Avg Cover Ratio', val: `${(filtered.reduce((s, r) => s + r.coverRatio, 0) / (filtered.length || 1)).toFixed(2)}x` },
                         ].map((s, i) => (
-                            <div key={i} className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] px-4 py-3 shadow-[var(--shadow-sm)]">
-                                <div className="font-mono text-[9.5px] font-bold tracking-[1px] uppercase text-[var(--color-text-3)] mb-1">{s.label}</div>
-                                <div className="font-[var(--font-display)] text-[18px] font-bold text-[var(--color-teal)] leading-none">{s.val}</div>
+                            <div key={i} className="bg-white border border-light-2 rounded-sm px-4 py-3 shadow-sm">
+                                <div className="font-mono text-[9.5px] font-bold tracking-[1px] uppercase text-text-3 mb-1">{s.label}</div>
+                                <div className="font-display text-[18px] font-bold text-teal leading-none">{s.val}</div>
                             </div>
                         ))}
                     </div>

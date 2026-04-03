@@ -279,7 +279,7 @@ export default function CmsDashboard() {
 
                 {/* ── content tab ── */}
                 {activeTab === 'content' && (
-                    <div>
+                    <div className='mb-10'>
                         <div className="font-[var(--font-display)] text-[28px] font-bold text-[var(--color-text)] mb-1 tracking-[-0.3px]">Dashboard</div>
                         <div className="text-[13px] text-[var(--color-text-3)] mb-6">Overview of all content - investor.mef.gov.kh</div>
 
@@ -353,7 +353,7 @@ export default function CmsDashboard() {
 
                 {/* ── auction tab ── */}
                 {activeTab === 'auction' && (
-                    <div>
+                    <div className='mb-10'>
                         <div className="font-[var(--font-display)] text-[28px] font-bold text-[var(--color-text)] mb-1 tracking-[-0.3px]">Auction Results</div>
                         <div className="text-[13px] text-[var(--color-text-3)] mb-6">Manage government bond auction results.</div>
 
