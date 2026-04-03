@@ -254,7 +254,7 @@ export function PortfolioDonut() {
                             onMouseLeave={() => setActiveIndex(null)}
                         >
                             <div className="w-2 h-2 rounded-xs shrink-0" style={{ background: d.color }}></div>
-                            <span className="text-[12px] text-text-2 flex-1">{d.name}</span>
+                            <span className="text-[12px] text-text-2">{d.name}</span>
                             <span className="font-mono text-[10.5px] font-semibold text-text">{d.pct}%</span>
                         </div>
                     ))}
