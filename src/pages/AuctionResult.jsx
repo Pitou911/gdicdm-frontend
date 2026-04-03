@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { auctionResults } from '../data/auctionResults';
+import { useState, useMemo, useEffect } from 'react';
+import { fetchAuctionResults } from '../data/index';
 
 const TENORS    = ['All', '1Y', '2Y', '3Y', '5Y', '10Y', '15Y'];
 const CURRENCIES = ['All', 'KHR', 'USD'];
@@ -13,6 +13,27 @@ export default function AuctionResult() {
     const [sortKey, setSortKey]     = useState('date');
     const [sortDir, setSortDir]     = useState('desc');
 
+    const [allResults, setAllResults] = useState([]);
+
+    useEffect(() => {
+        fetchAuctionResults().then(data => {
+            setAllResults(data.map(r => ({
+                id: r.id,
+                date: r.auction_date,
+                dateLabel: r.date_label,
+                currency: r.currency,
+                tenor: r.tenor,
+                title: r.title,
+                offered: Number(r.offered),
+                bidding: Number(r.bidding),
+                accepted: Number(r.accepted),
+                coupon: Number(r.coupon),
+                coverRatio: Number(r.cover_ratio),
+                investors: r.investors,
+                status: r.status,
+            })))
+        });
+    }, []);
     const handleSort = (key) => {
         if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
         else { setSortKey(key); setSortDir('desc'); }
@@ -25,7 +46,7 @@ export default function AuctionResult() {
     );
 
     const filtered = useMemo(() => {
-        return auctionResults
+        return allResults
             .filter(r => {
                 const matchSearch   = r.title.toLowerCase().includes(search.toLowerCase()) ||
                                       r.dateLabel.toLowerCase().includes(search.toLowerCase());
@@ -40,17 +61,8 @@ export default function AuctionResult() {
                 if (sortDir === 'asc') return va > vb ? 1 : -1;
                 return va < vb ? 1 : -1;
             });
-    }, [search, tenor, currency, status, sortKey, sortDir]);
+    }, [allResults, search, tenor, currency, status, sortKey, sortDir]);
 
-    // group by date
-    const grouped = useMemo(() => {
-        const map = {};
-        filtered.forEach(r => {
-            if (!map[r.dateLabel]) map[r.dateLabel] = [];
-            map[r.dateLabel].push(r);
-        });
-        return map;
-    }, [filtered]);
 
     const CurrencyBadge = ({ currency }) => currency === 'USD'
         ? <span className="font-mono text-[10px] font-bold px-[6px] py-[2px] rounded-[4px] bg-[var(--color-blue-3)] text-[var(--color-blue-2)]">USD</span>

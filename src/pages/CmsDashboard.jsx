@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchCmsAll } from '../data/index';
+import { fetchCmsAll, fetchAuctionResults } from '../data/index';
 
 const BASE = 'http://localhost:8000/api';
 
@@ -11,6 +11,15 @@ const STATUSES   = ['published', 'draft'];
 const SECTIONS   = ['Documents', 'Education', 'News'];
 
 const emptyForm = { title: '', section: 'Documents', type: 'Debt Bulletin', language: 'EN', status: 'draft', date: '', description: '' };
+
+const emptyAuction = {
+    auction_date: '', currency: 'KHR', tenor: 1,
+    offered: '', bidding: '', accepted: '',
+    coupon: '', cover_ratio: '', investors: '', status: 'pending',
+};
+
+const TENORS_LIST    = [1, 2, 3, 5, 10, 15];
+const CURRENCIES_LIST = ['KHR', 'USD'];
 
 export default function CmsDashboard() {
     const [rows, setRows]           = useState([]);
@@ -24,11 +33,80 @@ export default function CmsDashboard() {
     const [loading, setLoading]     = useState(false);
     const [error, setError]         = useState('');
 
-    const loadRows = () => {
-        fetchCmsAll().then(setRows).catch(() => setError('Failed to load.'));
+    const [activeTab, setActiveTab]         = useState('content');
+    const [auctions, setAuctions]           = useState([]);
+    const [showAuctionModal, setShowAuctionModal] = useState(false);
+    const [auctionForm, setAuctionForm]     = useState(emptyAuction);
+    const [auctionEditId, setAuctionEditId] = useState(null);
+    const [auctionLoading, setAuctionLoading] = useState(false);
+    const [auctionError, setAuctionError]   = useState('');
+
+    const loadRows    = () => fetchCmsAll().then(setRows).catch(() => setError('Failed to load.'));
+    const loadAuctions = () => fetchAuctionResults().then(setAuctions).catch(() => setAuctionError('Failed to load.'));
+
+    useEffect(() => { loadRows(); loadAuctions(); }, []);
+
+    // preview title from form
+    const previewTitle = () => {
+        if (!auctionForm.auction_date || !auctionForm.currency || !auctionForm.tenor) return '—';
+        const d = new Date(auctionForm.auction_date);
+        if (isNaN(d)) return '—';
+        const day   = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year  = d.getFullYear();
+        return `${auctionForm.currency}_GS_${auctionForm.tenor}Y_${day}${month}${year}`;
     };
 
-    useEffect(() => { loadRows(); }, []);
+    const openAuctionAdd = () => {
+        setAuctionForm(emptyAuction);
+        setAuctionEditId(null);
+        setShowAuctionModal(true);
+    };
+
+    const openAuctionEdit = (row) => {
+        setAuctionForm({
+            auction_date: row.auction_date,
+            currency:     row.currency,
+            tenor:        row.tenor,
+            offered:      row.offered,
+            bidding:      row.bidding,
+            accepted:     row.accepted,
+            coupon:       row.coupon,
+            cover_ratio:  row.cover_ratio,
+            investors:    row.investors,
+            status:       row.status,
+        });
+        setAuctionEditId(row.id);
+        setShowAuctionModal(true);
+    };
+
+    const handleAuctionSave = async () => {
+        setAuctionLoading(true);
+        const url    = auctionEditId ? `${BASE}/auction-results/${auctionEditId}` : `${BASE}/auction-results`;
+        const method = auctionEditId ? 'PUT' : 'POST';
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(auctionForm),
+            });
+            if (!res.ok) throw new Error();
+            setShowAuctionModal(false);
+            loadAuctions();
+        } catch {
+            setAuctionError('Failed to save.');
+        } finally {
+            setAuctionLoading(false);
+        }
+    };
+
+    const handleAuctionDelete = async (id) => {
+        if (!confirm('Delete this auction result?')) return;
+        try {
+            await fetch(`${BASE}/auction-results/${id}`, { method: 'DELETE' });
+            loadAuctions();
+        } catch { setAuctionError('Failed to delete.'); }
+    };
 
     const handleSectionChange = (section) => {
         const defaultType = section === 'Documents' ? 'Debt Bulletin' : section === 'Education' ? 'PDF' : 'Announcement';
@@ -135,86 +213,216 @@ export default function CmsDashboard() {
         } catch { setError('Failed to delete.'); }
     };
 
+    
     const Pill = ({ status }) => status === 'published'
         ? <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-green-3 text-green-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-green-2">Published</span>
         : <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-blue-3 text-blue-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-blue-2">Draft</span>;
 
+    const StatusBadge = ({ status }) => status === 'settled'
+        ? <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-green-3)] text-[var(--color-green-2)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-green-2)]">Settled</span>
+        : <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-amber-3)] text-[var(--color-amber)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-amber)]">Pending</span>;
+
     const typeOptions = form.section === 'Documents' ? DOC_TYPES : form.section === 'Education' ? EDU_TYPES : NEWS_CATS;
 
     return (
-        <div id="cms-dashboard">
+        <div className="flex gap-6">
 
-            {/* header */}
-            <div className="font-display text-[28px] font-bold text-text mb-1 tracking-[-0.3px]">Dashboard</div>
-            <div className="text-[13px] text-text-3 mb-6">Overview of all content - investor.mef.gov.kh</div>
+            {/* ── sidebar ───────────────────────────────────── */}
+            <div className="w-[200px] shrink-0">
+                <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] overflow-hidden shadow-[var(--shadow-sm)]">
 
-            {/* stats */}
-            <div className="grid grid-cols-4 gap-3.5 mb-6">
-                {[
-                    { val: rows.length,                                       label: 'Total Items',    delta: 'across all sections', color: 'text-green-2' },
-                    { val: rows.filter(r => r.status === 'published').length, label: 'Published',      delta: '↑ live items',        color: 'text-green-2' },
-                    { val: rows.filter(r => r.status === 'draft').length,     label: 'Drafts Pending', delta: 'Needs review',        color: 'text-amber' },
-                    { val: rows.filter(r => r.section === 'News').length,     label: 'News Articles',  delta: 'total articles',      color: 'text-green-2' },
-                ].map((s, i) => (
-                    <div key={i} className="bg-white border border-light-2 rounded-sm p-5 shadow-sm">
-                        <div className="font-display text-[34px] font-bold text-text leading-none mb-1 tracking-[-0.5px]">{s.val}</div>
-                        <div className="text-[12px] font-medium text-text-3">{s.label}</div>
-                        <div className={`font-mono text-[10.5px] mt-1 ${s.color}`}>{s.delta}</div>
+                    <div className="px-4 py-3 border-b border-[var(--color-light-2)]">
+                        <div className="font-mono text-[9px] font-bold tracking-[1.5px] uppercase text-[var(--color-text-3)]">
+                            CMS Sections
+                        </div>
                     </div>
-                ))}
-            </div>
 
-            {/* toolbar */}
-            <div className="flex items-center justify-between mb-2.5">
-                <div className="text-[11px] font-bold tracking-[1px] uppercase text-text-3">All Content</div>
-                <button onClick={openAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2">
-                    + Add New
-                </button>
-            </div>
-
-            {error && <div className="text-[13px] text-red-500 mb-3">{error}</div>}
-
-            {/* table */}
-            <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2">
-                <thead>
-                    <tr>
-                        {['Title', 'Type', 'Section', 'Language', 'Status', 'Date', 'Actions'].map(h => (
-                            <th key={h} className="bg-snow text-text-3 px-3.5 py-2.5 text-left text-[10.5px] font-bold tracking-[1px] uppercase border-b border-light-2">{h}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.length === 0 ? (
-                        <tr><td colSpan={7} className="text-center py-10 text-text-3 text-[13px]">No content yet.</td></tr>
-                    ) : rows.map(row => (
-                        <tr key={row.id} className="group">
-                            <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><strong>{row.title}</strong></td>
-                            <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><span className="font-mono text-[11px] text-text-3">{row.type}</span></td>
-                            <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">{row.section}</td>
-                            <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">{row.language || '—'}</td>
-                            <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><Pill status={row.status} /></td>
-                            <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><span className="font-mono text-[11px] text-text-3">{row.date || '—'}</span></td>
-                            <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">
-                                <div className="flex gap-1.25 items-center">
-                                    {row.status === 'draft' ? (
-                                        <>
-                                            <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
-                                            <button onClick={() => setPreview(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-blue-2 hover:text-blue-2">Preview</button>
-                                            <button onClick={() => handlePublish(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white">Publish</button>
-                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
-                                            <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
-                                        </>
-                                    )}
-                                </div>
-                            </td>
-                        </tr>
+                    {[
+                        { id: 'content',  label: 'Content',        emoji: '📄' },
+                        { id: 'auction',  label: 'Auction Results', emoji: '🏦' },
+                    ].map(item => (
+                        <button
+                            key={item.id}
+                            onClick={() => setActiveTab(item.id)}
+                            className={`w-full flex items-center gap-3 px-4 py-3 text-[13px] font-medium cursor-pointer transition-all duration-150 border-b border-[var(--color-light-2)] last:border-b-0 text-left
+                                ${activeTab === item.id
+                                    ? 'bg-[var(--color-teal-4)] text-[var(--color-teal)] font-semibold'
+                                    : 'text-[var(--color-text-3)] hover:bg-[var(--color-snow)] hover:text-[var(--color-text)]'
+                                }`}
+                        >
+                            <span>{item.emoji}</span>
+                            {item.label}
+                        </button>
                     ))}
-                </tbody>
-            </table>
+
+                    {/* quick stats */}
+                    <div className="px-4 py-3 border-t border-[var(--color-light-2)] flex flex-col gap-2">
+                        <div className="flex items-center justify-between">
+                            <span className="font-mono text-[9.5px] text-[var(--color-text-3)]">Content</span>
+                            <span className="font-mono text-[10px] font-bold text-[var(--color-teal)]">{rows.length}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-mono text-[9.5px] text-[var(--color-text-3)]">Auctions</span>
+                            <span className="font-mono text-[10px] font-bold text-[var(--color-teal)]">{auctions.length}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-mono text-[9.5px] text-[var(--color-text-3)]">Drafts</span>
+                            <span className="font-mono text-[10px] font-bold text-[var(--color-amber)]">{rows.filter(r => r.status === 'draft').length}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* ── main panel ───────────────────────────────── */}
+            <div className="flex-1 min-w-0">
+
+                {/* ── content tab ── */}
+                {activeTab === 'content' && (
+                    <div>
+                        <div className="font-[var(--font-display)] text-[28px] font-bold text-[var(--color-text)] mb-1 tracking-[-0.3px]">Dashboard</div>
+                        <div className="text-[13px] text-[var(--color-text-3)] mb-6">Overview of all content - investor.mef.gov.kh</div>
+
+                        {/* stats */}
+                        <div className="grid grid-cols-4 gap-3.5 mb-6">
+                            {[
+                                { val: rows.length,                                       label: 'Total Items',    delta: 'across all sections', color: 'text-green-2' },
+                                { val: rows.filter(r => r.status === 'published').length, label: 'Published',      delta: '↑ live items',        color: 'text-green-2' },
+                                { val: rows.filter(r => r.status === 'draft').length,     label: 'Drafts Pending', delta: 'Needs review',        color: 'text-amber' },
+                                { val: rows.filter(r => r.section === 'News').length,     label: 'News Articles',  delta: 'total articles',      color: 'text-green-2' },
+                            ].map((s, i) => (
+                                <div key={i} className="bg-white border border-light-2 rounded-sm p-5 shadow-sm">
+                                    <div className="font-display text-[34px] font-bold text-text leading-none mb-1 tracking-[-0.5px]">{s.val}</div>
+                                    <div className="text-[12px] font-medium text-text-3">{s.label}</div>
+                                    <div className={`font-mono text-[10.5px] mt-1 ${s.color}`}>{s.delta}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex items-center justify-between mb-2.5">
+                            <div className="text-[11px] font-bold tracking-[1px] uppercase text-text-3">All Content</div>
+                            <button onClick={openAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2">
+                                + Add New
+                            </button>
+                        </div>
+
+                        {error && <div className="text-[13px] text-red-500 mb-3">{error}</div>}
+
+                        <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2">
+                            <thead>
+                                <tr>
+                                    {['Title', 'Type', 'Section', 'Language', 'Status', 'Date', 'Actions'].map(h => (
+                                        <th key={h} className="bg-snow text-text-3 px-3.5 py-2.5 text-left text-[10.5px] font-bold tracking-[1px] uppercase border-b border-light-2">{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows.length === 0 ? (
+                                    <tr><td colSpan={7} className="text-center py-10 text-text-3 text-[13px]">No content yet.</td></tr>
+                                ) : rows.map(row => (
+                                    <tr key={row.id} className="group">
+                                        <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><strong>{row.title}</strong></td>
+                                        <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><span className="font-mono text-[11px] text-text-3">{row.type}</span></td>
+                                        <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">{row.section}</td>
+                                        <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">{row.language || '—'}</td>
+                                        <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><Pill status={row.status} /></td>
+                                        <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow"><span className="font-mono text-[11px] text-text-3">{row.date || '—'}</span></td>
+                                        <td className="px-3.5 py-2.75 border-b border-light text-[13px] text-text align-middle group-hover:bg-snow">
+                                            <div className="flex gap-1.25 items-center">
+                                                {row.status === 'draft' ? (
+                                                    <>
+                                                        <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
+                                                        <button onClick={() => setPreview(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-blue-2 hover:text-blue-2">Preview</button>
+                                                        <button onClick={() => handlePublish(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white">Publish</button>
+                                                        <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
+                                                        <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {/* ── auction tab ── */}
+                {activeTab === 'auction' && (
+                    <div>
+                        <div className="font-[var(--font-display)] text-[28px] font-bold text-[var(--color-text)] mb-1 tracking-[-0.3px]">Auction Results</div>
+                        <div className="text-[13px] text-[var(--color-text-3)] mb-6">Manage government bond auction results.</div>
+
+                        {/* auction stats */}
+                        <div className="grid grid-cols-4 gap-3.5 mb-6">
+                            {[
+                                { val: auctions.length,                                          label: 'Total Results',   color: 'text-[var(--color-green-2)]' },
+                                { val: auctions.filter(a => a.status === 'settled').length,      label: 'Settled',         color: 'text-[var(--color-green-2)]' },
+                                { val: auctions.filter(a => a.status === 'pending').length,      label: 'Pending',         color: 'text-[var(--color-amber)]' },
+                                { val: auctions.filter(a => a.currency === 'KHR').length,        label: 'KHR Auctions',    color: 'text-[var(--color-teal)]' },
+                            ].map((s, i) => (
+                                <div key={i} className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] p-5 shadow-[var(--shadow-sm)]">
+                                    <div className="font-[var(--font-display)] text-[34px] font-bold text-[var(--color-text)] leading-none mb-1 tracking-[-0.5px]">{s.val}</div>
+                                    <div className={`text-[12px] font-medium ${s.color}`}>{s.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex items-center justify-between mb-2.5">
+                            <div className="text-[11px] font-bold tracking-[1px] uppercase text-[var(--color-text-3)]">All Auction Results</div>
+                            <button onClick={openAuctionAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-[var(--color-teal)] text-white rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:bg-[var(--color-teal-2)]">
+                                + Add Result
+                            </button>
+                        </div>
+
+                        {auctionError && <div className="text-[13px] text-red-500 mb-3">{auctionError}</div>}
+
+                        <table className="w-full border-collapse bg-white rounded-[var(--radius-sm)] overflow-hidden shadow-[var(--shadow-sm)] border border-[var(--color-light-2)]">
+                            <thead>
+                                <tr>
+                                    {['Date', 'Title', 'CCY', 'Tenor', 'Offered', 'Bidding', 'Accepted', 'Cover', 'Coupon', 'Investors', 'Status', 'Actions'].map(h => (
+                                        <th key={h} className="bg-[var(--color-teal)] text-white/85 px-3 py-[10px] text-left text-[10px] font-bold tracking-[0.8px] uppercase whitespace-nowrap">{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {auctions.length === 0 ? (
+                                    <tr><td colSpan={12} className="text-center py-10 text-[var(--color-text-3)] text-[13px]">No auction results yet.</td></tr>
+                                ) : auctions.map(row => (
+                                    <tr key={row.id} className="group border-b border-[var(--color-light)] last:border-b-0 hover:bg-[var(--color-snow)] transition-colors">
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{row.date_label}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-bold text-[var(--color-teal)]">{row.title}</span></td>
+                                        <td className="px-3 py-2.5 align-middle">
+                                            <span className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] ${row.currency === 'USD' ? 'bg-[var(--color-blue-3)] text-[var(--color-blue-2)]' : 'bg-[var(--color-teal-4)] text-[var(--color-teal)]'}`}>
+                                                {row.currency}
+                                            </span>
+                                        </td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text-2)]">{row.tenor}Y</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{Number(row.offered).toFixed(2)}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{Number(row.bidding).toFixed(2)}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{Number(row.accepted).toFixed(2)}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-semibold text-[var(--color-teal)]">{Number(row.cover_ratio).toFixed(2)}x</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-semibold text-[var(--color-teal)]">{Number(row.coupon).toFixed(2)}%</span></td>
+                                        <td className="px-3 py-2.5 align-middle text-center"><span className="font-mono text-[11px] text-[var(--color-text-2)]">{row.investors}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><StatusBadge status={row.status} /></td>
+                                        <td className="px-3 py-2.5 align-middle">
+                                            <div className="flex gap-1 items-center">
+                                                <button onClick={() => openAuctionEdit(row)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-[var(--color-light-2)] bg-transparent cursor-pointer text-[var(--color-text-3)] rounded-[6px] transition-all duration-150 hover:border-[var(--color-text-2)] hover:text-[var(--color-text)]">Edit</button>
+                                                <button onClick={() => handleAuctionDelete(row.id)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-[var(--color-light-2)] bg-transparent cursor-pointer text-[var(--color-text-3)] rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+            </div>
 
             {/* add/edit modal */}
             {showModal && (
@@ -514,6 +722,153 @@ export default function CmsDashboard() {
                                 className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2"
                             >
                                 Publish Now
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+            {/* ── auction modal ── */}
+            {showAuctionModal && (
+                <div className="fixed inset-0 bg-black/40 z-[500] flex items-center justify-center">
+                    <div className="bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] w-full max-w-[520px] p-7 max-h-[90vh] overflow-y-auto">
+
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="font-[var(--font-display)] text-[18px] font-bold text-[var(--color-text)]">
+                                {auctionEditId ? 'Edit Auction Result' : 'Add Auction Result'}
+                            </div>
+                            <button onClick={() => setShowAuctionModal(false)} className="text-[var(--color-text-3)] hover:text-[var(--color-text)] text-[20px] leading-none cursor-pointer">✕</button>
+                        </div>
+
+                        {/* title preview */}
+                        <div className="bg-[var(--color-teal-4)] border border-[var(--color-teal-3)] rounded-[var(--radius-sm)] px-4 py-3 mb-5">
+                            <div className="font-mono text-[9px] font-bold tracking-[1px] uppercase text-[var(--color-teal)] mb-1">Auto-generated Title</div>
+                            <div className="font-mono text-[14px] font-bold text-[var(--color-teal)]">{previewTitle()}</div>
+                        </div>
+
+                        <div className="flex flex-col gap-4">
+
+                            {/* date + currency */}
+                            <div className="grid grid-cols-2 gap-3.5">
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Auction Date</label>
+                                    <input type="date"
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={auctionForm.auction_date}
+                                        onChange={e => setAuctionForm({ ...auctionForm, auction_date: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Currency</label>
+                                    <select
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)]"
+                                        value={auctionForm.currency}
+                                        onChange={e => setAuctionForm({ ...auctionForm, currency: e.target.value })}
+                                    >
+                                        {CURRENCIES_LIST.map(c => <option key={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* tenor + status */}
+                            <div className="grid grid-cols-2 gap-3.5">
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Tenor (Years)</label>
+                                    <select
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)]"
+                                        value={auctionForm.tenor}
+                                        onChange={e => setAuctionForm({ ...auctionForm, tenor: Number(e.target.value) })}
+                                    >
+                                        {TENORS_LIST.map(t => <option key={t} value={t}>{t} Year{t > 1 ? 's' : ''}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Status</label>
+                                    <select
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)]"
+                                        value={auctionForm.status}
+                                        onChange={e => setAuctionForm({ ...auctionForm, status: e.target.value })}
+                                    >
+                                        <option value="pending">Pending</option>
+                                        <option value="settled">Settled</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* offered + bidding */}
+                            <div className="grid grid-cols-2 gap-3.5">
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Offered (B KHR)</label>
+                                    <input type="number" step="0.01"
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={auctionForm.offered}
+                                        onChange={e => setAuctionForm({ ...auctionForm, offered: e.target.value })}
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Bidding (B KHR)</label>
+                                    <input type="number" step="0.01"
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={auctionForm.bidding}
+                                        onChange={e => setAuctionForm({ ...auctionForm, bidding: e.target.value })}
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* accepted + cover ratio */}
+                            <div className="grid grid-cols-2 gap-3.5">
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Accepted (B KHR)</label>
+                                    <input type="number" step="0.01"
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={auctionForm.accepted}
+                                        onChange={e => setAuctionForm({ ...auctionForm, accepted: e.target.value })}
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Cover Ratio</label>
+                                    <input type="number" step="0.01"
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={auctionForm.cover_ratio}
+                                        onChange={e => setAuctionForm({ ...auctionForm, cover_ratio: e.target.value })}
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* coupon + investors */}
+                            <div className="grid grid-cols-2 gap-3.5">
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Coupon Rate (%)</label>
+                                    <input type="number" step="0.01"
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={auctionForm.coupon}
+                                        onChange={e => setAuctionForm({ ...auctionForm, coupon: e.target.value })}
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">No. of Investors</label>
+                                    <input type="number"
+                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        value={auctionForm.investors}
+                                        onChange={e => setAuctionForm({ ...auctionForm, investors: e.target.value })}
+                                        placeholder="0"
+                                    />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div className="flex justify-end gap-2 mt-6">
+                            <button onClick={() => setShowAuctionModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-[var(--color-light-2)] bg-transparent text-[var(--color-text-3)] rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:border-[var(--color-text-2)] hover:text-[var(--color-text)]">
+                                Cancel
+                            </button>
+                            <button onClick={handleAuctionSave} disabled={auctionLoading} className="text-[13px] font-semibold px-4.5 py-2.25 bg-[var(--color-teal)] text-white rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:bg-[var(--color-teal-2)] disabled:opacity-50">
+                                {auctionLoading ? 'Saving...' : auctionEditId ? 'Save Changes' : 'Add Result'}
                             </button>
                         </div>
 
