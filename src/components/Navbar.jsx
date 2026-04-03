@@ -17,6 +17,7 @@ export default function Navbar(){
         { id: 'Education', path: '/education',  label: t('navEdu') },
         { id: 'News',      path: '/news',       label: t('navNews') },
         { id: 'Contact',   path: '/contact',    label: t('navContact') },
+        { id: 'Auction Result', path: '/auction_result', label: t('navAuction') }
     ];
 
     const closeMenu = () => setMenuOpen(false);

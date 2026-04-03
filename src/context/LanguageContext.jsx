@@ -11,7 +11,7 @@ const BASE_TRANSLATIONS = {
         heroSub: 'Access official debt statistics, bond information, and financial education resources from the General Department of International Cooperation and Debt Management.',
         heroBtn1: 'View Debt Data', heroBtn2: 'Explore Bonds',
         kpi1: 'Published Documents', kpi2: 'Partner Organisations', kpi3: 'International Partners',
-        kpiEducation: 'Learning Resources',
+        kpiEducation: 'Learning Resources', navAuction: 'Auction Result',
         eduTitle: 'Understand Public Debt', eduSub: 'Free guides, videos, and infographics on public debt and investment in Cambodia.', eduBtn: 'Browse Resources',
         linkDebtData: 'View All Data →', linkDocLibrary: 'View All Documents →', linkNewsRoom: 'View All News →',
     }
