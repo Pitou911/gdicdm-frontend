@@ -219,8 +219,8 @@ export default function CmsDashboard() {
         : <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-blue-3 text-blue-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-blue-2">Draft</span>;
 
     const StatusBadge = ({ status }) => status === 'settled'
-        ? <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-green-3)] text-[var(--color-green-2)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-green-2)]">Settled</span>
-        : <span className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-[9px] py-[3px] rounded-[20px] bg-[var(--color-amber-3)] text-[var(--color-amber)] before:content-[''] before:w-[5px] before:h-[5px] before:rounded-full before:bg-[var(--color-amber)]">Pending</span>;
+        ? <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-green-3 text-green-2 before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-green-2">Settled</span>
+        : <span className="inline-flex items-center gap-1.25 text-[11px] font-semibold px-2.25 py-0.75 rounded-[20px] bg-amber-3 text-amber before:content-[''] before:w-1.25 before:h-1.25 before:rounded-full before:bg-amber">Pending</span>;
 
     const typeOptions = form.section === 'Documents' ? DOC_TYPES : form.section === 'Education' ? EDU_TYPES : NEWS_CATS;
 
@@ -228,11 +228,11 @@ export default function CmsDashboard() {
         <div className="flex gap-6">
 
             {/* ── sidebar ───────────────────────────────────── */}
-            <div className="w-[200px] shrink-0">
-                <div className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] overflow-hidden shadow-[var(--shadow-sm)]">
+            <div className="w-50 shrink-0">
+                <div className="bg-white border border-light-2 rounded-sm overflow-hidden shadow-sm">
 
-                    <div className="px-4 py-3 border-b border-[var(--color-light-2)]">
-                        <div className="font-mono text-[9px] font-bold tracking-[1.5px] uppercase text-[var(--color-text-3)]">
+                    <div className="px-4 py-3 border-b border-light-2">
+                        <div className="font-mono text-[9px] font-bold tracking-[1.5px] uppercase text-text-3">
                             CMS Sections
                         </div>
                     </div>
@@ -244,10 +244,10 @@ export default function CmsDashboard() {
                         <button
                             key={item.id}
                             onClick={() => setActiveTab(item.id)}
-                            className={`w-full flex items-center gap-3 px-4 py-3 text-[13px] font-medium cursor-pointer transition-all duration-150 border-b border-[var(--color-light-2)] last:border-b-0 text-left
+                            className={`w-full flex items-center gap-3 px-4 py-3 text-[13px] font-medium cursor-pointer transition-all duration-150 border-b border-light-2 last:border-b-0 text-left
                                 ${activeTab === item.id
-                                    ? 'bg-[var(--color-teal-4)] text-[var(--color-teal)] font-semibold'
-                                    : 'text-[var(--color-text-3)] hover:bg-[var(--color-snow)] hover:text-[var(--color-text)]'
+                                    ? 'bg-teal-4 text-teal font-semibold'
+                                    : 'text-text-3 hover:bg-snow hover:text-text'
                                 }`}
                         >
                             <span>{item.emoji}</span>
@@ -256,18 +256,18 @@ export default function CmsDashboard() {
                     ))}
 
                     {/* quick stats */}
-                    <div className="px-4 py-3 border-t border-[var(--color-light-2)] flex flex-col gap-2">
+                    <div className="px-4 py-3 border-t border-light-2 flex flex-col gap-2">
                         <div className="flex items-center justify-between">
-                            <span className="font-mono text-[9.5px] text-[var(--color-text-3)]">Content</span>
-                            <span className="font-mono text-[10px] font-bold text-[var(--color-teal)]">{rows.length}</span>
+                            <span className="font-mono text-[9.5px] text-text-3">Content</span>
+                            <span className="font-mono text-[10px] font-bold text-teal">{rows.length}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="font-mono text-[9.5px] text-[var(--color-text-3)]">Auctions</span>
-                            <span className="font-mono text-[10px] font-bold text-[var(--color-teal)]">{auctions.length}</span>
+                            <span className="font-mono text-[9.5px] text-text-3">Auctions</span>
+                            <span className="font-mono text-[10px] font-bold text-teal">{auctions.length}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="font-mono text-[9.5px] text-[var(--color-text-3)]">Drafts</span>
-                            <span className="font-mono text-[10px] font-bold text-[var(--color-amber)]">{rows.filter(r => r.status === 'draft').length}</span>
+                            <span className="font-mono text-[9.5px] text-text-3">Drafts</span>
+                            <span className="font-mono text-[10px] font-bold text-amber">{rows.filter(r => r.status === 'draft').length}</span>
                         </div>
                     </div>
 
@@ -280,8 +280,8 @@ export default function CmsDashboard() {
                 {/* ── content tab ── */}
                 {activeTab === 'content' && (
                     <div className='mb-10'>
-                        <div className="font-[var(--font-display)] text-[28px] font-bold text-[var(--color-text)] mb-1 tracking-[-0.3px]">Dashboard</div>
-                        <div className="text-[13px] text-[var(--color-text-3)] mb-6">Overview of all content - investor.mef.gov.kh</div>
+                        <div className="font-display text-[28px] font-bold text-text mb-1 tracking-[-0.3px]">Dashboard</div>
+                        <div className="text-[13px] text-text-3 mb-6">Overview of all content - investor.mef.gov.kh</div>
 
                         {/* stats */}
                         <div className="grid grid-cols-4 gap-3.5 mb-6">
@@ -334,12 +334,12 @@ export default function CmsDashboard() {
                                                         <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
                                                         <button onClick={() => setPreview(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-blue-2 hover:text-blue-2">Preview</button>
                                                         <button onClick={() => handlePublish(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-green-2 bg-transparent cursor-pointer text-green-2 rounded-[6px] transition-all duration-150 hover:bg-green-2 hover:text-white">Publish</button>
-                                                        <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                                        <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
                                                     </>
                                                 ) : (
                                                     <>
                                                         <button onClick={() => openEdit(row)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
-                                                        <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                                        <button onClick={() => handleDelete(row.id)} className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
                                                     </>
                                                 )}
                                             </div>
@@ -354,8 +354,8 @@ export default function CmsDashboard() {
                 {/* ── auction tab ── */}
                 {activeTab === 'auction' && (
                     <div className='mb-10'>
-                        <div className="font-[var(--font-display)] text-[28px] font-bold text-[var(--color-text)] mb-1 tracking-[-0.3px]">Auction Results</div>
-                        <div className="text-[13px] text-[var(--color-text-3)] mb-6">Manage government bond auction results.</div>
+                        <div className="font-display text-[28px] font-bold text-text mb-1 tracking-[-0.3px]">Auction Results</div>
+                        <div className="text-[13px] text-text-3 mb-6">Manage government bond auction results.</div>
 
                         {/* auction stats */}
                         <div className="grid grid-cols-4 gap-3.5 mb-6">
@@ -365,54 +365,54 @@ export default function CmsDashboard() {
                                 { val: auctions.filter(a => a.status === 'pending').length,      label: 'Pending',         color: 'text-[var(--color-amber)]' },
                                 { val: auctions.filter(a => a.currency === 'KHR').length,        label: 'KHR Auctions',    color: 'text-[var(--color-teal)]' },
                             ].map((s, i) => (
-                                <div key={i} className="bg-white border border-[var(--color-light-2)] rounded-[var(--radius-sm)] p-5 shadow-[var(--shadow-sm)]">
-                                    <div className="font-[var(--font-display)] text-[34px] font-bold text-[var(--color-text)] leading-none mb-1 tracking-[-0.5px]">{s.val}</div>
+                                <div key={i} className="bg-white border border-light-2 rounded-sm p-5 shadow-sm">
+                                    <div className="font-display text-[34px] font-bold text-text leading-none mb-1 tracking-[-0.5px]">{s.val}</div>
                                     <div className={`text-[12px] font-medium ${s.color}`}>{s.label}</div>
                                 </div>
                             ))}
                         </div>
 
                         <div className="flex items-center justify-between mb-2.5">
-                            <div className="text-[11px] font-bold tracking-[1px] uppercase text-[var(--color-text-3)]">All Auction Results</div>
-                            <button onClick={openAuctionAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-[var(--color-teal)] text-white rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:bg-[var(--color-teal-2)]">
+                            <div className="text-[11px] font-bold tracking-[1px] uppercase text-text-3">All Auction Results</div>
+                            <button onClick={openAuctionAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2">
                                 + Add Result
                             </button>
                         </div>
 
                         {auctionError && <div className="text-[13px] text-red-500 mb-3">{auctionError}</div>}
 
-                        <table className="w-full border-collapse bg-white rounded-[var(--radius-sm)] overflow-hidden shadow-[var(--shadow-sm)] border border-[var(--color-light-2)]">
+                        <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2">
                             <thead>
                                 <tr>
                                     {['Date', 'Title', 'CCY', 'Tenor', 'Offered', 'Bidding', 'Accepted', 'Cover', 'Coupon', 'Investors', 'Status', 'Actions'].map(h => (
-                                        <th key={h} className="bg-[var(--color-teal)] text-white/85 px-3 py-[10px] text-left text-[10px] font-bold tracking-[0.8px] uppercase whitespace-nowrap">{h}</th>
+                                        <th key={h} className="bg-teal text-white/85 px-3 py-2.5 text-left text-[10px] font-bold tracking-[0.8px] uppercase whitespace-nowrap">{h}</th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {auctions.length === 0 ? (
-                                    <tr><td colSpan={12} className="text-center py-10 text-[var(--color-text-3)] text-[13px]">No auction results yet.</td></tr>
+                                    <tr><td colSpan={12} className="text-center py-10 text-text-3 text-[13px]">No auction results yet.</td></tr>
                                 ) : auctions.map(row => (
-                                    <tr key={row.id} className="group border-b border-[var(--color-light)] last:border-b-0 hover:bg-[var(--color-snow)] transition-colors">
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{row.date_label}</span></td>
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-bold text-[var(--color-teal)]">{row.title}</span></td>
+                                    <tr key={row.id} className="group border-b border-light last:border-b-0 hover:bg-snow transition-colors">
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-text">{row.date_label}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-bold text-teal">{row.title}</span></td>
                                         <td className="px-3 py-2.5 align-middle">
-                                            <span className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] ${row.currency === 'USD' ? 'bg-[var(--color-blue-3)] text-[var(--color-blue-2)]' : 'bg-[var(--color-teal-4)] text-[var(--color-teal)]'}`}>
+                                            <span className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] ${row.currency === 'USD' ? 'bg-blue-3 text-blue-2' : 'bg-teal-4 text-teal'}`}>
                                                 {row.currency}
                                             </span>
                                         </td>
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text-2)]">{row.tenor}Y</span></td>
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{Number(row.offered).toFixed(2)}</span></td>
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{Number(row.bidding).toFixed(2)}</span></td>
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-[var(--color-text)]">{Number(row.accepted).toFixed(2)}</span></td>
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-semibold text-[var(--color-teal)]">{Number(row.cover_ratio).toFixed(2)}x</span></td>
-                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-semibold text-[var(--color-teal)]">{Number(row.coupon).toFixed(2)}%</span></td>
-                                        <td className="px-3 py-2.5 align-middle text-center"><span className="font-mono text-[11px] text-[var(--color-text-2)]">{row.investors}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-text-2">{row.tenor}Y</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-text">{Number(row.offered).toFixed(2)}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-text">{Number(row.bidding).toFixed(2)}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] text-text">{Number(row.accepted).toFixed(2)}</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-semibold text-teal">{Number(row.cover_ratio).toFixed(2)}x</span></td>
+                                        <td className="px-3 py-2.5 align-middle"><span className="font-mono text-[11px] font-semibold text-teal">{Number(row.coupon).toFixed(2)}%</span></td>
+                                        <td className="px-3 py-2.5 align-middle text-center"><span className="font-mono text-[11px] text-text-2">{row.investors}</span></td>
                                         <td className="px-3 py-2.5 align-middle"><StatusBadge status={row.status} /></td>
                                         <td className="px-3 py-2.5 align-middle">
                                             <div className="flex gap-1 items-center">
-                                                <button onClick={() => openAuctionEdit(row)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-[var(--color-light-2)] bg-transparent cursor-pointer text-[var(--color-text-3)] rounded-[6px] transition-all duration-150 hover:border-[var(--color-text-2)] hover:text-[var(--color-text)]">Edit</button>
-                                                <button onClick={() => handleAuctionDelete(row.id)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-[var(--color-light-2)] bg-transparent cursor-pointer text-[var(--color-text-3)] rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
+                                                <button onClick={() => openAuctionEdit(row)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
+                                                <button onClick={() => handleAuctionDelete(row.id)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -730,20 +730,20 @@ export default function CmsDashboard() {
             )}
             {/* ── auction modal ── */}
             {showAuctionModal && (
-                <div className="fixed inset-0 bg-black/40 z-[500] flex items-center justify-center">
-                    <div className="bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] w-full max-w-[520px] p-7 max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
+                    <div className="bg-white rounded-md shadow-lg w-full max-w-130 p-7 max-h-[90vh] overflow-y-auto">
 
                         <div className="flex items-center justify-between mb-6">
-                            <div className="font-[var(--font-display)] text-[18px] font-bold text-[var(--color-text)]">
+                            <div className="font-display text-[18px] font-bold text-text">
                                 {auctionEditId ? 'Edit Auction Result' : 'Add Auction Result'}
                             </div>
-                            <button onClick={() => setShowAuctionModal(false)} className="text-[var(--color-text-3)] hover:text-[var(--color-text)] text-[20px] leading-none cursor-pointer">✕</button>
+                            <button onClick={() => setShowAuctionModal(false)} className="text-text-3 hover:text-text text-[20px] leading-none cursor-pointer">✕</button>
                         </div>
 
                         {/* title preview */}
-                        <div className="bg-[var(--color-teal-4)] border border-[var(--color-teal-3)] rounded-[var(--radius-sm)] px-4 py-3 mb-5">
-                            <div className="font-mono text-[9px] font-bold tracking-[1px] uppercase text-[var(--color-teal)] mb-1">Auto-generated Title</div>
-                            <div className="font-mono text-[14px] font-bold text-[var(--color-teal)]">{previewTitle()}</div>
+                        <div className="bg-teal-4 border border-teal-3 rounded-sm px-4 py-3 mb-5">
+                            <div className="font-mono text-[9px] font-bold tracking-[1px] uppercase text-teal mb-1">Auto-generated Title</div>
+                            <div className="font-mono text-[14px] font-bold text-teal">{previewTitle()}</div>
                         </div>
 
                         <div className="flex flex-col gap-4">
@@ -751,17 +751,17 @@ export default function CmsDashboard() {
                             {/* date + currency */}
                             <div className="grid grid-cols-2 gap-3.5">
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Auction Date</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Auction Date</label>
                                     <input type="date"
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                         value={auctionForm.auction_date}
                                         onChange={e => setAuctionForm({ ...auctionForm, auction_date: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Currency</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Currency</label>
                                     <select
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal"
                                         value={auctionForm.currency}
                                         onChange={e => setAuctionForm({ ...auctionForm, currency: e.target.value })}
                                     >
@@ -773,9 +773,9 @@ export default function CmsDashboard() {
                             {/* tenor + status */}
                             <div className="grid grid-cols-2 gap-3.5">
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Tenor (Years)</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Tenor (Years)</label>
                                     <select
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal"
                                         value={auctionForm.tenor}
                                         onChange={e => setAuctionForm({ ...auctionForm, tenor: Number(e.target.value) })}
                                     >
@@ -783,9 +783,9 @@ export default function CmsDashboard() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Status</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Status</label>
                                     <select
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal"
                                         value={auctionForm.status}
                                         onChange={e => setAuctionForm({ ...auctionForm, status: e.target.value })}
                                     >
@@ -798,18 +798,18 @@ export default function CmsDashboard() {
                             {/* offered + bidding */}
                             <div className="grid grid-cols-2 gap-3.5">
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Offered (B KHR)</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Offered (B KHR)</label>
                                     <input type="number" step="0.01"
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                         value={auctionForm.offered}
                                         onChange={e => setAuctionForm({ ...auctionForm, offered: e.target.value })}
                                         placeholder="0.00"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Bidding (B KHR)</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Bidding (B KHR)</label>
                                     <input type="number" step="0.01"
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                         value={auctionForm.bidding}
                                         onChange={e => setAuctionForm({ ...auctionForm, bidding: e.target.value })}
                                         placeholder="0.00"
@@ -820,18 +820,18 @@ export default function CmsDashboard() {
                             {/* accepted + cover ratio */}
                             <div className="grid grid-cols-2 gap-3.5">
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Accepted (B KHR)</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Accepted (B KHR)</label>
                                     <input type="number" step="0.01"
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                         value={auctionForm.accepted}
                                         onChange={e => setAuctionForm({ ...auctionForm, accepted: e.target.value })}
                                         placeholder="0.00"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Cover Ratio</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Cover Ratio</label>
                                     <input type="number" step="0.01"
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                         value={auctionForm.cover_ratio}
                                         onChange={e => setAuctionForm({ ...auctionForm, cover_ratio: e.target.value })}
                                         placeholder="0.00"
@@ -842,18 +842,18 @@ export default function CmsDashboard() {
                             {/* coupon + investors */}
                             <div className="grid grid-cols-2 gap-3.5">
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Coupon Rate (%)</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Coupon Rate (%)</label>
                                     <input type="number" step="0.01"
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                         value={auctionForm.coupon}
                                         onChange={e => setAuctionForm({ ...auctionForm, coupon: e.target.value })}
                                         placeholder="0.00"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">No. of Investors</label>
+                                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">No. of Investors</label>
                                     <input type="number"
-                                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                        className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
                                         value={auctionForm.investors}
                                         onChange={e => setAuctionForm({ ...auctionForm, investors: e.target.value })}
                                         placeholder="0"
@@ -864,10 +864,10 @@ export default function CmsDashboard() {
                         </div>
 
                         <div className="flex justify-end gap-2 mt-6">
-                            <button onClick={() => setShowAuctionModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-[var(--color-light-2)] bg-transparent text-[var(--color-text-3)] rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:border-[var(--color-text-2)] hover:text-[var(--color-text)]">
+                            <button onClick={() => setShowAuctionModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-light-2 bg-transparent text-text-3 rounded-sm cursor-pointer transition-all duration-150 hover:border-text-2 hover:text-text">
                                 Cancel
                             </button>
-                            <button onClick={handleAuctionSave} disabled={auctionLoading} className="text-[13px] font-semibold px-4.5 py-2.25 bg-[var(--color-teal)] text-white rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:bg-[var(--color-teal-2)] disabled:opacity-50">
+                            <button onClick={handleAuctionSave} disabled={auctionLoading} className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2 disabled:opacity-50">
                                 {auctionLoading ? 'Saving...' : auctionEditId ? 'Save Changes' : 'Add Result'}
                             </button>
                         </div>
