@@ -229,7 +229,7 @@ export default function CmsDashboard() {
 
             {/* ── sidebar ───────────────────────────────────── */}
             <div className="w-50 shrink-0">
-                <div className="bg-white border border-light-2 rounded-sm overflow-hidden shadow-sm">
+                <div className="bg-white border border-light-2 overflow-hidden">
 
                     <div className="px-4 py-3 border-b border-light-2">
                         <div className="font-mono text-[9px] font-bold tracking-[1.5px] uppercase text-text-3">
@@ -275,7 +275,7 @@ export default function CmsDashboard() {
             </div>
 
             {/* ── main panel ───────────────────────────────── */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 mt-5">
 
                 {/* ── content tab ── */}
                 {activeTab === 'content' && (
