@@ -494,7 +494,7 @@ const handleCalendarDelete = async (id) => {
                     </div>
                 )}
                 {activeTab === 'calendar' && (
-                    <div>
+                    <div className='mb-10'>
                         <div className="font-display text-[28px] font-bold text-text mb-1 tracking-[-0.3px]">Auction Calendar</div>
                         <div className="text-[13px] text-text-3 mb-6">Manage bond auction dates and tenors.</div>
 
