@@ -83,3 +83,6 @@ export async function fetchCmsAll()  { return fetch(`${BASE}/cms`).then(r => r.j
 export async function fetchAuctionResults(){
     return fetch(`${BASE}/auction-results`).then(r => r.json());
 }
+export async function fetchAuctionCalendar() {
+    return fetch(`${BASE}/auction-calendar`).then(r => r.json());
+}
