@@ -494,59 +494,59 @@ const handleCalendarDelete = async (id) => {
                     </div>
                 )}
                 {activeTab === 'calendar' && (
-    <div>
-        <div className="font-[var(--font-display)] text-[28px] font-bold text-[var(--color-text)] mb-1 tracking-[-0.3px]">Auction Calendar</div>
-        <div className="text-[13px] text-[var(--color-text-3)] mb-6">Manage bond auction dates and tenors.</div>
+                    <div>
+                        <div className="font-display text-[28px] font-bold text-text mb-1 tracking-[-0.3px]">Auction Calendar</div>
+                        <div className="text-[13px] text-text-3 mb-6">Manage bond auction dates and tenors.</div>
 
-        <div className="flex items-center justify-between mb-2.5">
-            <div className="text-[11px] font-bold tracking-[1px] uppercase text-[var(--color-text-3)]">
-                {calendarEvents.length} Auction Dates
-            </div>
-            <button onClick={openCalendarAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-[var(--color-teal)] text-white rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:bg-[var(--color-teal-2)]">
-                + Add Date
-            </button>
-        </div>
+                        <div className="flex items-center justify-between mb-2.5">
+                            <div className="text-[11px] font-bold tracking-[1px] uppercase text-text-3">
+                                {calendarEvents.length} Auction Dates
+                            </div>
+                            <button onClick={openCalendarAdd} className="text-[13px] font-semibold px-4.5 py-2 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2">
+                                + Add Date
+                            </button>
+                        </div>
 
-        {calendarError && <div className="text-[13px] text-red-500 mb-3">{calendarError}</div>}
+                        {calendarError && <div className="text-[13px] text-red-500 mb-3">{calendarError}</div>}
 
-        <table className="w-full border-collapse bg-white rounded-[var(--radius-sm)] overflow-hidden shadow-[var(--shadow-sm)] border border-[var(--color-light-2)]">
-            <thead>
-                <tr>
-                    {['Date', 'Month', 'Tenors', 'Actions'].map(h => (
-                        <th key={h} className="bg-[var(--color-teal)] text-white/85 px-4 py-[10px] text-left text-[10.5px] font-bold tracking-[1px] uppercase">{h}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {calendarEvents.length === 0 ? (
-                    <tr><td colSpan={4} className="text-center py-10 text-[var(--color-text-3)] text-[13px]">No calendar entries yet.</td></tr>
-                ) : calendarEvents.map(ev => (
-                    <tr key={ev.id} className="group border-b border-[var(--color-light)] last:border-b-0 hover:bg-[var(--color-snow)]">
-                        <td className="px-4 py-3 align-middle">
-                            <span className="font-[var(--font-display)] text-[16px] font-bold text-[var(--color-text)]">{ev.label}</span>
-                        </td>
-                        <td className="px-4 py-3 align-middle">
-                            <span className="text-[13px] text-[var(--color-text-2)]">{ev.month}</span>
-                        </td>
-                        <td className="px-4 py-3 align-middle">
-                            <div className="flex gap-1.5 flex-wrap">
-                                {ev.tenors.map(t => (
-                                    <span key={t} className="font-mono text-[10px] font-bold px-2 py-[3px] rounded-[4px] bg-[var(--color-teal-4)] text-[var(--color-teal)]">{t}</span>
+                        <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2">
+                            <thead>
+                                <tr>
+                                    {['Date', 'Month', 'Tenors', 'Actions'].map(h => (
+                                        <th key={h} className="bg-teal text-white/85 px-4 py-2.5 text-left text-[10.5px] font-bold tracking-[1px] uppercase">{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {calendarEvents.length === 0 ? (
+                                    <tr><td colSpan={4} className="text-center py-10 text-text-3 text-[13px]">No calendar entries yet.</td></tr>
+                                ) : calendarEvents.map(ev => (
+                                    <tr key={ev.id} className="group border-b border-light last:border-b-0 hover:bg-snow">
+                                        <td className="px-4 py-3 align-middle">
+                                            <span className="font-display text-[16px] font-bold text-text">{ev.label}</span>
+                                        </td>
+                                        <td className="px-4 py-3 align-middle">
+                                            <span className="text-[13px] text-text-2">{ev.month}</span>
+                                        </td>
+                                        <td className="px-4 py-3 align-middle">
+                                            <div className="flex gap-1.5 flex-wrap">
+                                                {ev.tenors.map(t => (
+                                                    <span key={t} className="font-mono text-[10px] font-bold px-2 py-0.75 rounded-[4px] bg-teal-4 text-teal">{t}</span>
+                                                ))}
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-3 align-middle">
+                                            <div className="flex gap-1 items-center">
+                                                <button onClick={() => openCalendarEdit(ev)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
+                                                <button onClick={() => handleCalendarDelete(ev.id)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 ))}
-                            </div>
-                        </td>
-                        <td className="px-4 py-3 align-middle">
-                            <div className="flex gap-1 items-center">
-                                <button onClick={() => openCalendarEdit(ev)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-[var(--color-light-2)] bg-transparent cursor-pointer text-[var(--color-text-3)] rounded-[6px] transition-all duration-150 hover:border-[var(--color-text-2)] hover:text-[var(--color-text)]">Edit</button>
-                                <button onClick={() => handleCalendarDelete(ev.id)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-[var(--color-light-2)] bg-transparent cursor-pointer text-[var(--color-text-3)] rounded-[6px] transition-all duration-150 hover:border-[#ef4444] hover:text-[#ef4444]">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>
-)}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
 
             </div>
 
@@ -1003,76 +1003,76 @@ const handleCalendarDelete = async (id) => {
             )}
 
             {showCalendarModal && (
-    <div className="fixed inset-0 bg-black/40 z-[500] flex items-center justify-center">
-        <div className="bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] w-full max-w-[440px] p-7">
+                <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
+                    <div className="bg-white rounded-md shadow-lg w-full max-w-110 p-7">
 
-            <div className="flex items-center justify-between mb-6">
-                <div className="font-[var(--font-display)] text-[18px] font-bold text-[var(--color-text)]">
-                    {calendarEditId ? 'Edit Auction Date' : 'Add Auction Date'}
-                </div>
-                <button onClick={() => setShowCalendarModal(false)} className="text-[var(--color-text-3)] hover:text-[var(--color-text)] text-[20px] leading-none cursor-pointer">✕</button>
-            </div>
-
-            <div className="flex flex-col gap-4">
-
-                {/* date */}
-                <div>
-                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-1.5">Auction Date</label>
-                    <input type="date"
-                        className="w-full border-[1.5px] border-[var(--color-light-2)] px-3.5 py-2.5 text-[14px] text-[var(--color-text)] bg-white outline-none rounded-[var(--radius-sm)] focus:border-[var(--color-teal)] focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
-                        value={calendarForm.auction_date}
-                        onChange={e => setCalendarForm({ ...calendarForm, auction_date: e.target.value })}
-                    />
-                </div>
-
-                {/* tenors — checkbox grid */}
-                <div>
-                    <label className="block text-[11.5px] font-bold tracking-[0.5px] text-[var(--color-text-2)] mb-2">
-                        Available Tenors <span className="font-normal text-[var(--color-text-3)]">(select all that apply)</span>
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                        {['1Y', '2Y', '3Y', '5Y', '10Y', '15Y'].map(tenor => {
-                            const selected = calendarForm.tenors.includes(tenor);
-                            return (
-                                <button
-                                    key={tenor}
-                                    onClick={() => toggleTenor(tenor)}
-                                    className={`font-mono text-[12px] font-bold py-2.5 rounded-[var(--radius-sm)] border-[1.5px] cursor-pointer transition-all duration-150
-                                        ${selected
-                                            ? 'bg-[var(--color-teal)] border-[var(--color-teal)] text-white shadow-[0_2px_6px_rgba(0,109,110,0.25)]'
-                                            : 'bg-white border-[var(--color-light-2)] text-[var(--color-text-3)] hover:border-[var(--color-teal-3)] hover:text-[var(--color-teal)]'
-                                        }`}
-                                >
-                                    {selected ? '✓ ' : ''}{tenor}
-                                </button>
-                            );
-                        })}
-                    </div>
-                    {calendarForm.tenors.length > 0 && (
-                        <div className="mt-2 font-mono text-[10px] text-[var(--color-teal)]">
-                            Selected: {calendarForm.tenors.join(', ')}
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="fon-display text-[18px] font-bold text-text">
+                                {calendarEditId ? 'Edit Auction Date' : 'Add Auction Date'}
+                            </div>
+                            <button onClick={() => setShowCalendarModal(false)} className="text-text-3 hover:text-text text-[20px] leading-none cursor-pointer">✕</button>
                         </div>
-                    )}
+
+                        <div className="flex flex-col gap-4">
+
+                            {/* date */}
+                            <div>
+                                <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Auction Date</label>
+                                <input type="date"
+                                    className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                    value={calendarForm.auction_date}
+                                    onChange={e => setCalendarForm({ ...calendarForm, auction_date: e.target.value })}
+                                />
+                            </div>
+
+                            {/* tenors — checkbox grid */}
+                            <div>
+                                <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-2">
+                                    Available Tenors <span className="font-normal text-text-3">(select all that apply)</span>
+                                </label>
+                                <div className="grid grid-cols-3 gap-2">
+                                    {['1Y', '2Y', '3Y', '5Y', '10Y', '15Y'].map(tenor => {
+                                        const selected = calendarForm.tenors.includes(tenor);
+                                        return (
+                                            <button
+                                                key={tenor}
+                                                onClick={() => toggleTenor(tenor)}
+                                                className={`font-mono text-[12px] font-bold py-2.5 rounded-sm border-[1.5px] cursor-pointer transition-all duration-150
+                                                    ${selected
+                                                        ? 'bg-teal border-teal text-white shadow-[0_2px_6px_rgba(0,109,110,0.25)]'
+                                                        : 'bg-white border-light-2 text-text-3 hover:border-teal-3 hover:text-teal'
+                                                    }`}
+                                            >
+                                                {selected ? '✓ ' : ''}{tenor}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                {calendarForm.tenors.length > 0 && (
+                                    <div className="mt-2 font-mono text-[10px] text-teal">
+                                        Selected: {calendarForm.tenors.join(', ')}
+                                    </div>
+                                )}
+                            </div>
+
+                        </div>
+
+                        <div className="flex justify-end gap-2 mt-6">
+                            <button onClick={() => setShowCalendarModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-light-2 bg-transparent text-text-3 rounded-sm cursor-pointer transition-all duration-150 hover:border-text-2 hover:text-text">
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleCalendarSave}
+                                disabled={calendarLoading || !calendarForm.auction_date || calendarForm.tenors.length === 0}
+                                className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2 disabled:opacity-50"
+                            >
+                                {calendarLoading ? 'Saving...' : calendarEditId ? 'Save Changes' : 'Add Date'}
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
-
-            </div>
-
-            <div className="flex justify-end gap-2 mt-6">
-                <button onClick={() => setShowCalendarModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-[var(--color-light-2)] bg-transparent text-[var(--color-text-3)] rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:border-[var(--color-text-2)] hover:text-[var(--color-text)]">
-                    Cancel
-                </button>
-                <button
-                    onClick={handleCalendarSave}
-                    disabled={calendarLoading || !calendarForm.auction_date || calendarForm.tenors.length === 0}
-                    className="text-[13px] font-semibold px-4.5 py-2.25 bg-[var(--color-teal)] text-white rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 hover:bg-[var(--color-teal-2)] disabled:opacity-50"
-                >
-                    {calendarLoading ? 'Saving...' : calendarEditId ? 'Save Changes' : 'Add Date'}
-                </button>
-            </div>
-
-        </div>
-    </div>
-)}
+            )}
 
         </div>
     );
