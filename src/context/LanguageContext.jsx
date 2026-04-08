@@ -2,83 +2,101 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 
 const LanguageContext = createContext();
 
-const BASE_TRANSLATIONS = {
+const translations = {
     en: {
-        navHome: 'Home', navAbout: 'About', navBonds: 'Bonds',
-        navDebt: 'Debt Data', navDocs: 'Documents', navEdu: 'Education',
-        navNews: 'News', navContact: 'Contact', navCalendar: 'Calendar',
+        // Navbar
+        navHome:     'Home',
+        navAbout:    'About',
+        navBonds:    'Bonds',
+        navDebt:     'Debt Data',
+        navDocs:     'Documents',
+        navEdu:      'Education',
+        navNews:     'News',
+        navContact:  'Contact',
+        navCalendar: 'Calendar',
+        navAuction:  'Auction Result',
+
+        // Hero
         heroSub2: 'Transparency & Accountability',
-        heroSub: 'Access official debt statistics, bond information, and financial education resources from the General Department of International Cooperation and Debt Management.',
-        heroBtn1: 'View Debt Data', heroBtn2: 'Explore Bonds',
-        kpi1: 'Published Documents', kpi2: 'Partner Organisations', kpi3: 'International Partners',
-        kpiEducation: 'Learning Resources', navAuction: 'Auction Result',
-        eduTitle: 'Understand Public Debt', eduSub: 'Free guides, videos, and infographics on public debt and investment in Cambodia.', eduBtn: 'Browse Resources',
-        linkDebtData: 'View All Data →', linkDocLibrary: 'View All Documents →', linkNewsRoom: 'View All News →',
-    }
+        heroSub:  'Access official debt statistics, bond information, and financial education resources from the General Department of International Cooperation and Debt Management.',
+        heroBtn1: 'View Debt Data',
+        heroBtn2: 'Explore Bonds',
+
+        // KPIs
+        kpi1:          'Published Documents',
+        kpi2:          'Partner Organisations',
+        kpi3:          'International Partners',
+        kpiEducation:  'Learning Resources',
+
+        // Education section
+        eduTitle: 'Understand Public Debt',
+        eduSub:   'Free guides, videos, and infographics on public debt and investment in Cambodia.',
+        eduBtn:   'Browse Resources',
+
+        // Section links
+        linkDebtData:   'View All Data →',
+        linkDocLibrary: 'View All Documents →',
+        linkNewsRoom:   'View All News →',
+    },
+    km: {
+        // Navbar
+        navHome:     'ទំព័រដើម',
+        navAbout:    'អំពីយើង',
+        navBonds:    'មូលបត្រ',
+        navDebt:     'ទិន្នន័យបំណុល',
+        navDocs:     'ឯកសារ',
+        navEdu:      'ការអប់រំ',
+        navNews:     'ព័ត៌មាន',
+        navContact:  'ទំនាក់ទំនង',
+        navCalendar: 'ប្រតិទិន',
+        navAuction:  'លទ្ធផលដេញថ្លៃ',
+
+        // Hero
+        heroSub2: 'តម្លាភាព និងគណនេយ្យភាព',
+        heroSub:  'ចូលទៅកាន់ស្ថិតិបំណុលផ្លូវការ ព័ត៌មានអំពីមូលបត្រ និងធនធានអប់រំហិរញ្ញវត្ថុ ពីនាយកដ្ឋានទូទៅនៃកិច្ចសហប្រតិបត្តិការអន្តរជាតិ និងការគ្រប់គ្រងបំណុល។',
+        heroBtn1: 'មើលទិន្នន័យបំណុល',
+        heroBtn2: 'ស្វែងយល់អំពីមូលបត្រ',
+
+        // KPIs
+        kpi1:         'ឯកសារបោះពុម្ព',
+        kpi2:         'អង្គការដៃគូ',
+        kpi3:         'ដៃគូអន្តរជាតិ',
+        kpiEducation: 'ធនធានសិក្សា',
+
+        // Education section
+        eduTitle: 'យល់ដឹងអំពីបំណុលសាធារណៈ',
+        eduSub:   'មគ្គុទ្ទេសក៍ វីដេអូ និងអត្ថបទព័ត៌មានអំពីបំណុលសាធារណៈ និងការវិនិយោគនៅកម្ពុជា ដោយឥតគិតថ្លៃ។',
+        eduBtn:   'រកមើលធនធាន',
+
+        // Section links
+        linkDebtData:   'មើលទិន្នន័យទាំងអស់ →',
+        linkDocLibrary: 'មើលឯកសារទាំងអស់ →',
+        linkNewsRoom:   'មើលព័ត៌មានទាំងអស់ →',
+    },
 };
 
-const CACHE_KEY = 'translation_cache_km';
-
 export function LanguageProvider({ children }) {
-    const [lang, setLang]             = useState('en');
-    const [translations, setTranslations] = useState({});
-    const [loading, setLoading]       = useState(false);
+    const [lang, setLangState] = useState(
+        () => localStorage.getItem('lang') || 'en'
+    );
 
-    const translateText = async (text) => {
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|km`;
-        const res  = await fetch(url);
-        const data = await res.json();
-        return data.responseData?.translatedText || text;
+    const setLang = (newLang) => {
+        localStorage.setItem('lang', newLang);
+        setLangState(newLang);
     };
 
-    const loadKhmerTranslations = useCallback(async () => {
-        // check cache first
-        const cached = sessionStorage.getItem(CACHE_KEY);
-        if (cached) {
-            setTranslations(JSON.parse(cached));
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const entries  = Object.entries(BASE_TRANSLATIONS.en);
-            const results  = {};
-
-            // translate in batches of 5 to avoid rate limiting
-            for (let i = 0; i < entries.length; i += 5) {
-                const batch = entries.slice(i, i + 5);
-                const translated = await Promise.all(
-                    batch.map(async ([key, value]) => {
-                        const text = await translateText(value);
-                        return [key, text];
-                    })
-                );
-                translated.forEach(([key, value]) => { results[key] = value; });
-                // small delay between batches to respect rate limits
-                if (i + 5 < entries.length) await new Promise(r => setTimeout(r, 300));
-            }
-
-            sessionStorage.setItem(CACHE_KEY, JSON.stringify(results));
-            setTranslations(results);
-        } catch (err) {
-            console.error('Translation failed:', err);
-            setTranslations({});
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
+    // Keep the <html lang> attribute in sync for accessibility and SEO
     useEffect(() => {
-        if (lang === 'km') loadKhmerTranslations();
-    }, [lang, loadKhmerTranslations]);
+        document.documentElement.lang = lang;
+    }, [lang]);
 
-    const t = useCallback((key) => {
-        if (lang === 'en') return BASE_TRANSLATIONS.en[key] || key;
-        return translations[key] || BASE_TRANSLATIONS.en[key] || key;
-    }, [lang, translations]);
+    const t = useCallback(
+        (key) => translations[lang]?.[key] ?? translations.en[key] ?? key,
+        [lang]
+    );
 
     return (
-        <LanguageContext.Provider value={{ lang, setLang, t, loading }}>
+        <LanguageContext.Provider value={{ lang, setLang, t }}>
             {children}
         </LanguageContext.Provider>
     );

@@ -43,6 +43,7 @@
   --font-display: 'Sora', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-khmer: 'Noto Sans Khmer', sans-serif;
 }
 
 @layer base {
@@ -62,6 +63,12 @@
   a{
     @apply no-underline;
   }
+}
+
+/* Apply Khmer font site-wide when language is set to km */
+:lang(km) body,
+:lang(km) .font-body {
+  font-family: var(--font-khmer);
 }
 
 .eyebrow::before{content:'';width:16px;height:2px;background:var(--color-teal);border-radius:1px}

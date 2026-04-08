@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Navbar(){
-    const { lang, setLang, t, loading } = useLanguage();
+    const { lang, setLang, t } = useLanguage();
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -57,23 +57,20 @@ export default function Navbar(){
                 </div>
 
                 {/* desktop lang toggle */}
-                <div className="hidden lg:flex items-center gap-2 ml-auto shrink-0">
-                    {loading && (
-                        <div className="flex bg-light rounded-sm p-0.75 gap-0.5"/>
-                    )}
+                <div className="hidden lg:flex items-center gap-0.5 ml-auto shrink-0 bg-light rounded-sm p-0.75">
                     <div
                         onClick={() => setLang('en')}
                         className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer rounded-[6px] transition-all duration-150
-                                ${lang === 'en' ? 'text-teal  shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-white' : ' text-text-3'}`}
-                        >
+                                ${lang === 'en' ? 'text-teal shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-white' : 'text-text-3'}`}
+                    >
                         EN
                     </div>
                     <div
                         onClick={() => setLang('km')}
-                        className={`font-mono text-[11px] font-semibold px-2.5 py-1 cursor-pointer rounded-[6px] transition-all duration-150
-                                ${lang === 'km' ? ' text-teal bg-white  shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : 'text-text-3'}`}
-                        >
-                        {loading && lang !== 'km' ? '...' : 'ខ្មែរ'}
+                        className={`font-khmer text-[11px] font-semibold px-2.5 py-1 cursor-pointer rounded-[6px] transition-all duration-150
+                                ${lang === 'km' ? 'text-teal bg-white shadow-[0_1px_3px_rgba(0,0,0,0.1)]' : 'text-text-3'}`}
+                    >
+                        ខ្មែរ
                     </div>
                 </div>
                 {/* hamburger button — mobile only */}
