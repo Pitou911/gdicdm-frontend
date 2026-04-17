@@ -1,4 +1,5 @@
-const BASE = 'http://localhost:8000/api';
+const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8000';
+const BASE = `${API_BASE}/api`;
 
 // ── public pages ──────────────────────────────────────────
 
@@ -22,7 +23,7 @@ export async function fetchDocuments() {
         meta:      d.date || '',
         linkText:  '⬇ Download',
         fileUrl:   d.file_url,
-        coverUrl:  d.cover_url ? `http://localhost:8000${d.cover_url}` : null,
+        coverUrl:  d.cover_url ? `${API_BASE}${d.cover_url}` : null,
     }));
     return [...seeded, ...cmsFormatted];
 }
@@ -47,8 +48,8 @@ export async function fetchResources() {
         meta:      e.language || '',
         linkText:  e.type === 'LINK' ? '↗ Open' : e.type === 'VIDEO' ? '▶ Play' : '⬇ Download',
         fileUrl:   e.file_url,
-        streamUrl: e.type === 'VIDEO' && e.file_url ? `http://localhost:8000/api/cms/education/${e.id}/stream` : null,
-        coverUrl:  e.cover_url ? `http://localhost:8000${e.cover_url}` : null,
+        streamUrl: e.type === 'VIDEO' && e.file_url ? `${BASE}/cms/education/${e.id}/stream` : null,
+        coverUrl:  e.cover_url ? `${API_BASE}${e.cover_url}` : null,
     }));
 
     return [...seeded, ...cmsFormatted];
@@ -65,8 +66,8 @@ export async function fetchNews() {
         category:    n.category,
         title:       n.title,
         description: n.description,
-        image_url:   n.image_url   ? `http://localhost:8000${n.image_url}`   : null,
-        cover_url:   n.cover_url   ? `http://localhost:8000${n.cover_url}`   : null,
+        image_url:   n.image_url   ? `${API_BASE}${n.image_url}`   : null,
+        cover_url:   n.cover_url   ? `${API_BASE}${n.cover_url}`   : null,
         date:        n.date || '',
     }));
 
