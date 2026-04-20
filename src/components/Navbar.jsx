@@ -1,11 +1,19 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar(){
     const { lang, setLang, t } = useLanguage();
+    const { isAuthenticated, user, logout } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/login');
+    };
 
     const navLinks = [
         { id: 'Home',      path: '/',          label: t('navHome') },
@@ -55,6 +63,21 @@ export default function Navbar(){
                         </Link>
                     ))}
                 </div>
+
+                {/* admin badge + logout */}
+                {isAuthenticated && (
+                    <div className="hidden lg:flex items-center gap-2 ml-4 shrink-0">
+                        <span className="text-[12px] font-semibold text-teal bg-teal-4 px-2.5 py-1 rounded-sm">
+                            {user?.name || 'Admin'}
+                        </span>
+                        <button
+                            onClick={handleLogout}
+                            className="text-[12px] font-semibold text-text-3 hover:text-text px-2.5 py-1 rounded-sm hover:bg-light transition-colors cursor-pointer"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                )}
 
                 {/* desktop lang toggle */}
                 <div className="hidden lg:flex items-center gap-0.5 ml-auto shrink-0 bg-light rounded-sm p-0.75">
@@ -106,6 +129,18 @@ export default function Navbar(){
                             </Link>
                         ))}
                     </div>
+
+                    {isAuthenticated && (
+                        <div className="mt-3 pt-3 border-t border-light-2 flex items-center justify-between">
+                            <span className="text-[12px] font-semibold text-teal">{user?.name || 'Admin'}</span>
+                            <button
+                                onClick={() => { handleLogout(); closeMenu(); }}
+                                className="text-[12px] font-semibold text-text-3 hover:text-text px-2.5 py-1 rounded-sm hover:bg-light transition-colors cursor-pointer"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
 
                     <div className="mt-3 pt-3 border-t border-light-2 flex items-center gap-2">
                         <span className="text-[11px] text-text-3 font-semibold tracking-[0.5px] uppercase">Language</span>

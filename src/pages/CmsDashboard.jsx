@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 import { fetchCmsAll, fetchAuctionResults, fetchAuctionCalendar } from '../data/index';
+import { useAuth } from '../context/AuthContext';
 
 const BASE = 'http://localhost:8000/api';
+
+const authHeaders = (token, extra = {}) => ({
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/json',
+    ...extra,
+});
 
 const DOC_TYPES  = ['Debt Bulletin', 'Statistical', 'Legal', 'Bond Info'];
 const EDU_TYPES  = ['PDF', 'VIDEO', 'IMG', 'LINK'];
@@ -22,6 +29,7 @@ const TENORS_LIST    = [1, 2, 3, 5, 10, 15];
 const CURRENCIES_LIST = ['KHR', 'USD'];
 
 export default function CmsDashboard() {
+    const { token, user } = useAuth();
     const [rows, setRows]           = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [preview, setPreview]     = useState(null);
@@ -47,6 +55,17 @@ export default function CmsDashboard() {
     const [calendarEditId, setCalendarEditId]     = useState(null);
     const [calendarLoading, setCalendarLoading]   = useState(false);
     const [calendarError, setCalendarError]       = useState('');
+
+    const [accounts, setAccounts]                 = useState([]);
+    const [showAccountModal, setShowAccountModal] = useState(false);
+    const [accountForm, setAccountForm]           = useState({ name: '', email: '', password: '', role: 'officer' });
+    const [accountLoading, setAccountLoading]     = useState(false);
+    const [accountError, setAccountError]         = useState('');
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [passwordTarget, setPasswordTarget]     = useState(null);
+    const [newPassword, setNewPassword]           = useState('');
+    const [passwordLoading, setPasswordLoading]   = useState(false);
+    const [passwordError, setPasswordError]       = useState('');
 
     useEffect(() => {
     loadRows();
@@ -88,7 +107,7 @@ const handleCalendarSave = async () => {
     try {
         const res = await fetch(url, {
             method,
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: authHeaders(token, { 'Content-Type': 'application/json' }),
             body: JSON.stringify(calendarForm),
         });
         if (!res.ok) throw new Error();
@@ -106,16 +125,74 @@ const handleCalendarSave = async () => {
 const handleCalendarDelete = async (id) => {
     if (!confirm('Delete this calendar entry?')) return;
     try {
-        await fetch(`${BASE}/auction-calendar/${id}`, { method: 'DELETE' });
+        await fetch(`${BASE}/auction-calendar/${id}`, { method: 'DELETE', headers: authHeaders(token) });
         fetchAuctionCalendar().then(data => setCalendarEvents(data.map(e => ({
             id: e.id, date: e.auction_date, label: e.date_label, month: e.month, tenors: e.tenors,
         }))));
     } catch { setCalendarError('Failed to delete.'); }
 };
-    const loadRows    = () => fetchCmsAll().then(setRows).catch(() => setError('Failed to load.'));
+    const loadRows     = () => fetchCmsAll().then(setRows).catch(() => setError('Failed to load.'));
     const loadAuctions = () => fetchAuctionResults().then(setAuctions).catch(() => setAuctionError('Failed to load.'));
+    const loadAccounts = () =>
+        fetch(`${BASE}/users`, { headers: authHeaders(token) })
+            .then(r => r.json()).then(setAccounts)
+            .catch(() => setAccountError('Failed to load accounts.'));
 
-    useEffect(() => { loadRows(); loadAuctions(); }, []);
+    useEffect(() => { loadRows(); loadAuctions(); loadAccounts(); }, []);
+
+    const handleAccountSave = async () => {
+        setAccountLoading(true);
+        setAccountError('');
+        try {
+            const res = await fetch(`${BASE}/users`, {
+                method:  'POST',
+                headers: authHeaders(token, { 'Content-Type': 'application/json' }),
+                body:    JSON.stringify(accountForm),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || Object.values(data.errors || {})[0]?.[0] || 'Failed to create account');
+            setShowAccountModal(false);
+            setAccountForm({ name: '', email: '', password: '' });
+            loadAccounts();
+        } catch (err) {
+            setAccountError(err.message);
+        } finally {
+            setAccountLoading(false);
+        }
+    };
+
+    const handlePasswordSave = async () => {
+        setPasswordLoading(true);
+        setPasswordError('');
+        try {
+            const res = await fetch(`${BASE}/users/${passwordTarget.id}/password`, {
+                method:  'PUT',
+                headers: authHeaders(token, { 'Content-Type': 'application/json' }),
+                body:    JSON.stringify({ password: newPassword }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Failed to update password');
+            setShowPasswordModal(false);
+            setNewPassword('');
+            setPasswordTarget(null);
+        } catch (err) {
+            setPasswordError(err.message);
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
+    const handleAccountDelete = async (id) => {
+        if (!confirm('Delete this account? This cannot be undone.')) return;
+        try {
+            const res = await fetch(`${BASE}/users/${id}`, { method: 'DELETE', headers: authHeaders(token) });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message);
+            loadAccounts();
+        } catch (err) {
+            setAccountError(err.message);
+        }
+    };
 
     // preview title from form
     const previewTitle = () => {
@@ -158,7 +235,7 @@ const handleCalendarDelete = async (id) => {
         try {
             const res = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                headers: authHeaders(token, { 'Content-Type': 'application/json' }),
                 body: JSON.stringify(auctionForm),
             });
             if (!res.ok) throw new Error();
@@ -174,7 +251,7 @@ const handleCalendarDelete = async (id) => {
     const handleAuctionDelete = async (id) => {
         if (!confirm('Delete this auction result?')) return;
         try {
-            await fetch(`${BASE}/auction-results/${id}`, { method: 'DELETE' });
+            await fetch(`${BASE}/auction-results/${id}`, { method: 'DELETE', headers: authHeaders(token) });
             loadAuctions();
         } catch { setAuctionError('Failed to delete.'); }
     };
@@ -255,7 +332,7 @@ const handleCalendarDelete = async (id) => {
                 if (cover) fd.append('cover', cover);
             }
 
-            const res = await fetch(endpoint, { method: 'POST', headers: { 'Accept': 'application/json' }, body: fd });
+            const res = await fetch(endpoint, { method: 'POST', headers: authHeaders(token), body: fd });
             if (!res.ok) throw new Error();
             setShowModal(false);
             setFile(null);
@@ -271,7 +348,7 @@ const handleCalendarDelete = async (id) => {
 
     const handlePublish = async (id) => {
         try {
-            await fetch(getPublishEndpoint(id), { method: 'PUT' });
+            await fetch(getPublishEndpoint(id), { method: 'PUT', headers: authHeaders(token) });
             loadRows();
         } catch { setError('Failed to publish.'); }
     };
@@ -279,7 +356,7 @@ const handleCalendarDelete = async (id) => {
     const handleDelete = async (id) => {
         if (!confirm('Delete this item?')) return;
         try {
-            await fetch(getDeleteEndpoint(id), { method: 'DELETE' });
+            await fetch(getDeleteEndpoint(id), { method: 'DELETE', headers: authHeaders(token) });
             loadRows();
         } catch { setError('Failed to delete.'); }
     };
@@ -309,9 +386,10 @@ const handleCalendarDelete = async (id) => {
                     </div>
 
                     {[
-                        { id: 'content',  label: 'Content',        emoji: '📄' },
-                        { id: 'auction',  label: 'Auction Results', emoji: '🏦' },
+                        { id: 'content',  label: 'Content',         emoji: '📄' },
+                        { id: 'auction',  label: 'Auction Results',  emoji: '🏦' },
                         { id: 'calendar', label: 'Auction Calendar', emoji: '📅' },
+                        ...(user?.role === 'admin' ? [{ id: 'accounts', label: 'Accounts', emoji: '👥' }] : []),
                     ].map(item => (
                         <button
                             key={item.id}
@@ -539,6 +617,87 @@ const handleCalendarDelete = async (id) => {
                                             <div className="flex gap-1 items-center">
                                                 <button onClick={() => openCalendarEdit(ev)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text">Edit</button>
                                                 <button onClick={() => handleCalendarDelete(ev.id)} className="text-[11px] font-semibold px-2 py-1 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-amber-2 hover:text-amber-2">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {/* ── accounts tab ── */}
+                {activeTab === 'accounts' && (
+                    <div className="mb-10">
+                        <div className="font-display text-[28px] font-bold text-text mb-1 tracking-[-0.3px]">Accounts</div>
+                        <div className="text-[13px] text-text-3 mb-6">Manage admin and officer accounts.</div>
+
+                        <div className="flex items-center justify-between mb-2.5">
+                            <div className="text-[11px] font-bold tracking-[1px] uppercase text-text-3">{accounts.length} Account{accounts.length !== 1 ? 's' : ''}</div>
+                            <button
+                                onClick={() => { setAccountForm({ name: '', email: '', password: '', role: 'officer' }); setAccountError(''); setShowAccountModal(true); }}
+                                className="text-[13px] font-semibold px-4.5 py-2 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2"
+                            >
+                                + Add Account
+                            </button>
+                        </div>
+
+                        {accountError && <div className="text-[13px] text-red-500 mb-3">{accountError}</div>}
+
+                        <table className="w-full border-collapse bg-white rounded-sm overflow-hidden shadow-sm border border-light-2">
+                            <thead>
+                                <tr>
+                                    {['Name', 'Email', 'Role', 'Created', 'Actions'].map(h => (
+                                        <th key={h} className="bg-snow text-text-3 px-4 py-2.5 text-left text-[10.5px] font-bold tracking-[1px] uppercase border-b border-light-2">{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {accounts.length === 0 ? (
+                                    <tr><td colSpan={5} className="text-center py-10 text-text-3 text-[13px]">No accounts found.</td></tr>
+                                ) : accounts.map(acc => (
+                                    <tr key={acc.id} className="group border-b border-light last:border-b-0 hover:bg-snow">
+                                        <td className="px-4 py-3 align-middle">
+                                            <div className="flex items-center gap-2.5">
+                                                <div className="w-7 h-7 rounded-full bg-teal-4 flex items-center justify-center text-[12px] font-bold text-teal shrink-0">
+                                                    {acc.name.charAt(0).toUpperCase()}
+                                                </div>
+                                                <span className="text-[13px] font-semibold text-text">{acc.name}</span>
+                                                {acc.id === user?.id && (
+                                                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] bg-teal-4 text-teal">You</span>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-3 align-middle">
+                                            <span className="font-mono text-[12px] text-text-2">{acc.email}</span>
+                                        </td>
+                                        <td className="px-4 py-3 align-middle">
+                                            {acc.role === 'admin'
+                                                ? <span className="text-[10.5px] font-bold px-2 py-0.75 rounded-[4px] bg-teal-4 text-teal">Admin</span>
+                                                : <span className="text-[10.5px] font-bold px-2 py-0.75 rounded-[4px] bg-light text-text-3">Officer</span>
+                                            }
+                                        </td>
+                                        <td className="px-4 py-3 align-middle">
+                                            <span className="font-mono text-[11px] text-text-3">
+                                                {new Date(acc.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3 align-middle">
+                                            <div className="flex gap-1.25 items-center">
+                                                <button
+                                                    onClick={() => { setPasswordTarget(acc); setNewPassword(''); setPasswordError(''); setShowPasswordModal(true); }}
+                                                    className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-text-2 hover:text-text"
+                                                >
+                                                    Change Password
+                                                </button>
+                                                {acc.id !== user?.id && (
+                                                    <button
+                                                        onClick={() => handleAccountDelete(acc.id)}
+                                                        className="text-[11.5px] font-semibold px-2.5 py-1.25 border-[1.5px] border-light-2 bg-transparent cursor-pointer text-text-3 rounded-[6px] transition-all duration-150 hover:border-red-400 hover:text-red-500"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                )}
                                             </div>
                                         </td>
                                     </tr>
@@ -1067,6 +1226,122 @@ const handleCalendarDelete = async (id) => {
                                 className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer transition-all duration-150 hover:bg-teal-2 disabled:opacity-50"
                             >
                                 {calendarLoading ? 'Saving...' : calendarEditId ? 'Save Changes' : 'Add Date'}
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
+            {/* ── create account modal ── */}
+            {showAccountModal && (
+                <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
+                    <div className="bg-white rounded-md shadow-lg w-full max-w-110 p-7">
+
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="font-display text-[18px] font-bold text-text">Add Account</div>
+                            <button onClick={() => setShowAccountModal(false)} className="text-text-3 hover:text-text text-[20px] leading-none cursor-pointer">✕</button>
+                        </div>
+
+                        {accountError && (
+                            <div className="mb-4 px-3.5 py-2.5 rounded-lg bg-red-50 border border-red-200 text-[13px] text-red-600">{accountError}</div>
+                        )}
+
+                        <div className="flex flex-col gap-4">
+                            <div>
+                                <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Full Name</label>
+                                <input
+                                    className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                    value={accountForm.name}
+                                    onChange={e => setAccountForm({ ...accountForm, name: e.target.value })}
+                                    placeholder="e.g. Sokha Chan"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Email</label>
+                                <input
+                                    type="email"
+                                    className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                    value={accountForm.email}
+                                    onChange={e => setAccountForm({ ...accountForm, email: e.target.value })}
+                                    placeholder="officer@gdicdm.gov.kh"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Password <span className="font-normal text-text-3">(min. 8 characters)</span></label>
+                                <input
+                                    type="password"
+                                    className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                    value={accountForm.password}
+                                    onChange={e => setAccountForm({ ...accountForm, password: e.target.value })}
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">Role</label>
+                                <select
+                                    className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal"
+                                    value={accountForm.role}
+                                    onChange={e => setAccountForm({ ...accountForm, role: e.target.value })}
+                                >
+                                    <option value="officer">Officer</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end gap-2 mt-6">
+                            <button onClick={() => setShowAccountModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-light-2 bg-transparent text-text-3 rounded-sm cursor-pointer hover:border-text-2 hover:text-text">Cancel</button>
+                            <button
+                                onClick={handleAccountSave}
+                                disabled={accountLoading || !accountForm.name || !accountForm.email || !accountForm.password}
+                                className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer hover:bg-teal-2 disabled:opacity-50"
+                            >
+                                {accountLoading ? 'Creating...' : 'Create Account'}
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
+            {/* ── change password modal ── */}
+            {showPasswordModal && passwordTarget && (
+                <div className="fixed inset-0 bg-black/40 z-500 flex items-center justify-center">
+                    <div className="bg-white rounded-md shadow-lg w-full max-w-100 p-7">
+
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="font-display text-[18px] font-bold text-text">Change Password</div>
+                            <button onClick={() => setShowPasswordModal(false)} className="text-text-3 hover:text-text text-[20px] leading-none cursor-pointer">✕</button>
+                        </div>
+                        <p className="text-[13px] text-text-3 mb-6">
+                            Setting new password for <span className="font-semibold text-text">{passwordTarget.name}</span>
+                        </p>
+
+                        {passwordError && (
+                            <div className="mb-4 px-3.5 py-2.5 rounded-lg bg-red-50 border border-red-200 text-[13px] text-red-600">{passwordError}</div>
+                        )}
+
+                        <div>
+                            <label className="block text-[11.5px] font-bold tracking-[0.5px] text-text-2 mb-1.5">New Password <span className="font-normal text-text-3">(min. 8 characters)</span></label>
+                            <input
+                                type="password"
+                                className="w-full border-[1.5px] border-light-2 px-3.5 py-2.5 text-[14px] text-text bg-white outline-none rounded-sm focus:border-teal focus:shadow-[0_0_0_3px_rgba(0,109,110,0.08)]"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                placeholder="••••••••"
+                                autoFocus
+                            />
+                        </div>
+
+                        <div className="flex justify-end gap-2 mt-6">
+                            <button onClick={() => setShowPasswordModal(false)} className="text-[13px] font-semibold px-4.5 py-2.25 border-[1.5px] border-light-2 bg-transparent text-text-3 rounded-sm cursor-pointer hover:border-text-2 hover:text-text">Cancel</button>
+                            <button
+                                onClick={handlePasswordSave}
+                                disabled={passwordLoading || newPassword.length < 8}
+                                className="text-[13px] font-semibold px-4.5 py-2.25 bg-teal text-white rounded-sm cursor-pointer hover:bg-teal-2 disabled:opacity-50"
+                            >
+                                {passwordLoading ? 'Saving...' : 'Update Password'}
                             </button>
                         </div>
 
