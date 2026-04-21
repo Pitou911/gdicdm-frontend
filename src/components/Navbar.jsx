@@ -19,11 +19,11 @@ export default function Navbar(){
         { id: 'Home',      path: '/',          label: t('navHome') },
         { id: 'Calendar',  path: '/calendar',   label: t('navCalendar') },
         { id: 'About',     path: '/about',      label: t('navAbout') },
-        { id: 'Bonds',     path: '/bonds',      label: t('navBonds') },
+        // { id: 'Bonds',     path: '/bonds',      label: t('navBonds') },
         { id: 'Debt Data', path: '/debt',       label: t('navDebt') },
-        { id: 'Documents', path: '/documents',  label: t('navDocs') },
-        { id: 'Education', path: '/education',  label: t('navEdu') },
-        { id: 'News',      path: '/news',       label: t('navNews') },
+        // { id: 'Documents', path: '/documents',  label: t('navDocs') },
+        // { id: 'Education', path: '/education',  label: t('navEdu') },
+        // { id: 'News',      path: '/news',       label: t('navNews') },
         { id: 'Contact',   path: '/contact',    label: t('navContact') },
         { id: 'Auction Result', path: '/auction_result', label: t('navAuction') }
     ];
