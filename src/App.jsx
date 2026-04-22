@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { LanguageProvider } from './context/LanguageContext'
 import { AuthProvider } from './context/AuthContext'
@@ -19,12 +19,21 @@ import Calendar from './pages/Calendar'
 import AuctionResult from './pages/AuctionResult'
 import Login from './pages/Login'
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
+  return null;
+}
+
 function Layout() {
   const location = useLocation();
   const isLogin  = location.pathname === '/login';
 
   return (
     <>
+      <ScrollToTop />
       {!isLogin && <Navbar />}
       <Routes>
         <Route path="/"              element={<Home />} />
