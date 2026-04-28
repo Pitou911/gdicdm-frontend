@@ -17,6 +17,7 @@ import News from './pages/News'
 import NewsDetail from './pages/NewsDetail'
 import Calendar from './pages/Calendar'
 import AuctionResult from './pages/AuctionResult'
+import BondCalculator from './pages/BondCalculator'
 import Login from './pages/Login'
 
 function ScrollToTop() {
@@ -47,6 +48,7 @@ function Layout() {
         <Route path="/news/:id"      element={<NewsDetail />} />
         <Route path="/calendar"      element={<Calendar />} />
         <Route path="/auction_result" element={<AuctionResult />} />
+        <Route path="/bond-calculator" element={<BondCalculator />} />
         <Route path="/login"         element={<Login />} />
         <Route
           path="/cms-dashboard"

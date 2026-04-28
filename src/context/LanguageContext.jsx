@@ -15,6 +15,7 @@ const translations = {
         navContact:  'Contact',
         navCalendar: 'Calendar',
         navAuction:  'Auction Result',
+        navCalc:     'Bond Calculator',
 
         // Hero
         heroSub2: 'Transparency & Accountability',
@@ -50,6 +51,7 @@ const translations = {
         navContact:  'ទំនាក់ទំនង',
         navCalendar: 'ប្រតិទិន',
         navAuction:  'លទ្ធផលដេញថ្លៃ',
+        navCalc:     'គណនាតម្លៃមូលបត្រ',
 
         // Hero
         heroSub2: 'តម្លាភាព និងគណនេយ្យភាព',

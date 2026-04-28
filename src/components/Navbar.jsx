@@ -25,7 +25,8 @@ export default function Navbar(){
         // { id: 'Education', path: '/education',  label: t('navEdu') },
         // { id: 'News',      path: '/news',       label: t('navNews') },
         { id: 'Contact',   path: '/contact',    label: t('navContact') },
-        { id: 'Auction Result', path: '/auction_result', label: t('navAuction') }
+        { id: 'Auction Result',  path: '/auction_result',  label: t('navAuction') },
+        { id: 'Bond Calculator', path: '/bond-calculator', label: t('navCalc') }
     ];
 
     const closeMenu = () => setMenuOpen(false);
