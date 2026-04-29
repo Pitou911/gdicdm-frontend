@@ -18,15 +18,15 @@ export default function Navbar(){
     const navLinks = [
         { id: 'Home',      path: '/',          label: t('navHome') },
         { id: 'Calendar',  path: '/calendar',   label: t('navCalendar') },
-        { id: 'About',     path: '/about',      label: t('navAbout') },
+        { id: 'Auction Result',  path: '/auction_result',  label: t('navAuction') },
         // { id: 'Bonds',     path: '/bonds',      label: t('navBonds') },
         { id: 'Debt Data', path: '/debt',       label: t('navDebt') },
+        { id: 'Bond Calculator', path: '/bond-calculator', label: t('navCalc') },
         // { id: 'Documents', path: '/documents',  label: t('navDocs') },
         // { id: 'Education', path: '/education',  label: t('navEdu') },
         // { id: 'News',      path: '/news',       label: t('navNews') },
+        { id: 'About',     path: '/about',      label: t('navAbout') },
         { id: 'Contact',   path: '/contact',    label: t('navContact') },
-        { id: 'Auction Result',  path: '/auction_result',  label: t('navAuction') },
-        { id: 'Bond Calculator', path: '/bond-calculator', label: t('navCalc') }
     ];
 
     const closeMenu = () => setMenuOpen(false);
